@@ -15,16 +15,24 @@ public class Runner {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        //right most capital pawn
+        mainBoard.visualizeBitboard(checkValidConditions.getCapitalRookMoves(Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000010000000", 2), mainBoard.mainBoard));
+
+
+
+        /////////////////////////////
 //        System.out.println("Capital Is In Check: " + checkValidConditions.capitalIsInCheck(mainBoard.mainBoard));
 //        System.out.println("Lower Case Is In Check: " + checkValidConditions.lowerCaseIsInCheck(mainBoard.mainBoard));
-
-        Long[][] splitBoard = controlAndSeparation.splitBitboardArray(mainBoard.mainBoard);
-
-        for (int i = 0; i < splitBoard.length; i++) {
-            for (int j = 0; j < splitBoard[i].length; j++) {
-                mainBoard.visualizeBitboard(splitBoard[i][j]);
-            }
-        }
+//
+//        Long[][] splitBoard = controlAndSeparation.splitBitboardArray(mainBoard.mainBoard);
+//
+//        for (int i = 0; i < splitBoard.length; i++) {
+//            for (int j = 0; j < splitBoard[i].length; j++) {
+//                mainBoard.visualizeBitboard(splitBoard[i][j]);
+//            }
+//        }
+//
+//        mainBoard.visualizeBitboardArray(controlAndSeparation.condense2dBoard(splitBoard));
 
 
 //En Passant Testing
@@ -38,5 +46,7 @@ public class Runner {
 //        mainBoard.visualizeBitboard(checkValidConditions.getLowerCasePawnAttacks(mainBoard.mainBoard, mainBoard.mainBoardHistory));
 
     }
+
+
 }
 

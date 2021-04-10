@@ -288,20 +288,54 @@ public class BitboardControlAndSeparation {
 
     public Long[][] splitBitboardArray(Long[] currentBoard){
 
-        //first split each bitboard in currentboard into an array of individual bitboards (splitBitboard) and then add that array to the 2d array of pieces which it will return.
-        //10 is the max amount of any piece you could have on the board at a time (promotions (8) + standard pieces (2 max))
-        Long[][] splitBoard = new Long[currentBoard.length][10];
-
-        for (int i = 0; i < currentBoard.length; i++) {
-            Long[] pieceBoard = splitBitboard(currentBoard[i]);
-            for (int j = 0; j < pieceBoard.length; j++) {
-                splitBoard[i][j] = pieceBoard[j];
-            }
-        }
+        //each small array has a different size
+        Long[][] splitBoard = {splitBitboard(currentBoard[0]),
+                splitBitboard(currentBoard[1]),
+                splitBitboard(currentBoard[2]),
+                splitBitboard(currentBoard[3]),
+                splitBitboard(currentBoard[4]),
+                splitBitboard(currentBoard[5]),
+                splitBitboard(currentBoard[6]),
+                splitBitboard(currentBoard[7]),
+                splitBitboard(currentBoard[8]),
+                splitBitboard(currentBoard[9]),
+                splitBitboard(currentBoard[10]),
+                splitBitboard(currentBoard[11])};
 
         return splitBoard;
 
     }
+
+    public Long[] condense2dBoard(Long[][] currentBoard){
+
+        Long[] condensedBoard = new Long[12];
+        //initialize condensedBoard contents
+        for (int i = 0; i < condensedBoard.length; i++) {
+            condensedBoard[i] = 0l;
+        }
+
+
+        for (int i = 0; i < currentBoard.length; i++) {
+            for (int j = 0; j < currentBoard[i].length; j++) {
+                condensedBoard[i] |= currentBoard[i][j];
+            }
+        }
+
+        return condensedBoard;
+    }
+
+    public Long[] changeBitboardArrayIndex(Long[] currentBoard, int index, long bitboard){
+        Long[] copyBoard = new Long[currentBoard.length];
+        for (int i = 0; i < currentBoard.length; i++) {
+            if(i==index){
+                copyBoard[i] = bitboard;
+            }else{
+                copyBoard[i] = currentBoard[i];
+            }
+        }
+        return copyBoard;
+    }
+
 
 
 }

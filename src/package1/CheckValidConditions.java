@@ -246,12 +246,35 @@ public class CheckValidConditions {
         return combined&withPieces;
     }
 
-    ////////Pawn Moves Combined///////////////////////////////////
-    public long getCapitalPawnCombined(Long[] currentBoard, Long[] currentBoardHistory){
+    ////////Pawn Moves Combined With En Passant///////////////////////////////////
+    public long getCapitalPawnCombinedWithEnPassant(Long[] currentBoard, Long[] currentBoardHistory){
         return getCapitalPawnForwardMoves(currentBoard)|getCapitalPawnAttacks(currentBoard, currentBoardHistory);
     }
-    public long getLowerCasePawnCombined(Long[] currentBoard, Long[] currentBoardHistory){
+    public long getLowerCasePawnCombinedWithEnPassant(Long[] currentBoard, Long[] currentBoardHistory){
         return getLowerCasePawnDownwardsMoves(currentBoard)|getLowerCasePawnAttacks(currentBoard, currentBoardHistory);
+    }
+
+    ////////Pawn Moves Combined Without En Passant///////////////////////////////////
+    public long getCapitalPawnCombined(Long[] currentBoard){
+        return getCapitalPawnForwardMoves(currentBoard)|getCapitalPawnAttacksWithoutEnPassant(currentBoard);
+    }
+    public long getCapitalPawnCombined(long thisPiece, Long[] currentBoard){
+        //index 11
+        //newBoard is a copy of currentBoard, but with just the moves that that thisPiece can make if it was the only piece of its type on the board
+        Long[] newBoard = Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 11, thisPiece);
+        //when you combine the moves that all piece of that type can make and moves just thisPiece can make if there were no others of its type, you get all the moves just thisPiece can make
+        return (getCapitalPawnForwardMoves(currentBoard)|getCapitalPawnAttacksWithoutEnPassant(currentBoard)) & (getCapitalPawnForwardMoves(newBoard)|getCapitalPawnAttacksWithoutEnPassant(newBoard));
+    }
+    public long getLowerCasePawnCombined(Long[] currentBoard){
+        return getLowerCasePawnDownwardsMoves(currentBoard)|getLowerCasePawnAttacksWithoutEnPassant(currentBoard);
+    }
+    public long getLowerCasePawnCombined(long thisPiece, Long[] currentBoard){
+        //index 5
+        //newBoard is a copy of currentBoard, but with just the moves that that thisPiece can make if it was the only piece of its type on the board
+        Long[] newBoard = Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 5, thisPiece);
+        //when you combine the moves that all piece of that type can make and moves just thisPiece can make if there were no others of its type, you get all the moves just thisPiece can make
+        //when you combine the moves that all piece of that type can make and moves just thisPiece can make if there were no others of its type, you get all the moves just thisPiece can make
+        return (getLowerCasePawnDownwardsMoves(currentBoard)|getLowerCasePawnAttacksWithoutEnPassant(currentBoard)) & (getLowerCasePawnDownwardsMoves(newBoard)|getLowerCasePawnAttacksWithoutEnPassant(newBoard));
     }
 
     //Pawn Threatened Spaces///////////
@@ -298,6 +321,11 @@ public class CheckValidConditions {
         return moveset;
     }
 
+    public long getCapitalKnightMoves(long thisPiece, Long[] currentBoard){
+        //position 7//
+        return getCapitalKnightMoves(currentBoard) & getCapitalKnightMoves(Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 7, thisPiece));
+    }
+
     public long getLowerCaseKnightMoves(Long[] currentBoard){
         //Position 1//
         long moveset = 0l;
@@ -319,6 +347,11 @@ public class CheckValidConditions {
         }
 
         return moveset;
+    }
+
+    public long getLowerCaseKnightMoves(long thisPiece, Long[] currentBoard){
+        //position 1//
+        return getLowerCaseKnightMoves(currentBoard) & getLowerCaseKnightMoves(Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 1, thisPiece));
     }
 
     //Knight Attacks Special//
@@ -375,6 +408,12 @@ public class CheckValidConditions {
 
         return possibleMoves;
     }
+    public long getCapitalRookMoves(long thisPiece, Long[] currentBoard){
+        //position 6//
+        return getCapitalRookMoves(currentBoard) & getCapitalRookMoves(Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 6, thisPiece));
+    }
+
+
     public long getLowerCaseRookMoves(Long[] currentBoard){
         //Position 0//
 
@@ -402,6 +441,11 @@ public class CheckValidConditions {
 
         return possibleMoves;
     }
+    public long getLowerCaseRookMoves(long thisPiece, Long[] currentBoard){
+        //position 0//
+        return getLowerCaseRookMoves(currentBoard) & getLowerCaseRookMoves(Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 0, thisPiece));
+    }
+
     //////////
 
     //Horizontal and Vertical Sliders///////////////////
@@ -525,6 +569,12 @@ public class CheckValidConditions {
 
         return possibleMoves;
     }
+
+    public long getCapitalBishopMoves(long thisPiece, Long[] currentBoard){
+        //position 8//
+        return getCapitalBishopMoves(currentBoard) & getCapitalBishopMoves(Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 8, thisPiece));
+    }
+
     public long getLowerCaseBishopMoves(Long[] currentBoard){
 
         //Position 2//
@@ -554,6 +604,11 @@ public class CheckValidConditions {
 
         return possibleMoves;
     }
+    public long getLowerCaseBishopMoves(long thisPiece, Long[] currentBoard){
+        //position 2//
+        return getLowerCaseBishopMoves(currentBoard) & getLowerCaseBishopMoves(Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 2, thisPiece));
+    }
+
     /////////////////
 
     //Diagonal Sliders/////////////////////////
@@ -684,6 +739,11 @@ public class CheckValidConditions {
         return possibleMoves;
 
     }
+    public long getCapitalQueenMoves(long thisPiece, Long[] currentBoard){
+        //position 9//
+        return getCapitalQueenMoves(currentBoard) & getCapitalQueenMoves(Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 9, thisPiece));
+    }
+
     public long getLowerCaseQueenMoves(Long[] currentBoard){
 
         //Position 3//
@@ -712,11 +772,17 @@ public class CheckValidConditions {
 
         return possibleMoves;
     }
+    public long getLowerCaseQueenMoves(long thisPiece, Long[] currentBoard){
+        //position 3//
+        return getLowerCaseQueenMoves(currentBoard) & getLowerCaseQueenMoves(Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 3, thisPiece));
+    }
+
     ////////////////////////////
 
     //King Moves -> Need to add that cannot move if square is attacked by enemy piece (do by simulate a move and check)//
     public long getCapitalKingMoves(Long[] currentBoard){
 
+        //position 10//
         long movesetGeneral = 0l;
 
         movesetGeneral |= (currentBoard[10]<<9 & (~hFile));
@@ -736,6 +802,10 @@ public class CheckValidConditions {
 
 
         return movesetGeneral;
+    }
+    public long getCapitalKingMoves(long thisPiece, Long[] currentBoard){
+        //position 10//
+        return getCapitalKingMoves(currentBoard) & getCapitalKingMoves(Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 10, thisPiece));
     }
     public long getLowerCaseKingMoves(Long[] currentBoard){
 
@@ -760,6 +830,11 @@ public class CheckValidConditions {
 
 
     }
+    public long getLowerCaseKingMoves(long thisPiece, Long[] currentBoard){
+        //position 4//
+        return getLowerCaseKingMoves(currentBoard) & getLowerCaseKingMoves(Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 4, thisPiece));
+    }
+
     /////////////////////////
 
     //Attacking Squares of Casing ('c' = capital piece attacks, 'l' = lower case piece attacks)//
