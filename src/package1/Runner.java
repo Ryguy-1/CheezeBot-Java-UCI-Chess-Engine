@@ -15,14 +15,24 @@ public class Runner {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        //right most capital pawn
-        mainBoard.visualizeBitboard(checkValidConditions.getCapitalRookMoves(Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000010000000", 2), mainBoard.mainBoard));
 
 
+        mainBoard.visualizeBitboard(checkValidConditions.getLowerCasePawnAttacksWithoutEnPassant(mainBoard.mainBoard));
+        mainBoard.visualizeBitboard(checkValidConditions.getCapitalKingMoves(mainBoard.mainBoard));
 
+
+        //mainBoard.visualizeBitboard(checkValidConditions.getLowerCasePawnCombined(Runner.mainBoard.parseLong("0000000001000000000000000000000000000000000000000000000000000000", 2), mainBoard.mainBoard));
+
+        //mainBoard.visualizeBitboard(checkValidConditions.getCapitalPawnCombined(Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000001000000000", 2), mainBoard.mainBoard));
+
+        //mainBoard.visualizeBitboard(checkValidConditions.getCapitalPawnForwardMoves(mainBoard.mainBoard));
         /////////////////////////////
-//        System.out.println("Capital Is In Check: " + checkValidConditions.capitalIsInCheck(mainBoard.mainBoard));
-//        System.out.println("Lower Case Is In Check: " + checkValidConditions.lowerCaseIsInCheck(mainBoard.mainBoard));
+        System.out.println();
+        System.out.println("Capital Is In Check: " + checkValidConditions.capitalIsInCheck(mainBoard.mainBoard));
+        System.out.println("Lower Case Is In Check: " + checkValidConditions.lowerCaseIsInCheck(mainBoard.mainBoard));
+        System.out.println();
+        System.out.println("Capital Is In CheckMATE: " + search.capitalIsInCheckmate(mainBoard.mainBoard));
+        //System.out.println("Lower Case Is In CheckMATE: " + search.lowerCaseIsInCheckmate(mainBoard.mainBoard));
 //
 //        Long[][] splitBoard = controlAndSeparation.splitBitboardArray(mainBoard.mainBoard);
 //

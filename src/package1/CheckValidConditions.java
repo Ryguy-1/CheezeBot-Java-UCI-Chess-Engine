@@ -260,21 +260,86 @@ public class CheckValidConditions {
     }
     public long getCapitalPawnCombined(long thisPiece, Long[] currentBoard){
         //index 11
-        //newBoard is a copy of currentBoard, but with just the moves that that thisPiece can make if it was the only piece of its type on the board
+//        //newBoard is a copy of currentBoard, but with just the moves that that thisPiece can make if it was the only piece of its type on the board
         Long[] newBoard = Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 11, thisPiece);
-        //when you combine the moves that all piece of that type can make and moves just thisPiece can make if there were no others of its type, you get all the moves just thisPiece can make
-        return (getCapitalPawnForwardMoves(currentBoard)|getCapitalPawnAttacksWithoutEnPassant(currentBoard)) & (getCapitalPawnForwardMoves(newBoard)|getCapitalPawnAttacksWithoutEnPassant(newBoard));
+
+        //attacks substituted with thisPiece
+
+        //Position 11//
+        //aFile makes sure right pawn still works. Take compliment of a file -> If it is not in the aFile, then it is okay
+        long pawnAttacksRight = (thisPiece<<7)&(~aFile);
+        //h file makes sure left pawn still works. Same thing as aFile with hFile
+        long pawnAttacksLeft = (thisPiece<<9)&(~hFile);
+        //bitboard of all places you can move to without taking into account if they have pieces or not
+        long combined = pawnAttacksLeft|pawnAttacksRight;
+        //spaces with pieces on them
+        long withPieces= 0l;
+        //for loop only iterates over lower case pieces because capital can only capture lower case diagonally with pawns
+        for (int i = 0; i < currentBoard.length/2; i++) {
+            withPieces = withPieces|currentBoard[i];
+        }
+        long attacks = combined&withPieces;
+
+        //moves need to be recalculated because can move twice forward -> (!!Substitute the array of pawns for just the one pawn thisPiece bitboard!!)
+        long pawnMovesOne = thisPiece<<8;
+        //excludes bad moves one move forward
+        for (int i = 0; i < currentBoard.length; i++) {
+            pawnMovesOne = pawnMovesOne^currentBoard[i]&pawnMovesOne;
+        }
+        //spaces that work in the fourth file because there are no pieces in the 3rd file before it
+        long pawnMovesTwo = ((rank2<<8)&pawnMovesOne)<<8;
+        //Excludes spaces in the fourth file with pieces on them
+        for (int i = 0; i < currentBoard.length; i++) {
+            pawnMovesTwo = pawnMovesTwo^currentBoard[i]&pawnMovesTwo;
+        }
+        long pawnForwardCombined = pawnMovesOne|pawnMovesTwo;
+
+
+        return pawnForwardCombined | attacks;
     }
     public long getLowerCasePawnCombined(Long[] currentBoard){
         return getLowerCasePawnDownwardsMoves(currentBoard)|getLowerCasePawnAttacksWithoutEnPassant(currentBoard);
     }
     public long getLowerCasePawnCombined(long thisPiece, Long[] currentBoard){
         //index 5
-        //newBoard is a copy of currentBoard, but with just the moves that that thisPiece can make if it was the only piece of its type on the board
+//        //newBoard is a copy of currentBoard, but with just the moves that that thisPiece can make if it was the only piece of its type on the board
         Long[] newBoard = Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 5, thisPiece);
-        //when you combine the moves that all piece of that type can make and moves just thisPiece can make if there were no others of its type, you get all the moves just thisPiece can make
-        //when you combine the moves that all piece of that type can make and moves just thisPiece can make if there were no others of its type, you get all the moves just thisPiece can make
-        return (getLowerCasePawnDownwardsMoves(currentBoard)|getLowerCasePawnAttacksWithoutEnPassant(currentBoard)) & (getLowerCasePawnDownwardsMoves(newBoard)|getLowerCasePawnAttacksWithoutEnPassant(newBoard));
+
+        //attacks recalculation
+        //Position 5//
+        //aFile makes sure right pawn still works. Take compliment of a file -> If it is not in the aFile, then it is okay
+        long pawnAttacksRight = (thisPiece>>>7)&(~hFile);
+        //h file makes sure left pawn still works. Same thing as aFile with hFile
+        long pawnAttacksLeft = (thisPiece>>>9)&(~aFile);
+        //bitboard of all places you can move to without taking into account if they have pieces or not
+        long combined = pawnAttacksLeft|pawnAttacksRight;
+        //spaces with pieces on them
+        long withPieces= 0l;
+        //for loop only iterates over capital pieces (See Capital Piece Method for Better Description)
+        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
+            withPieces = withPieces|currentBoard[i];
+        }
+
+        //geometrically and with pieces bitboard returned
+        long attacks = combined&withPieces;
+
+
+        //Position 5//
+        long pawnMovesOne = thisPiece>>>8;
+        //excludes bad moves one move downwards
+        for (int i = 0; i < currentBoard.length; i++) {
+            pawnMovesOne = pawnMovesOne^currentBoard[i]&pawnMovesOne;
+        }
+        //spaces that work in the fourth file because there are no pieces in the 3rd file before it
+        long pawnMovesTwo = ((rank7>>>8)&pawnMovesOne)>>>8;
+        //Excludes spaces in the fourth file with pieces on them
+        for (int i = 0; i < currentBoard.length; i++) {
+            pawnMovesTwo = pawnMovesTwo^currentBoard[i]&pawnMovesTwo;
+        }
+        long pawnDownwardsCombined = pawnMovesOne|pawnMovesTwo;
+
+
+        return pawnDownwardsCombined | attacks;
     }
 
     //Pawn Threatened Spaces///////////
@@ -408,9 +473,25 @@ public class CheckValidConditions {
 
         return possibleMoves;
     }
+
     public long getCapitalRookMoves(long thisPiece, Long[] currentBoard){
         //position 6//
-        return getCapitalRookMoves(currentBoard) & getCapitalRookMoves(Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 6, thisPiece));
+        long allPieces = 0l;
+        long badPieces = 0l;
+        long goodPieces = 0l;
+
+        //initializes a bitboard of all pieces
+        for (int i = 0; i < currentBoard.length; i++) {
+            allPieces = allPieces|currentBoard[i];
+        }
+        for (int i = 0; i < currentBoard.length/2; i++) {
+            badPieces = badPieces|currentBoard[i];
+        }
+        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
+            goodPieces = goodPieces|currentBoard[i];
+        }
+
+        return getVerticalHorizontalMovesSingle(goodPieces, badPieces, thisPiece);
     }
 
 
@@ -443,7 +524,23 @@ public class CheckValidConditions {
     }
     public long getLowerCaseRookMoves(long thisPiece, Long[] currentBoard){
         //position 0//
-        return getLowerCaseRookMoves(currentBoard) & getLowerCaseRookMoves(Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 0, thisPiece));
+        long allPieces = 0l;
+        long badPieces = 0l;
+        long goodPieces = 0l;
+
+        //initializes a bitboard of all pieces
+        for (int i = 0; i < currentBoard.length; i++) {
+            allPieces = allPieces|currentBoard[i];
+        }
+        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
+            badPieces = badPieces|currentBoard[i];
+        }
+        for (int i = 0; i < currentBoard.length/2; i++) {
+            goodPieces = goodPieces|currentBoard[i];
+        }
+
+        return getVerticalHorizontalMovesSingle(goodPieces, badPieces, thisPiece);
+
     }
 
     //////////
@@ -572,7 +669,26 @@ public class CheckValidConditions {
 
     public long getCapitalBishopMoves(long thisPiece, Long[] currentBoard){
         //position 8//
-        return getCapitalBishopMoves(currentBoard) & getCapitalBishopMoves(Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 8, thisPiece));
+        //Position 8//
+
+        long possibleMoves = 0l;
+
+        long allPieces = 0l;
+        long badPieces = 0l;
+        long goodPieces = 0l;
+
+        //initializes a bitboard of all pieces
+        for (int i = 0; i < currentBoard.length; i++) {
+            allPieces = allPieces|currentBoard[i];
+        }
+        for (int i = 0; i < currentBoard.length/2; i++) {
+            badPieces = badPieces|currentBoard[i];
+        }
+        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
+            goodPieces = goodPieces|currentBoard[i];
+        }
+
+        return getDiagonalMovesSingle(goodPieces, badPieces, thisPiece);
     }
 
     public long getLowerCaseBishopMoves(Long[] currentBoard){
@@ -606,7 +722,23 @@ public class CheckValidConditions {
     }
     public long getLowerCaseBishopMoves(long thisPiece, Long[] currentBoard){
         //position 2//
-        return getLowerCaseBishopMoves(currentBoard) & getLowerCaseBishopMoves(Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 2, thisPiece));
+        long allPieces = 0l;
+        long badPieces = 0l;
+        long goodPieces = 0l;
+
+        //initializes a bitboard of all pieces
+        for (int i = 0; i < currentBoard.length; i++) {
+            allPieces = allPieces|currentBoard[i];
+        }
+        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
+            badPieces = badPieces|currentBoard[i];
+        }
+        for (int i = 0; i < currentBoard.length/2; i++) {
+            goodPieces = goodPieces|currentBoard[i];
+        }
+
+        return getDiagonalMovesSingle(goodPieces, badPieces, thisPiece);
+
     }
 
     /////////////////
@@ -741,7 +873,23 @@ public class CheckValidConditions {
     }
     public long getCapitalQueenMoves(long thisPiece, Long[] currentBoard){
         //position 9//
-        return getCapitalQueenMoves(currentBoard) & getCapitalQueenMoves(Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 9, thisPiece));
+        long allPieces = 0l;
+        long badPieces = 0l;
+        long goodPieces = 0l;
+
+        //initializes a bitboard of all pieces
+        for (int i = 0; i < currentBoard.length; i++) {
+            allPieces = allPieces|currentBoard[i];
+        }
+        for (int i = 0; i < currentBoard.length/2; i++) {
+            badPieces = badPieces|currentBoard[i];
+        }
+        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
+            goodPieces = goodPieces|currentBoard[i];
+        }
+
+        return (getDiagonalMovesSingle(goodPieces, badPieces, thisPiece) | getVerticalHorizontalMovesSingle(goodPieces, badPieces, thisPiece));
+
     }
 
     public long getLowerCaseQueenMoves(Long[] currentBoard){
@@ -774,7 +922,22 @@ public class CheckValidConditions {
     }
     public long getLowerCaseQueenMoves(long thisPiece, Long[] currentBoard){
         //position 3//
-        return getLowerCaseQueenMoves(currentBoard) & getLowerCaseQueenMoves(Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 3, thisPiece));
+        long allPieces = 0l;
+        long badPieces = 0l;
+        long goodPieces = 0l;
+
+        //initializes a bitboard of all pieces
+        for (int i = 0; i < currentBoard.length; i++) {
+            allPieces = allPieces|currentBoard[i];
+        }
+        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
+            badPieces = badPieces|currentBoard[i];
+        }
+        for (int i = 0; i < currentBoard.length/2; i++) {
+            goodPieces = goodPieces|currentBoard[i];
+        }
+
+        return (getDiagonalMovesSingle(goodPieces, badPieces, thisPiece) | getVerticalHorizontalMovesSingle(goodPieces, badPieces, thisPiece));
     }
 
     ////////////////////////////
@@ -799,9 +962,7 @@ public class CheckValidConditions {
             movesetGeneral = movesetGeneral&(~currentBoard[i]);
         }
 
-
-
-        return movesetGeneral;
+        return movesetGeneral & (~getAttackingSquaresByCasingNoKing(currentBoard, 'l'));
     }
     public long getCapitalKingMoves(long thisPiece, Long[] currentBoard){
         //position 10//
@@ -826,7 +987,7 @@ public class CheckValidConditions {
             movesetGeneral = movesetGeneral&(~currentBoard[i]);
         }
 
-        return movesetGeneral;
+        return movesetGeneral & (~getAttackingSquaresByCasingNoKing(currentBoard, 'c'));
 
 
     }
@@ -850,13 +1011,37 @@ public class CheckValidConditions {
             attackingSquares |= getLowerCaseKingMoves(currentBoard);
             attackingSquares |= getLowerCasePawnAttacksWithoutEnPassant(currentBoard);
         }else if(casing=='c'){
-            //lower case
+            //capital
             attackingSquares |= getCapitalRookMoves(currentBoard);
             attackingSquares |= getCapitalKnightMoves(currentBoard);
             attackingSquares |= getCapitalBishopMoves(currentBoard);
             attackingSquares |= getCapitalQueenMoves(currentBoard);
             attackingSquares |= getCapitalKingMoves(currentBoard);
             attackingSquares |= getCapitalPawnAttacksWithoutEnPassant(currentBoard);
+        }else{
+            System.out.println("Fatal: Error in Get Attacking Squares By Casing. Invalid Character.");
+        }
+
+        return attackingSquares;
+    }
+
+    public long getAttackingSquaresByCasingNoKing(Long[] currentBoard, char casing){
+        long attackingSquares = 0l;
+        //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
+        if(casing=='l'){
+            //capital
+            attackingSquares |= getLowerCaseRookMoves(currentBoard);
+            attackingSquares |= getLowerCaseKnightMoves(currentBoard);
+            attackingSquares |= getLowerCaseBishopMoves(currentBoard);
+            attackingSquares |= getLowerCaseQueenMoves(currentBoard);
+            attackingSquares |= getLowerCasePawnThreatenedSpaces(currentBoard);
+        }else if(casing=='c'){
+            //lower case
+            attackingSquares |= getCapitalRookMoves(currentBoard);
+            attackingSquares |= getCapitalKnightMoves(currentBoard);
+            attackingSquares |= getCapitalBishopMoves(currentBoard);
+            attackingSquares |= getCapitalQueenMoves(currentBoard);
+            attackingSquares |= getLowerCasePawnThreatenedSpaces(currentBoard);
         }else{
             System.out.println("Fatal: Error in Get Attacking Squares By Casing. Invalid Character.");
         }
