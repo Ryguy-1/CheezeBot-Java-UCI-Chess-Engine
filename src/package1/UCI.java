@@ -20,11 +20,11 @@ public class UCI {
             while(programRunning){
                 if(Runner.search.capitalIsInCheckmate(Runner.mainBoard.mainBoard)){
                     programRunning = false;
-                    System.out.println("Capital Is In Check!! Good Game");
+                    System.out.println("Capital Is In Checkmate!! Good Game");
                     break;
                 } else if (Runner.search.lowerCaseIsInCheckmate(Runner.mainBoard.mainBoard)) {
                     programRunning = false;
-                    System.out.println("Capital Is In Check!! Good Game");
+                    System.out.println("Lower Case Is In Checkmate!! Good Game");
                     break;
                 }
                     //if there are no checkmates
@@ -44,7 +44,7 @@ public class UCI {
                     break;
                 } else if (Runner.search.lowerCaseIsInCheckmate(Runner.mainBoard.mainBoard)) {
                     programRunning = false;
-                    System.out.println("Capital Is In Checkmate!! Good Game");
+                    System.out.println("Lower Case Is In Checkmate!! Good Game");
                     break;
                 }
                     //computer turn as lower case
