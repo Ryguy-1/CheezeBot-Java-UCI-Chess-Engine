@@ -31,8 +31,14 @@ public class Runner {
         System.out.println("Capital Is In Check: " + checkValidConditions.capitalIsInCheck(mainBoard.mainBoard));
         System.out.println("Lower Case Is In Check: " + checkValidConditions.lowerCaseIsInCheck(mainBoard.mainBoard));
         System.out.println();
+        System.out.println("All Capital Moves Lead To Check: " + search.allCapitalMovesEqualCheck(mainBoard.mainBoard));
+        System.out.println("All Lower Case Moves Lead To Check: " + search.allLowerCaseMovesEqualCheck(mainBoard.mainBoard));
+        System.out.println();
         System.out.println("Capital Is In CheckMATE: " + search.capitalIsInCheckmate(mainBoard.mainBoard));
-        //System.out.println("Lower Case Is In CheckMATE: " + search.lowerCaseIsInCheckmate(mainBoard.mainBoard));
+        System.out.println("Lower Case Is In CheckMATE: " + search.lowerCaseIsInCheckmate(mainBoard.mainBoard));
+        System.out.println();
+        System.out.println("Capital Is In Stalemate: " + search.capitalIsInStalemate(mainBoard.mainBoard));
+        System.out.println("Lower Case Is In Stalemate: " + search.lowerCaseIsInStalemate(mainBoard.mainBoard));
 //
 //        Long[][] splitBoard = controlAndSeparation.splitBitboardArray(mainBoard.mainBoard);
 //
