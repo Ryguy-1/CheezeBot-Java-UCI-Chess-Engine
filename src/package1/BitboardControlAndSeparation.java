@@ -336,6 +336,22 @@ public class BitboardControlAndSeparation {
         return copyBoard;
     }
 
+    public Long[] getCapitalPieces(Long[] currentBoard){
+        Long[] halfPieces = new Long[currentBoard.length/2];
+        byte counter = 0;
+        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
+            halfPieces[counter] = currentBoard[i];
+            counter++;
+        }
+        return halfPieces;
+    }
 
+    public Long[] getLowerCasePieces(Long[] currentBoard){
+        Long[] halfPieces = new Long[currentBoard.length/2];
+        for (int i = 0; i < currentBoard.length/2; i++) {
+            halfPieces[i] = currentBoard[i];
+        }
+        return halfPieces;
+    }
 
 }

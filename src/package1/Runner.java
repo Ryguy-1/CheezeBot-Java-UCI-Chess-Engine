@@ -5,20 +5,22 @@ public class Runner {
     public static CheckValidConditions checkValidConditions;
     public static BitboardControlAndSeparation controlAndSeparation;
     public static Search search;
+    public static UCI uci;
     public static void main(String[] args) {
         //initialize mainBoard FIRST
         mainBoard = new MainBoard();
         checkValidConditions = new CheckValidConditions();
         controlAndSeparation = new BitboardControlAndSeparation();
         search = new Search();
+        uci = new UCI();
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-        mainBoard.visualizeBitboard(checkValidConditions.getLowerCasePawnAttacksWithoutEnPassant(mainBoard.mainBoard));
-        mainBoard.visualizeBitboard(checkValidConditions.getCapitalKingMoves(mainBoard.mainBoard));
+//        mainBoard.visualizeBitboard(checkValidConditions.getLowerCasePawnAttacksWithoutEnPassant(mainBoard.mainBoard));
+          mainBoard.visualizeBitboard(checkValidConditions.getCapitalKingMoves(mainBoard.mainBoard));
 
 
         //mainBoard.visualizeBitboard(checkValidConditions.getLowerCasePawnCombined(Runner.mainBoard.parseLong("0000000001000000000000000000000000000000000000000000000000000000", 2), mainBoard.mainBoard));

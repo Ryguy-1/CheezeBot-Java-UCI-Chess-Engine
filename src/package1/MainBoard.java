@@ -3,6 +3,8 @@ package package1;
 import javax.swing.*;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Random;
 
 public class MainBoard {
 
@@ -12,37 +14,41 @@ public class MainBoard {
     //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
 
 
-//    String[][] visualRepresentation = {
-//            {"r", "n", "b", "q", "k", "b", "n", "r"},
-//            {"p", "p", "p", "p", "p", "p", "p", "p"},
-//            {"",  "",  "",  "",  "",  "",  "",  ""},
-//            {"",  "",  "",  "",  "",  "",  "",  ""},
-//            {"",  "",  "",  "",  "",  "",  "",  ""},
-//            {"",  "",  "",  "",  "",  "",  "",  ""},
-//            {"P", "P", "P", "P", "P", "P", "P", "P"},
-//            {"R", "N", "B", "Q", "K", "B", "N", "R"}
-//    };
-
     String[][] visualRepresentation = {
-            {"", "R", "", "", "", "", "", ""},
-            {"", "", "", "", "", "", "", ""},
-            {"", "", "", "", "", "", "", ""},
-            {"", "", "", "", "", "", "", ""},
-            {"", "", "", "", "", "", "", ""},
-            {"", "", "", "", "", "", "", ""},
-            {"", "", "", "", "", "", "", "R"},
-            {"k", "", "", "", "", "", "", ""}
+            {"r", "n", "b", "q", "k", "b", "n", "r"},
+            {"p", "p", "p", "p", "p", "p", "p", "p"},
+            {"",  "",  "",  "",  "",  "",  "",  ""},
+            {"",  "",  "",  "",  "",  "",  "",  ""},
+            {"",  "",  "",  "",  "",  "",  "",  ""},
+            {"",  "",  "",  "",  "",  "",  "",  ""},
+            {"P", "P", "P", "P", "P", "P", "P", "P"},
+            {"R", "N", "B", "Q", "K", "B", "N", "R"}
     };
+
+    private Long longEnd1 = parseLong("1000000000000000000000000000000000000000000000000000000000000000", 2);
+
+//    String[][] visualRepresentation = {
+//            {"", "R", "", "", "", "", "", ""},
+//            {"", "", "", "", "", "", "", ""},
+//            {"", "", "", "", "", "", "", ""},
+//            {"", "", "", "", "", "", "", ""},
+//            {"", "", "", "", "", "", "", ""},
+//            {"", "", "", "", "", "", "", ""},
+//            {"", "", "", "", "", "", "", "R"},
+//            {"k", "", "", "", "", "", "", ""}
+//    };
 
     Long[] mainBoard = new Long[12];
 
     //this is one move ago -> Will use for en passant later on
     Long[] mainBoardHistory = new Long[12];
 
+    //temp random generator
+    Random random;
 
     MainBoard(){
         initializeBoard();
-
+        random = new Random();
     }
 
     private void initializeBoard(){
@@ -190,6 +196,123 @@ public class MainBoard {
     }
 
 
+    //Logic Crazy Chess Implementation of Drawing For Testing Purposes (Modified)
+    public void drawGameBoard(Long[] currentBoard) {
+        String chessBoard[][]=new String[8][8];
+        for (int i=0;i<64;i++) {
+            chessBoard[i/8][i%8]=" ";
+        }
+        //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
+        for (int i=0;i<64;i++) {
+            if (((currentBoard[11]<<i)&longEnd1)==longEnd1) {chessBoard[i/8][i%8]="P";}
+            if (((currentBoard[7]<<i)&longEnd1)==longEnd1) {chessBoard[i/8][i%8]="N";}
+            if (((currentBoard[8]<<i)&longEnd1)==longEnd1) {chessBoard[i/8][i%8]="B";}
+            if (((currentBoard[6]<<i)&longEnd1)==longEnd1) {chessBoard[i/8][i%8]="R";}
+            if (((currentBoard[9]<<i)&longEnd1)==longEnd1) {chessBoard[i/8][i%8]="Q";}
+            if (((currentBoard[10]<<i)&longEnd1)==longEnd1) {chessBoard[i/8][i%8]="K";}
+            if (((currentBoard[5]<<i)&longEnd1)==longEnd1) {chessBoard[i/8][i%8]="p";}
+            if (((currentBoard[1]<<i)&longEnd1)==longEnd1) {chessBoard[i/8][i%8]="n";}
+            if (((currentBoard[2]<<i)&longEnd1)==longEnd1) {chessBoard[i/8][i%8]="b";}
+            if (((currentBoard[0]<<i)&longEnd1)==longEnd1) {chessBoard[i/8][i%8]="r";}
+            if (((currentBoard[3]<<i)&longEnd1)==longEnd1) {chessBoard[i/8][i%8]="q";}
+            if (((currentBoard[4]<<i)&longEnd1)==longEnd1) {chessBoard[i/8][i%8]="k";}
+        }
+        for (int i=0;i<8;i++) {
+            System.out.println(Arrays.toString(chessBoard[i]));
+        }
+    }
+
+    public Long[] moveRandom(String casing, Long[] currentBoard){
+        Long[] newBoard = new Long[12];
+        if(casing.equals("c")){
+            //capital
+
+            //NOT IMPLEMENTED
+
+        }else if(casing.equals("l")){
+
+            //splits the bitboard array into a 2d array for simplicity
+            Long[][] splitBitboardArray = Runner.controlAndSeparation.splitBitboardArray(currentBoard);
+            //takes only the lower case pieces from the 2d array
+            Long[][] lowerCasePieces2d = {splitBitboardArray[0], splitBitboardArray[1], splitBitboardArray[2], splitBitboardArray[3], splitBitboardArray[4], splitBitboardArray[5]};
+
+            //finds the total amount of pieces on the board
+            int totalPieces = 0;
+            for (int i = 0; i < lowerCasePieces2d.length; i++) {
+                for (int j = 0; j < lowerCasePieces2d[i].length; j++) {
+                    totalPieces++;
+                }
+            }
+
+            //chooses a random piece
+            int randomPiece = random.nextInt(totalPieces);
+
+            int chosenPiece = 0;
+            int counter = 0;
+            long possibleMoves = 0l;
+            long chosenMove = 0l;
+            //see comments above
+            boolean hasFoundMove = false;
+            while(!hasFoundMove){
+
+                randomPiece = random.nextInt(totalPieces);
+                //chosenPiece++;
+                counter=0;
+                OUTER: for (int i = 0; i < lowerCasePieces2d.length; i++) {
+                    for (int j = 0; j < lowerCasePieces2d[i].length; j++) {
+                        if(counter==randomPiece){ //was chosenPiece
+                            //this is the random piece chosen
+                            switch(i){
+                                case 0://lower case rook
+                                    //gets the possible moves for that individual piece of this piece type
+                                    possibleMoves = Runner.checkValidConditions.getLowerCaseRookMoves(lowerCasePieces2d[i][j], currentBoard);
+                                    break;
+                                case 1://lower case knight
+                                    //gets the possible moves for that individual piece of this piece type
+                                    possibleMoves = Runner.checkValidConditions.getLowerCaseKnightMoves(lowerCasePieces2d[i][j], currentBoard);
+                                    break;
+                                case 2://lower case Bishop
+                                    //gets the possible moves for that individual piece of this piece type
+                                    possibleMoves = Runner.checkValidConditions.getLowerCaseBishopMoves(lowerCasePieces2d[i][j], currentBoard);
+                                    break;
+                                case 3://lower case Queen
+                                    //gets the possible moves for that individual piece of this piece type
+                                    possibleMoves = Runner.checkValidConditions.getLowerCaseQueenMoves(lowerCasePieces2d[i][j], currentBoard);
+                                    break;
+                                case 4://lower case King
+                                    //gets the possible moves for that individual piece of this piece type
+                                    possibleMoves = Runner.checkValidConditions.getLowerCaseKingMoves(lowerCasePieces2d[i][j], currentBoard);
+                                    break;
+                                case 5://lower case Pawns
+                                    //gets the possible moves for that individual piece of this piece type
+                                    possibleMoves = Runner.checkValidConditions.getLowerCasePawnCombined(lowerCasePieces2d[i][j], currentBoard);
+                                    break;
+                            }
+                            //pick a random possible move
+                            Long[] allIndividualMoves = Runner.controlAndSeparation.splitBitboard(possibleMoves);
+                            //pick a random individual move
+                            //if there are no possible moves, break outer and try again
+                            if(allIndividualMoves.length==0){
+                                break OUTER;
+                            }
+                            chosenMove = allIndividualMoves[random.nextInt(allIndividualMoves.length)];
+                            //gets the new board after the possible move was made
+                            newBoard = Runner.controlAndSeparation.fromToMove(lowerCasePieces2d[i][j], chosenMove, currentBoard);
+                            //if lower case is in check afterwards, then this is not a valid move, so break outer and try again
+                            if(Runner.checkValidConditions.lowerCaseIsInCheck(newBoard)){
+                                break OUTER;
+                            }else{ //if lower case is not in check afterwards, then this is a valid move, so you have found the move, can break outer, and continue onwards to make that move a reality :)
+                                hasFoundMove = true;
+                                break OUTER;
+                            }
+                        }
+                        counter++;
+                    }
+                }
+            }
+        }
+        return newBoard;
+    }
 
 
 }

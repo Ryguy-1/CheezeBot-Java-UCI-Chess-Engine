@@ -255,8 +255,38 @@ public class Search {
         return true;
     }
 
+    public boolean moveLeadsToCheckCapital(long from, long to, Long[] currentBoard){
+        Long[] tempBoard = Runner.controlAndSeparation.fromToMove(from, to, currentBoard);
+        //checks the moved board (tempBoard) if capital is in check or not.
+        //if capital is not in check for any one of them, we simply return false
+        if(!Runner.checkValidConditions.capitalIsInCheck(tempBoard)){
+            return false;
+        }return true;
+    }
+    public boolean moveLeadsToCheckCapital(String from, String to, Long[] currentBoard){
+        Long[] tempBoard = Runner.controlAndSeparation.fromToMove(from, to, currentBoard);
+        //checks the moved board (tempBoard) if capital is in check or not.
+        //if capital is not in check for any one of them, we simply return false
+        if(!Runner.checkValidConditions.capitalIsInCheck(tempBoard)){
+            return false;
+        }return true;
+    }
 
-
-
+    public boolean moveLeadsToCheckLowerCase(long from, long to, Long[] currentBoard){
+        Long[] tempBoard = Runner.controlAndSeparation.fromToMove(from, to, currentBoard);
+        //checks the moved board (tempBoard) if capital is in check or not.
+        //if capital is not in check for any one of them, we simply return false
+        if(!Runner.checkValidConditions.lowerCaseIsInCheck(tempBoard)){
+            return false;
+        }return true;
+    }
+    public boolean moveLeadsToCheckLowerCase(String from, String to, Long[] currentBoard){
+        Long[] tempBoard = Runner.controlAndSeparation.fromToMove(from, to, currentBoard);
+        //checks the moved board (tempBoard) if capital is in check or not.
+        //if capital is not in check for any one of them, we simply return false
+        if(!Runner.checkValidConditions.lowerCaseIsInCheck(tempBoard)){
+            return false;
+        }return true;
+    }
 
 }
