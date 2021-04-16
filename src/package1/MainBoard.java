@@ -28,20 +28,20 @@ public class MainBoard {
     private Long longEnd1 = parseLong("1000000000000000000000000000000000000000000000000000000000000000", 2);
 
 //    String[][] visualRepresentation = {
-//            {"", "R", "", "", "", "", "", ""},
 //            {"", "", "", "", "", "", "", ""},
-//            {"", "", "", "", "", "", "", ""},
-//            {"", "", "", "", "", "", "", ""},
-//            {"", "", "", "", "", "", "", ""},
-//            {"", "", "", "", "", "", "", ""},
-//            {"", "", "", "", "", "", "", "R"},
-//            {"k", "", "", "", "", "", "", ""}
+//            {"", "", "", "", "N", "", "p", ""},
+//            {"p", "", "", "", "", "", "", "r"},
+//            {"", "", "", "", "", "", "", "p"},
+//            {"", "", "", "", "k", "", "", "P"},
+//            {"", "P", "", "R", "Q", "", "P", "K"},
+//            {"P", "", "", "", "", "", "", ""},
+//            {"", "", "", "", "", "", "", ""}
 //    };
 
     Long[] mainBoard = new Long[12];
 
-    //this is one move ago -> Will use for en passant later on
-    Long[] mainBoardHistory = new Long[12];
+//    //this is one move ago -> Will use for en passant later on
+//    Long[] mainBoardHistory = new Long[12];
 
     //temp random generator
     Random random;
@@ -117,7 +117,7 @@ public class MainBoard {
 
         for (int i = 0; i < mainBoard.length; i++) {
             mainBoard[i] = parseLong(tempStrings[i], 2);
-            mainBoardHistory[i] = mainBoard[i];
+//            mainBoardHistory[i] = mainBoard[i];
         }
 
 
@@ -190,10 +190,10 @@ public class MainBoard {
 
     }
 
-    public void updateMainBoardAndHistory(Long[] newBoard){
-        mainBoardHistory = mainBoard;
-        mainBoard=newBoard;
-    }
+//    public void updateMainBoardAndHistory(Long[] newBoard){
+//        mainBoardHistory = mainBoard;
+//        mainBoard=newBoard;
+//    }
 
 
     //Logic Crazy Chess Implementation of Drawing For Testing Purposes (Modified)
