@@ -19,7 +19,6 @@ public class Search {
             return true;
         }return false;
     }
-
     public boolean allCapitalMovesEqualCheck(Long[] currentBoardSingle){
         //Position 10// (Capital King)
         //
@@ -70,7 +69,6 @@ public class Search {
         //returns true if the king has nowhere to go. Like this because can be used to calculate stalemates if it is in "checkmate" and not in check
         return true;
     }
-
     public boolean allCapitalMovesEqualCheck(Long[][] currentBoard){
         //Position 10// (Capital King)
         //

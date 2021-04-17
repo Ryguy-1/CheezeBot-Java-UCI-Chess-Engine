@@ -45,11 +45,6 @@ public class CheckValidConditions {
 
 
 
-
-
-
-
-
     //Pawns (Threatening Squares - Done, Possible Squares To Move To/Attack - Including En Passant)
 
     ////////Pawn Moves Combined With En Passant///////////////////////////////////

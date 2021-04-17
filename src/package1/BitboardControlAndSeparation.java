@@ -24,7 +24,13 @@ public class BitboardControlAndSeparation {
     }
 
 
+//////////////////////////Position Methods////////////////////////////////////////////////////
 
+
+
+
+
+////////////////////Non-Position Methods///////////////////////////////////////////////
     //This Class:
     //Method to take a from square, a to square, and a bitboard array and make the necessarry changes
     public Long[] fromToMoveWithEnPassant(String from, String to, Long[] currentBoard, Long[] currentBoardHistory){
@@ -258,7 +264,7 @@ public class BitboardControlAndSeparation {
         ////////////////////
         return copyBoard;
     }
-
+/////////////////////////////////////////////////////////////////////////////////////////
 
 
     //Method to Separate the individual pieces in a bitboard into multiple of their own bitboards
