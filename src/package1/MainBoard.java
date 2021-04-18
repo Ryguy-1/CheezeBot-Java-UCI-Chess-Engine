@@ -14,37 +14,41 @@ public class MainBoard {
     //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
 
 
+//    String[][] visualRepresentation = {
+//            {"r", "n", "b", "q", "k", "b", "n", "r"},
+//            {"p", "p", "p", "p", "p", "p", "p", "p"},
+//            {"",  "",  "",  "",  "",  "",  "",  ""},
+//            {"",  "",  "",  "",  "",  "",  "",  ""},
+//            {"",  "",  "",  "",  "",  "",  "",  ""},
+//            {"",  "",  "",  "",  "",  "",  "",  ""},
+//            {"P", "P", "P", "P", "P", "P", "P", "P"},
+//            {"R", "N", "B", "Q", "K", "B", "N", "R"}
+//    };
+
+    public Position mainPosition;
+
+    private Long longEnd1 = parseLong("1000000000000000000000000000000000000000000000000000000000000000", 2);
+
     String[][] visualRepresentation = {
             {"r", "n", "b", "q", "k", "b", "n", "r"},
             {"p", "p", "p", "p", "p", "p", "p", "p"},
             {"",  "",  "",  "",  "",  "",  "",  ""},
+            {"",  "",  "",  "p",  "",  "",  "",  ""},
             {"",  "",  "",  "",  "",  "",  "",  ""},
-            {"",  "",  "",  "",  "",  "",  "",  ""},
-            {"",  "",  "",  "",  "",  "",  "",  ""},
+            {"",  "",  "n",  "",  "",  "",  "",  ""},
             {"P", "P", "P", "P", "P", "P", "P", "P"},
             {"R", "N", "B", "Q", "K", "B", "N", "R"}
     };
 
-    private Long longEnd1 = parseLong("1000000000000000000000000000000000000000000000000000000000000000", 2);
 
-//    String[][] visualRepresentation = {
-//            {"", "", "", "", "", "", "", ""},
-//            {"", "", "", "", "N", "", "p", ""},
-//            {"p", "", "", "", "", "", "", "r"},
-//            {"", "", "", "", "", "", "", "p"},
-//            {"", "", "", "", "k", "", "", "P"},
-//            {"", "P", "", "R", "Q", "", "P", "K"},
-//            {"P", "", "", "", "", "", "", ""},
-//            {"", "", "", "", "", "", "", ""}
-//    };
-
-    Long[] mainBoard = new Long[12];
 
 //    //this is one move ago -> Will use for en passant later on
 //    Long[] mainBoardHistory = new Long[12];
 
     //temp random generator
     Random random;
+
+
 
     MainBoard(){
         initializeBoard();
@@ -53,6 +57,7 @@ public class MainBoard {
 
     private void initializeBoard(){
 
+        Long[] mainBoardInitializer = new Long[12];
 
         //string array that will be converted to longs later
         String[] tempStrings = new String[12];
@@ -114,27 +119,22 @@ public class MainBoard {
                 counter++;
             }
         }
+        for (int i = 0; i < mainBoardInitializer.length; i++) {
+            mainBoardInitializer[i] = parseLong(tempStrings[i], 2);
 
-        for (int i = 0; i < mainBoard.length; i++) {
-            mainBoard[i] = parseLong(tempStrings[i], 2);
-//            mainBoardHistory[i] = mainBoard[i];
         }
-
-
-        //sysoMainBoard();
-        //sysoMainBoardLong();
-
+        mainPosition = new Position(mainBoardInitializer);
 
     }
 
     public void sysoMainBoard(){
-        for (Long l : mainBoard) {
+        for (Long l : mainPosition.getCurrentBoard()) {
             System.out.println(parseString(l));
         }
     }
 
     public void sysoMainBoardLong(){
-        for (Long l : mainBoard) {
+        for (Long l : mainPosition.getCurrentBoard()) {
             System.out.println(l);
         }
     }
@@ -222,97 +222,100 @@ public class MainBoard {
         }
     }
 
-    public Long[] moveRandom(String casing, Long[] currentBoard){
-        Long[] newBoard = new Long[12];
-        if(casing.equals("c")){
-            //capital
-
-            //NOT IMPLEMENTED
-
-        }else if(casing.equals("l")){
-
-            //splits the bitboard array into a 2d array for simplicity
-            Long[][] splitBitboardArray = Runner.controlAndSeparation.splitBitboardArray(currentBoard);
-            //takes only the lower case pieces from the 2d array
-            Long[][] lowerCasePieces2d = {splitBitboardArray[0], splitBitboardArray[1], splitBitboardArray[2], splitBitboardArray[3], splitBitboardArray[4], splitBitboardArray[5]};
-
-            //finds the total amount of pieces on the board
-            int totalPieces = 0;
-            for (int i = 0; i < lowerCasePieces2d.length; i++) {
-                for (int j = 0; j < lowerCasePieces2d[i].length; j++) {
-                    totalPieces++;
-                }
-            }
-
-            //chooses a random piece
-            int randomPiece = random.nextInt(totalPieces);
-
-            int chosenPiece = 0;
-            int counter = 0;
-            long possibleMoves = 0l;
-            long chosenMove = 0l;
-            //see comments above
-            boolean hasFoundMove = false;
-            while(!hasFoundMove){
-
-                randomPiece = random.nextInt(totalPieces);
-                //chosenPiece++;
-                counter=0;
-                OUTER: for (int i = 0; i < lowerCasePieces2d.length; i++) {
-                    for (int j = 0; j < lowerCasePieces2d[i].length; j++) {
-                        if(counter==randomPiece){ //was chosenPiece
-                            //this is the random piece chosen
-                            switch(i){
-                                case 0://lower case rook
-                                    //gets the possible moves for that individual piece of this piece type
-                                    possibleMoves = Runner.checkValidConditions.getLowerCaseRookMoves(lowerCasePieces2d[i][j], currentBoard);
-                                    break;
-                                case 1://lower case knight
-                                    //gets the possible moves for that individual piece of this piece type
-                                    possibleMoves = Runner.checkValidConditions.getLowerCaseKnightMoves(lowerCasePieces2d[i][j], currentBoard);
-                                    break;
-                                case 2://lower case Bishop
-                                    //gets the possible moves for that individual piece of this piece type
-                                    possibleMoves = Runner.checkValidConditions.getLowerCaseBishopMoves(lowerCasePieces2d[i][j], currentBoard);
-                                    break;
-                                case 3://lower case Queen
-                                    //gets the possible moves for that individual piece of this piece type
-                                    possibleMoves = Runner.checkValidConditions.getLowerCaseQueenMoves(lowerCasePieces2d[i][j], currentBoard);
-                                    break;
-                                case 4://lower case King
-                                    //gets the possible moves for that individual piece of this piece type
-                                    possibleMoves = Runner.checkValidConditions.getLowerCaseKingMoves(lowerCasePieces2d[i][j], currentBoard);
-                                    break;
-                                case 5://lower case Pawns
-                                    //gets the possible moves for that individual piece of this piece type
-                                    possibleMoves = Runner.checkValidConditions.getLowerCasePawnCombined(lowerCasePieces2d[i][j], currentBoard);
-                                    break;
-                            }
-                            //pick a random possible move
-                            Long[] allIndividualMoves = Runner.controlAndSeparation.splitBitboard(possibleMoves);
-                            //pick a random individual move
-                            //if there are no possible moves, break outer and try again
-                            if(allIndividualMoves.length==0){
-                                break OUTER;
-                            }
-                            chosenMove = allIndividualMoves[random.nextInt(allIndividualMoves.length)];
-                            //gets the new board after the possible move was made
-                            newBoard = Runner.controlAndSeparation.fromToMove(lowerCasePieces2d[i][j], chosenMove, currentBoard);
-                            //if lower case is in check afterwards, then this is not a valid move, so break outer and try again
-                            if(Runner.checkValidConditions.lowerCaseIsInCheck(newBoard)){
-                                break OUTER;
-                            }else{ //if lower case is not in check afterwards, then this is a valid move, so you have found the move, can break outer, and continue onwards to make that move a reality :)
-                                hasFoundMove = true;
-                                break OUTER;
-                            }
-                        }
-                        counter++;
-                    }
-                }
-            }
-        }
-        return newBoard;
-    }
+//    public Long[] moveRandom(String casing, Position pos){
+//
+//        Long[] currentBoard = pos.getCurrentBoard();
+//
+//        Long[] newBoard = new Long[12];
+//        if(casing.equals("c")){
+//            //capital
+//
+//            //NOT IMPLEMENTED
+//
+//        }else if(casing.equals("l")){
+//
+//            //splits the bitboard array into a 2d array for simplicity
+//            Long[][] splitBitboardArray = Runner.controlAndSeparation.splitBitboardArray(currentBoard);
+//            //takes only the lower case pieces from the 2d array
+//            Long[][] lowerCasePieces2d = {splitBitboardArray[0], splitBitboardArray[1], splitBitboardArray[2], splitBitboardArray[3], splitBitboardArray[4], splitBitboardArray[5]};
+//
+//            //finds the total amount of pieces on the board
+//            int totalPieces = 0;
+//            for (int i = 0; i < lowerCasePieces2d.length; i++) {
+//                for (int j = 0; j < lowerCasePieces2d[i].length; j++) {
+//                    totalPieces++;
+//                }
+//            }
+//
+//            //chooses a random piece
+//            int randomPiece = random.nextInt(totalPieces);
+//
+//            int chosenPiece = 0;
+//            int counter = 0;
+//            long possibleMoves = 0l;
+//            long chosenMove = 0l;
+//            //see comments above
+//            boolean hasFoundMove = false;
+//            while(!hasFoundMove){
+//
+//                randomPiece = random.nextInt(totalPieces);
+//                //chosenPiece++;
+//                counter=0;
+//                OUTER: for (int i = 0; i < lowerCasePieces2d.length; i++) {
+//                    for (int j = 0; j < lowerCasePieces2d[i].length; j++) {
+//                        if(counter==randomPiece){ //was chosenPiece
+//                            //this is the random piece chosen
+//                            switch(i){
+//                                case 0://lower case rook
+//                                    //gets the possible moves for that individual piece of this piece type
+//                                    possibleMoves = Runner.checkValidConditions.getLowerCaseRookMoves(lowerCasePieces2d[i][j], pos);
+//                                    break;
+//                                case 1://lower case knight
+//                                    //gets the possible moves for that individual piece of this piece type
+//                                    possibleMoves = Runner.checkValidConditions.getLowerCaseKnightMoves(lowerCasePieces2d[i][j], pos);
+//                                    break;
+//                                case 2://lower case Bishop
+//                                    //gets the possible moves for that individual piece of this piece type
+//                                    possibleMoves = Runner.checkValidConditions.getLowerCaseBishopMoves(lowerCasePieces2d[i][j], pos);
+//                                    break;
+//                                case 3://lower case Queen
+//                                    //gets the possible moves for that individual piece of this piece type
+//                                    possibleMoves = Runner.checkValidConditions.getLowerCaseQueenMoves(lowerCasePieces2d[i][j], pos);
+//                                    break;
+//                                case 4://lower case King
+//                                    //gets the possible moves for that individual piece of this piece type
+//                                    possibleMoves = Runner.checkValidConditions.getLowerCaseKingMoves(pos);
+//                                    break;
+//                                case 5://lower case Pawns
+//                                    //gets the possible moves for that individual piece of this piece type
+//                                    possibleMoves = Runner.checkValidConditions.getLowerCasePawnCombined(lowerCasePieces2d[i][j], pos);
+//                                    break;
+//                            }
+//                            //pick a random possible move
+//                            Long[] allIndividualMoves = Runner.controlAndSeparation.splitBitboard(possibleMoves);
+//                            //pick a random individual move
+//                            //if there are no possible moves, break outer and try again
+//                            if(allIndividualMoves.length==0){
+//                                break OUTER;
+//                            }
+//                            chosenMove = allIndividualMoves[random.nextInt(allIndividualMoves.length)];
+//                            //gets the new board after the possible move was made
+//                            newBoard = Runner.controlAndSeparation.fromToMove(lowerCasePieces2d[i][j], chosenMove, currentBoard);
+//                            //if lower case is in check afterwards, then this is not a valid move, so break outer and try again
+//                            if(Runner.checkValidConditions.lowerCaseIsInCheck(newBoard)){
+//                                break OUTER;
+//                            }else{ //if lower case is not in check afterwards, then this is a valid move, so you have found the move, can break outer, and continue onwards to make that move a reality :)
+//                                hasFoundMove = true;
+//                                break OUTER;
+//                            }
+//                        }
+//                        counter++;
+//                    }
+//                }
+//            }
+//        }
+//        return newBoard;
+//    }
 
 
 }
