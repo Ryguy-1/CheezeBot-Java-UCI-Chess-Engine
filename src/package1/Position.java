@@ -9,7 +9,7 @@ public class Position {
     private static Long[] referenceArray;
     private static boolean referenceArrayHasBeenInitialized;
 
-    private static String[][] algebraicNotation = {
+    private final static String[][] algebraicNotation = {
             {"a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8"},
             {"a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7"},
             {"a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6"},
