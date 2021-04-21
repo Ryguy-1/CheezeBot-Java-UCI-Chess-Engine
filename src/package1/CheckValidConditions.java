@@ -8,7 +8,15 @@ public class CheckValidConditions {
 
     public final long longCastleCapitalIntermediateSpaces;
     public final long longCastleCapitalAllInvolvedSpaces;
-            //5, 6, 7
+
+    public final long shortCastleCapitalIntermediateSpaces;
+    public final long shortCastleCapitalAllInvolvedSpaces;
+
+    public final long longCastleLowerCaseIntermediateSpaces;
+    public final long longCastleLowerCaseAllInvolvedSpaces;
+
+    public final long shortCastleLowerCaseIntermediateSpaces;
+    public final long shortCastleLowerCaseAllInvolvedSpaces;
 
     //>>> for right shift
     //<< for left shift because it is automatically unsigned
@@ -33,6 +41,15 @@ public class CheckValidConditions {
 
         longCastleCapitalIntermediateSpaces = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000001110000", 2);
         longCastleCapitalAllInvolvedSpaces = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000011111000", 2);
+
+        shortCastleCapitalIntermediateSpaces = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000000110", 2);
+        shortCastleCapitalAllInvolvedSpaces = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000001111", 2);
+
+        longCastleLowerCaseIntermediateSpaces = Runner.mainBoard.parseLong("0111000000000000000000000000000000000000000000000000000000000000", 2);
+        longCastleLowerCaseAllInvolvedSpaces = Runner.mainBoard.parseLong("1111100000000000000000000000000000000000000000000000000000000000", 2);
+
+        shortCastleLowerCaseIntermediateSpaces = Runner.mainBoard.parseLong("0000011000000000000000000000000000000000000000000000000000000000", 2);
+        shortCastleLowerCaseAllInvolvedSpaces = Runner.mainBoard.parseLong("0000111100000000000000000000000000000000000000000000000000000000", 2);
     }
 
 
@@ -706,6 +723,12 @@ public class CheckValidConditions {
             movesetGeneral = movesetGeneral&(~currentBoard[i]);
         }
 
+        //if capital can castle long, add that space, and if capital can castle short, add the other space
+
+
+
+
+
         return movesetGeneral & (~getAttackingSquaresByCasingNoKing(pos, 'l'));
     }
     public long getLowerCaseKingMoves(Position pos){
@@ -735,6 +758,8 @@ public class CheckValidConditions {
     }
     /////////////////////////
 
+
+    //untested
     private boolean capitalCanCastleLong(Position pos){
         //if either the AFile(left) rook or the king have moved, return false as this is immediately illegal
         if(pos.getCapitalAFileRookHasMoved() || pos.getCapitalKingHasMoved()){
@@ -744,6 +769,48 @@ public class CheckValidConditions {
             //2) no pieces checking either the rook, king, or any of the empty squares in between
             long totalBoard = Runner.controlAndSeparation.condenseBoard(pos.getCurrentBoard());
             if(((totalBoard & longCastleCapitalIntermediateSpaces)==0) && ((getAttackingSquaresByCasing(pos, 'l') & longCastleCapitalAllInvolvedSpaces)==0)){
+                //if there are no intermediate pieces and if the enemy is not attacking the origin squares of the rook, king, or any pieces in between
+                return true;
+            }return false; //if either of those conditions are false, you cannot castle
+        }
+    }
+    private boolean capitalCanCastleShort(Position pos){
+        //if either the AFile(left) rook or the king have moved, return false as this is immediately illegal
+        if(pos.getCapitalHFileRookHasMoved() || pos.getCapitalKingHasMoved()){
+            return false;
+        }else{ //otherwise, if neither have moved it is legal as long as there are...
+            //1) no pieces in the way
+            //2) no pieces checking either the rook, king, or any of the empty squares in between
+            long totalBoard = Runner.controlAndSeparation.condenseBoard(pos.getCurrentBoard());
+            if(((totalBoard & shortCastleCapitalIntermediateSpaces)==0) && ((getAttackingSquaresByCasing(pos, 'l') & shortCastleCapitalAllInvolvedSpaces)==0)){
+                //if there are no intermediate pieces and if the enemy is not attacking the origin squares of the rook, king, or any pieces in between
+                return true;
+            }return false; //if either of those conditions are false, you cannot castle
+        }
+    }
+    private boolean lowerCaseCanCastleLong(Position pos){
+        //if either the AFile(left) rook or the king have moved, return false as this is immediately illegal
+        if(pos.getLowerCaseAFileRookHasMoved() || pos.getLowerCaseKingHasMoved()){
+            return false;
+        }else{ //otherwise, if neither have moved it is legal as long as there are...
+            //1) no pieces in the way
+            //2) no pieces checking either the rook, king, or any of the empty squares in between
+            long totalBoard = Runner.controlAndSeparation.condenseBoard(pos.getCurrentBoard());
+            if(((totalBoard & longCastleLowerCaseIntermediateSpaces)==0) && ((getAttackingSquaresByCasing(pos, 'c') & longCastleLowerCaseAllInvolvedSpaces)==0)){
+                //if there are no intermediate pieces and if the enemy is not attacking the origin squares of the rook, king, or any pieces in between
+                return true;
+            }return false; //if either of those conditions are false, you cannot castle
+        }
+    }
+    private boolean lowerCaseCanCastleShort(Position pos){
+        //if either the AFile(left) rook or the king have moved, return false as this is immediately illegal
+        if(pos.getLowerCaseHFileRookHasMoved() || pos.getLowerCaseKingHasMoved()){
+            return false;
+        }else{ //otherwise, if neither have moved it is legal as long as there are...
+            //1) no pieces in the way
+            //2) no pieces checking either the rook, king, or any of the empty squares in between
+            long totalBoard = Runner.controlAndSeparation.condenseBoard(pos.getCurrentBoard());
+            if(((totalBoard & shortCastleLowerCaseIntermediateSpaces)==0) && ((getAttackingSquaresByCasing(pos, 'c') & shortCastleLowerCaseAllInvolvedSpaces)==0)){
                 //if there are no intermediate pieces and if the enemy is not attacking the origin squares of the rook, king, or any pieces in between
                 return true;
             }return false; //if either of those conditions are false, you cannot castle
