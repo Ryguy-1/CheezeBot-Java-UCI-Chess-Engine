@@ -16,33 +16,20 @@ public class Runner {
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//NEXT: FINISH UP TESTING ALL THE PUBLIC METHODS IN CHECKVALIDCONDITIONS, THEN ADD CASTLING
+//NEXT: ADD CASTLING IN CHECKVALIDCONDITIONS/ ADD PROMOTION IN POSITION MOVE METHODS AND CASTLING
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 
-    //methods that work in checkvalidconditions:
-        //PAWNS - tested
-        //- getCapitalEnPassantMoves
-        //- getLowerCaseEnPassantMoves
-        //- getCapitalPawnCombined (both)
-        //- getLowerCasePawnCombined (both)
-
-        //KNIGHTS - tested
-        //- getCapitalKnightMoves (both)
-        //- getLowerCaseKnightMoves (both)
-
-        //
 
 
-        long thisPiece = controlAndSeparation.splitBitboard(mainBoard.mainPosition.getCurrentBoard()[1])[0];
+
+        long thisPiece = mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000000000", 2);
 
         mainBoard.visualizeBitboardArray(mainBoard.mainPosition.getCurrentBoard());
 
-        mainBoard.visualizeBitboard(checkValidConditions.getLowerCaseKnightMoves(mainBoard.mainPosition));
-
-
+        mainBoard.visualizeBitboard(checkValidConditions.getLowerCaseKingMoves(mainBoard.mainPosition));
 
 
 

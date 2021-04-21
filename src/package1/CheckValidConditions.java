@@ -6,6 +6,10 @@ public class CheckValidConditions {
     public final long aFile, bFile, gFile, hFile;
     public final long long1;
 
+    public final long longCastleCapitalIntermediateSpaces;
+    public final long longCastleCapitalAllInvolvedSpaces;
+            //5, 6, 7
+
     //>>> for right shift
     //<< for left shift because it is automatically unsigned
 
@@ -26,6 +30,9 @@ public class CheckValidConditions {
         hFile = Runner.mainBoard.parseLong("0000000100000001000000010000000100000001000000010000000100000001", 2);
 
         long1 = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000000001", 2);
+
+        longCastleCapitalIntermediateSpaces = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000001110000", 2);
+        longCastleCapitalAllInvolvedSpaces = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000011111000", 2);
     }
 
 
@@ -38,7 +45,33 @@ public class CheckValidConditions {
 
 //////////USING POSITION OBJECT////////////////////////////////////////////////////////////////////////////////
 
-    //Public Pawn Methods...
+    //PAWNS - tested
+    //- getCapitalEnPassantMoves
+    //- getLowerCaseEnPassantMoves
+    //- getCapitalPawnCombined (both)
+    //- getLowerCasePawnCombined (both)
+
+    //KNIGHTS - tested
+    //- getCapitalKnightMoves (both)
+    //- getLowerCaseKnightMoves (both)
+
+    //BISHOPS - tested
+    //- getCapitalBishopMoves (both)
+    //- getLowerCaseBishopMoves (both)
+
+    //QUEENS - tested
+    //- getCapitalQueenMoves (both)
+    //- getLowerCaseQueenMoves (both)
+
+    //ROOKS / KINGS WITHOUT CASTLING - tested
+    //- getCapitalRookMoves (both)
+    //- getLowerCaseRookMoves (both)
+    //- getCapitalKingMoves
+    //- getLowerCaseKingMoves
+
+
+
+    //Public Pawn Methods
     ////////Pawn En Passant Moves (Used only in BitboardControlAndSeparation)
     public long getCapitalEnPassantMoves(Position pos){
         Long[] currentBoard = pos.getCurrentBoard();
@@ -76,7 +109,7 @@ public class CheckValidConditions {
 
         //geometrically and with pieces bitboard returned
         return enPassantAttackBitboardAddition;
-    } //working
+    }
     public long getLowerCaseEnPassantMoves(Position pos){
         Long[] currentBoard = pos.getCurrentBoard();
         Long[] currentBoardHistory = pos.getCurrentBoardHistory();
@@ -113,7 +146,7 @@ public class CheckValidConditions {
 
         //geometrically and with pieces bitboard returned
         return enPassantAttackBitboardAddition;
-    } //working
+    }
     ///////////////////////////////////////////////////////////////////////////////
     public long getCapitalPawnCombined(Position pos){
         return getCapitalPawnForwardMoves(pos)|getCapitalPawnAttacks(pos);
@@ -123,6 +156,10 @@ public class CheckValidConditions {
     }
     /////////////////////////////////////////////////////////////////////////
     public long getCapitalPawnCombined(long thisPiece, Position pos){
+
+        if(thisPiece==0l){
+            return 0l;
+        }
 
         Long[] currentBoard = pos.getCurrentBoard();
         Long[] currentBoardHistory = pos.getCurrentBoardHistory();
@@ -178,48 +215,13 @@ public class CheckValidConditions {
 
         return attacksTotal | forwardOnly;
 
-
-//        Long[] currentBoard = pos.getCurrentBoard();
-//
-//        //index 11
-////        //newBoard is a copy of currentBoard, but with just the moves that that thisPiece can make if it was the only piece of its type on the board
-//        Long[] newBoard = Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 11, thisPiece);
-//
-//        //attacks substituted with thisPiece
-//
-//        //Position 11//
-//        //aFile makes sure right pawn still works. Take compliment of a file -> If it is not in the aFile, then it is okay
-//        long pawnAttacksRight = (thisPiece<<7)&(~aFile);
-//        //h file makes sure left pawn still works. Same thing as aFile with hFile
-//        long pawnAttacksLeft = (thisPiece<<9)&(~hFile);
-//        //bitboard of all places you can move to without taking into account if they have pieces or not
-//        long combined = pawnAttacksLeft|pawnAttacksRight;
-//        //spaces with pieces on them
-//        long withPieces= 0l;
-//        //for loop only iterates over lower case pieces because capital can only capture lower case diagonally with pawns
-//        for (int i = 0; i < currentBoard.length/2; i++) {
-//            withPieces = withPieces|currentBoard[i];
-//        }
-//        long attacks = combined&withPieces;
-//
-//        //moves need to be recalculated because can move twice forward -> (!!Substitute the array of pawns for just the one pawn thisPiece bitboard!!)
-//        long pawnMovesOne = thisPiece<<8;
-//        //excludes bad moves one move forward
-//        for (int i = 0; i < currentBoard.length; i++) {
-//            pawnMovesOne = pawnMovesOne^currentBoard[i]&pawnMovesOne;
-//        }
-//        //spaces that work in the fourth file because there are no pieces in the 3rd file before it
-//        long pawnMovesTwo = ((rank2<<8)&pawnMovesOne)<<8;
-//        //Excludes spaces in the fourth file with pieces on them
-//        for (int i = 0; i < currentBoard.length; i++) {
-//            pawnMovesTwo = pawnMovesTwo^currentBoard[i]&pawnMovesTwo;
-//        }
-//        long pawnForwardCombined = pawnMovesOne|pawnMovesTwo;
-//
-//
-//        return pawnForwardCombined | attacks;
     }
     public long getLowerCasePawnCombined(long thisPiece, Position pos){
+
+        if(thisPiece==0l){
+            return 0l;
+        }
+
         Long[] currentBoard = pos.getCurrentBoard();
         Long[] currentBoardHistory = pos.getCurrentBoardHistory();
 
@@ -445,6 +447,11 @@ public class CheckValidConditions {
         return combined&withPieces;
     }
     private long getCapitalPawnAttacksWithoutEnPassant(long thisPiece, Position pos){
+
+        if(thisPiece==0l){
+            return 0l;
+        }
+
         Long[] currentBoard = pos.getCurrentBoard();
         //Position 11//
         //aFile makes sure right pawn still works. Take compliment of a file -> If it is not in the aFile, then it is okay
@@ -481,6 +488,11 @@ public class CheckValidConditions {
         return combined&withPieces;
     }
     private long getLowerCasePawnAttacksWithoutEnPassant(long thisPiece, Position pos){
+
+        if(thisPiece==0l){
+            return 0l;
+        }
+
         Long[] currentBoard = pos.getCurrentBoard();
         //Position 5//
         //aFile makes sure right pawn still works. Take compliment of a file -> If it is not in the aFile, then it is okay
@@ -521,6 +533,11 @@ public class CheckValidConditions {
         return pawnAttacksLeft|pawnAttacksRight;
     }
     private long getCapitalPawnThreatenedSpaces(long thisPiece, Position pos){
+
+        if(thisPiece==0l){
+            return 0l;
+        }
+
         //Position 11//
         //aFile makes sure right pawn still works. Take compliment of a file -> If it is not in the aFile, then it is okay
         long pawnAttacksRight = (thisPiece<<7)&(~aFile);
@@ -530,6 +547,11 @@ public class CheckValidConditions {
         return pawnAttacksLeft|pawnAttacksRight;
     }
     private long getLowerCasePawnThreatenedSpaces(long thisPiece, Position pos){
+
+        if(thisPiece==0l){
+            return 0l;
+        }
+
         //Position 5//
         //aFile makes sure right pawn still works. Take compliment of a file -> If it is not in the aFile, then it is okay
         long pawnAttacksRight = (thisPiece>>>7)&(~hFile);
@@ -576,6 +598,10 @@ public class CheckValidConditions {
         return possibleMoves;
     }
     public long getCapitalRookMoves(long thisPiece, Position pos){
+
+        if(thisPiece==0l){
+            return 0l;
+        }
 
         Long[] currentBoard = pos.getCurrentBoard();
 
@@ -630,6 +656,10 @@ public class CheckValidConditions {
     }
     public long getLowerCaseRookMoves(long thisPiece, Position pos){
 
+        if(thisPiece==0l){
+            return 0l;
+        }
+
         Long[] currentBoard = pos.getCurrentBoard();
 
         //position 0//
@@ -678,7 +708,6 @@ public class CheckValidConditions {
 
         return movesetGeneral & (~getAttackingSquaresByCasingNoKing(pos, 'l'));
     }
-
     public long getLowerCaseKingMoves(Position pos){
 
         Long[] currentBoard = pos.getCurrentBoard();
@@ -706,6 +735,20 @@ public class CheckValidConditions {
     }
     /////////////////////////
 
+    private boolean capitalCanCastleLong(Position pos){
+        //if either the AFile(left) rook or the king have moved, return false as this is immediately illegal
+        if(pos.getCapitalAFileRookHasMoved() || pos.getCapitalKingHasMoved()){
+            return false;
+        }else{ //otherwise, if neither have moved it is legal as long as there are...
+            //1) no pieces in the way
+            //2) no pieces checking either the rook, king, or any of the empty squares in between
+            long totalBoard = Runner.controlAndSeparation.condenseBoard(pos.getCurrentBoard());
+            if(((totalBoard & longCastleCapitalIntermediateSpaces)==0) && ((getAttackingSquaresByCasing(pos, 'l') & longCastleCapitalAllInvolvedSpaces)==0)){
+                //if there are no intermediate pieces and if the enemy is not attacking the origin squares of the rook, king, or any pieces in between
+                return true;
+            }return false; //if either of those conditions are false, you cannot castle
+        }
+    }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -740,6 +783,11 @@ public class CheckValidConditions {
         return moveset;
     }
     public long getCapitalKnightMoves(long thisPiece, Position pos){
+
+        if(thisPiece==0l){
+            return 0l;
+        }
+
         Long[] currentBoard = pos.getCurrentBoard();
         //position 7//
         return getCapitalKnightMoves(pos) & getCapitalKnightMoves(Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 7, thisPiece));
@@ -791,6 +839,11 @@ public class CheckValidConditions {
         return moveset;
     }
     public long getLowerCaseKnightMoves(long thisPiece, Position pos){
+
+        if(thisPiece==0l){
+            return 0l;
+        }
+
         Long[] currentBoard = pos.getCurrentBoard();
         //position 1//
         return getLowerCaseKnightMoves(pos) & getLowerCaseKnightMoves(Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 1, thisPiece));
@@ -853,6 +906,11 @@ public class CheckValidConditions {
         return possibleMoves;
     }
     public long getCapitalBishopMoves(long thisPiece, Position pos){
+
+        if(thisPiece==0l){
+            return 0l;
+        }
+
         Long[] currentBoard = pos.getCurrentBoard();
         //position 8//
         //Position 8//
@@ -909,6 +967,11 @@ public class CheckValidConditions {
         return possibleMoves;
     }
     public long getLowerCaseBishopMoves(long thisPiece, Position pos){
+
+        if(thisPiece==0l){
+            return 0l;
+        }
+
         Long[] currentBoard = pos.getCurrentBoard();
         //position 2//
         long allPieces = 0l;
@@ -966,6 +1029,10 @@ public class CheckValidConditions {
     }
     public long getCapitalQueenMoves(long thisPiece, Position pos){
 
+        if(thisPiece==0l){
+            return 0l;
+        }
+
         Long[] currentBoard = pos.getCurrentBoard();
 
         //position 9//
@@ -1019,6 +1086,10 @@ public class CheckValidConditions {
         return possibleMoves;
     }
     public long getLowerCaseQueenMoves(long thisPiece, Position pos){
+
+        if(thisPiece==0l){
+            return 0l;
+        }
 
         Long[] currentBoard = pos.getCurrentBoard();
 
@@ -1249,7 +1320,7 @@ public class CheckValidConditions {
             attackingSquares |= getCapitalBishopMoves(pos);
             attackingSquares |= getCapitalQueenMoves(pos);
             attackingSquares |= getCapitalKingMoves(pos);
-            attackingSquares |= getLowerCasePawnThreatenedSpaces(pos);
+            attackingSquares |= getCapitalPawnThreatenedSpaces(pos);
         }else{
             System.out.println("Fatal: Error in Get Attacking Squares By Casing. Invalid Character.");
         }
@@ -1272,7 +1343,7 @@ public class CheckValidConditions {
             attackingSquares |= getCapitalKnightMoves(pos);
             attackingSquares |= getCapitalBishopMoves(pos);
             attackingSquares |= getCapitalQueenMoves(pos);
-            attackingSquares |= getLowerCasePawnThreatenedSpaces(pos);
+            attackingSquares |= getCapitalPawnThreatenedSpaces(pos);
         }else{
             System.out.println("Fatal: Error in Get Attacking Squares By Casing. Invalid Character.");
         }

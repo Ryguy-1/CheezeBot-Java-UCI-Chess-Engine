@@ -86,6 +86,14 @@ public class BitboardControlAndSeparation {
         return condensedBoard;
     }
 
+    public long condenseBoard(Long[] currentBoard){
+        long combined = 0l;
+        for (int i = 0; i < currentBoard.length; i++) {
+            combined |= currentBoard[i];
+        }
+        return combined;
+    }
+
     public Long[] changeBitboardArrayIndex(Long[] currentBoard, int index, long bitboard){
         Long[] copyBoard = new Long[currentBoard.length];
         for (int i = 0; i < currentBoard.length; i++) {
@@ -115,6 +123,7 @@ public class BitboardControlAndSeparation {
         }
         return halfPieces;
     }
+
 
 
 ////////////////////Non-Position Methods///////////////////////////////////////////////
