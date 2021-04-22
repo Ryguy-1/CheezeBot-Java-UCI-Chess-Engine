@@ -7,16 +7,30 @@ public class CheckValidConditions {
     public final long long1;
 
     public final long longCastleCapitalIntermediateSpaces;
-    public final long longCastleCapitalAllInvolvedSpaces;
-
+    public final long longCastleCapitalKingSquares;
     public final long shortCastleCapitalIntermediateSpaces;
-    public final long shortCastleCapitalAllInvolvedSpaces;
-
+    public final long shortCastleCapitalKingSquares;
     public final long longCastleLowerCaseIntermediateSpaces;
-    public final long longCastleLowerCaseAllInvolvedSpaces;
-
+    public final long longCastleLowerCaseKingSquares;
     public final long shortCastleLowerCaseIntermediateSpaces;
-    public final long shortCastleLowerCaseAllInvolvedSpaces;
+    public final long shortCastleLowerCaseKingSquares;
+
+
+    public final long capitalKingLongCastleSquare;
+    public final long capitalKingShortCastleSquare;
+    public final long lowerCaseKingLongCastleSquare;
+    public final long lowerCaseKingShortCastleSquare;
+
+    public final long capitalRookLongCastleSquare;
+    public final long capitalRookShortCastleSquare;
+    public final long lowerCaseRookLongCastleSquare;
+    public final long lowerCaseRookShortCastleSquare;
+
+    public final long capitalAFileRookStartSquare;
+    public final long capitalHFileRookStartSquare;
+    public final long lowerCaseAFileRookStartSquare;
+    public final long lowerCaseHFileRookStartSquare;
+
 
     //>>> for right shift
     //<< for left shift because it is automatically unsigned
@@ -40,16 +54,31 @@ public class CheckValidConditions {
         long1 = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000000001", 2);
 
         longCastleCapitalIntermediateSpaces = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000001110000", 2);
-        longCastleCapitalAllInvolvedSpaces = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000011111000", 2);
+        longCastleCapitalKingSquares = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000111000", 2);
 
         shortCastleCapitalIntermediateSpaces = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000000110", 2);
-        shortCastleCapitalAllInvolvedSpaces = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000001111", 2);
+        shortCastleCapitalKingSquares = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000001110", 2);
 
         longCastleLowerCaseIntermediateSpaces = Runner.mainBoard.parseLong("0111000000000000000000000000000000000000000000000000000000000000", 2);
-        longCastleLowerCaseAllInvolvedSpaces = Runner.mainBoard.parseLong("1111100000000000000000000000000000000000000000000000000000000000", 2);
+        longCastleLowerCaseKingSquares = Runner.mainBoard.parseLong("0011100000000000000000000000000000000000000000000000000000000000", 2);
 
         shortCastleLowerCaseIntermediateSpaces = Runner.mainBoard.parseLong("0000011000000000000000000000000000000000000000000000000000000000", 2);
-        shortCastleLowerCaseAllInvolvedSpaces = Runner.mainBoard.parseLong("0000111100000000000000000000000000000000000000000000000000000000", 2);
+        shortCastleLowerCaseKingSquares = Runner.mainBoard.parseLong("0000111000000000000000000000000000000000000000000000000000000000", 2);
+
+        capitalKingLongCastleSquare = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000100000", 2);
+        capitalKingShortCastleSquare = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000000010", 2);
+        lowerCaseKingLongCastleSquare = Runner.mainBoard.parseLong("0010000000000000000000000000000000000000000000000000000000000000", 2);
+        lowerCaseKingShortCastleSquare = Runner.mainBoard.parseLong("0000001000000000000000000000000000000000000000000000000000000000", 2);
+
+        capitalRookLongCastleSquare = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000010000", 2);
+        capitalRookShortCastleSquare = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000000100", 2);
+        lowerCaseRookLongCastleSquare = Runner.mainBoard.parseLong("0001000000000000000000000000000000000000000000000000000000000000", 2);
+        lowerCaseRookShortCastleSquare = Runner.mainBoard.parseLong("0000010000000000000000000000000000000000000000000000000000000000", 2);
+
+        capitalAFileRookStartSquare = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000010000000", 2);
+        capitalHFileRookStartSquare = Runner.mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000000001", 2);
+        lowerCaseAFileRookStartSquare = Runner.mainBoard.parseLong("1000000000000000000000000000000000000000000000000000000000000000", 2);
+        lowerCaseHFileRookStartSquare = Runner.mainBoard.parseLong("0000000100000000000000000000000000000000000000000000000000000000", 2);
     }
 
 
@@ -86,6 +115,8 @@ public class CheckValidConditions {
     //- getCapitalKingMoves
     //- getLowerCaseKingMoves
 
+    //ROOKS / KINGS NORMAL
+    //-
 
 
     //Public Pawn Methods
@@ -612,6 +643,13 @@ public class CheckValidConditions {
         }
 
 
+        if(capitalCanCastleLong(pos)){
+            possibleMoves |= capitalRookLongCastleSquare;
+        }
+        if(capitalCanCastleShort(pos)){
+            possibleMoves |= capitalRookShortCastleSquare;
+        }
+
         return possibleMoves;
     }
     public long getCapitalRookMoves(long thisPiece, Position pos){
@@ -638,7 +676,48 @@ public class CheckValidConditions {
             goodPieces = goodPieces|currentBoard[i];
         }
 
-        return getVerticalHorizontalMovesSingle(goodPieces, badPieces, thisPiece);
+        long castleAddition = 0l;
+        //if capital can castle long (both the capital left rook and the capital king haven't moved), and the piece you want is the rook on the left rook starting square,
+        //then you must want to move the rook on the a file starting square which cannot have moved yet.
+        //THINKING HERE LAST!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //(think an else if is okay because you are only selecting a single piece at once. Slightly more efficient.)
+        if(capitalCanCastleLong(pos) && ((thisPiece & capitalAFileRookStartSquare)!=0)){
+            castleAddition |= capitalRookLongCastleSquare;
+        }else if(capitalCanCastleShort(pos) && ((thisPiece & capitalHFileRookStartSquare)!=0)){
+            castleAddition |= capitalRookShortCastleSquare;
+        }
+
+        return castleAddition | getVerticalHorizontalMovesSingle(goodPieces, badPieces, thisPiece);
+    }
+    private long getCapitalRookMovesCastleLogic(Position pos){
+        Long[] currentBoard = pos.getCurrentBoard();
+
+        //Position 6//
+
+        long possibleMoves = 0l;
+
+        long allPieces = 0l;
+        long badPieces = 0l;
+        long goodPieces = 0l;
+
+        //initializes a bitboard of all pieces
+        for (int i = 0; i < currentBoard.length; i++) {
+            allPieces = allPieces|currentBoard[i];
+        }
+        for (int i = 0; i < currentBoard.length/2; i++) {
+            badPieces = badPieces|currentBoard[i];
+        }
+        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
+            goodPieces = goodPieces|currentBoard[i];
+        }
+
+        Long[] bitboards = Runner.controlAndSeparation.splitBitboard(currentBoard[6]);
+        for (int i = 0; i < bitboards.length; i++) {
+            possibleMoves |= getVerticalHorizontalMovesSingle(goodPieces, badPieces, bitboards[i]);
+        }
+
+
+        return possibleMoves;
     }
 
     public long getLowerCaseRookMoves(Position pos){
@@ -669,6 +748,14 @@ public class CheckValidConditions {
             possibleMoves |= getVerticalHorizontalMovesSingle(goodPieces, badPieces, bitboards[i]);
         }
 
+        if(lowerCaseCanCastleLong(pos)){
+            possibleMoves |= lowerCaseRookLongCastleSquare;
+        }
+        if(lowerCaseCanCastleShort(pos)){
+            possibleMoves |= lowerCaseRookShortCastleSquare;
+        }
+
+
         return possibleMoves;
     }
     public long getLowerCaseRookMoves(long thisPiece, Position pos){
@@ -695,8 +782,49 @@ public class CheckValidConditions {
             goodPieces = goodPieces|currentBoard[i];
         }
 
-        return getVerticalHorizontalMovesSingle(goodPieces, badPieces, thisPiece);
+        long castleAddition = 0l;
+        //if capital can castle long (both the capital left rook and the capital king haven't moved), and the piece you want is the rook on the left rook starting square,
+        //then you must want to move the rook on the a file starting square which cannot have moved yet.
+        //THINKING HERE LAST!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //(think an else if is okay because you are only selecting a single piece at once. Slightly more efficient.)
+        if(lowerCaseCanCastleLong(pos) && ((thisPiece & lowerCaseAFileRookStartSquare)!=0)){
+            castleAddition |= lowerCaseRookLongCastleSquare;
+        }else if(lowerCaseCanCastleShort(pos) && ((thisPiece & lowerCaseHFileRookStartSquare)!=0)){
+            castleAddition |= lowerCaseRookShortCastleSquare;
+        }
 
+        return castleAddition | getVerticalHorizontalMovesSingle(goodPieces, badPieces, thisPiece);
+
+    }
+    private long getLowerCaseRookMovesCastleLogic(Position pos){
+
+        Long[] currentBoard = pos.getCurrentBoard();
+
+        //Position 0//
+
+        long possibleMoves = 0l;
+
+        long allPieces = 0l;
+        long badPieces = 0l;
+        long goodPieces = 0l;
+
+        //initializes a bitboard of all pieces
+        for (int i = 0; i < currentBoard.length; i++) {
+            allPieces = allPieces|currentBoard[i];
+        }
+        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
+            badPieces = badPieces|currentBoard[i];
+        }
+        for (int i = 0; i < currentBoard.length/2; i++) {
+            goodPieces = goodPieces|currentBoard[i];
+        }
+
+        Long[] bitboards = Runner.controlAndSeparation.splitBitboard(currentBoard[0]);
+        for (int i = 0; i < bitboards.length; i++) {
+            possibleMoves |= getVerticalHorizontalMovesSingle(goodPieces, badPieces, bitboards[i]);
+        }
+
+        return possibleMoves;
     }
     ///////////////////////
 
@@ -725,8 +853,37 @@ public class CheckValidConditions {
 
         //if capital can castle long, add that space, and if capital can castle short, add the other space
 
+        if(capitalCanCastleLong(pos)){
+            movesetGeneral |= capitalKingLongCastleSquare;
+        }
+        if(capitalCanCastleShort(pos)){
+            movesetGeneral |= capitalKingShortCastleSquare;
+        }
 
 
+
+        return movesetGeneral & (~getAttackingSquaresByCasingNoKing(pos, 'l'));
+    }
+    private long getCapitalKingMovesCastleLogic(Position pos){
+
+        Long[] currentBoard = pos.getCurrentBoard();
+
+        //position 10//
+        long movesetGeneral = 0l;
+
+        movesetGeneral |= (currentBoard[10]<<9 & (~hFile));
+        movesetGeneral |= (currentBoard[10]<<1 & (~hFile));
+        movesetGeneral |= (currentBoard[10]>>>7 & (~hFile));
+        movesetGeneral |= (currentBoard[10]>>>8);
+        movesetGeneral |= (currentBoard[10]>>>9 & (~aFile));
+        movesetGeneral |= (currentBoard[10]>>>1 & (~aFile));
+        movesetGeneral |= (currentBoard[10]<<7 & (~aFile));
+        movesetGeneral |= (currentBoard[10]<<8);
+
+        //capital pieces start at index len/2
+        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
+            movesetGeneral = movesetGeneral&(~currentBoard[i]);
+        }
 
 
         return movesetGeneral & (~getAttackingSquaresByCasingNoKing(pos, 'l'));
@@ -752,8 +909,40 @@ public class CheckValidConditions {
             movesetGeneral = movesetGeneral&(~currentBoard[i]);
         }
 
+
+        if(lowerCaseCanCastleLong(pos)){
+            movesetGeneral |= lowerCaseKingLongCastleSquare;
+        }
+        if(lowerCaseCanCastleShort(pos)){
+            movesetGeneral |= lowerCaseKingShortCastleSquare;
+        }
+
         return movesetGeneral & (~getAttackingSquaresByCasingNoKing(pos, 'c'));
 
+
+    }
+    private long getLowerCaseKingMovesCastleLogic(Position pos){
+
+        Long[] currentBoard = pos.getCurrentBoard();
+
+        //Position 4//
+        long movesetGeneral = 0l;
+
+        movesetGeneral |= (currentBoard[4]<<9 & (~hFile));
+        movesetGeneral |= (currentBoard[4]<<1 & (~hFile));
+        movesetGeneral |= (currentBoard[4]>>>7 & (~hFile));
+        movesetGeneral |= (currentBoard[4]>>>8);
+        movesetGeneral |= (currentBoard[4]>>>9 & (~aFile));
+        movesetGeneral |= (currentBoard[4]>>>1 & (~aFile));
+        movesetGeneral |= (currentBoard[4]<<7 & (~aFile));
+        movesetGeneral |= (currentBoard[4]<<8);
+
+        //capital pieces start at index len/2
+        for (int i = 0; i < currentBoard.length/2; i++) {
+            movesetGeneral = movesetGeneral&(~currentBoard[i]);
+        }
+
+        return movesetGeneral & (~getAttackingSquaresByCasingNoKing(pos, 'c'));
 
     }
     /////////////////////////
@@ -768,7 +957,7 @@ public class CheckValidConditions {
             //1) no pieces in the way
             //2) no pieces checking either the rook, king, or any of the empty squares in between
             long totalBoard = Runner.controlAndSeparation.condenseBoard(pos.getCurrentBoard());
-            if(((totalBoard & longCastleCapitalIntermediateSpaces)==0) && ((getAttackingSquaresByCasing(pos, 'l') & longCastleCapitalAllInvolvedSpaces)==0)){
+            if(((totalBoard & longCastleCapitalIntermediateSpaces)==0) && ((getAttackingSquaresByCasingCastling(pos, 'l') & longCastleCapitalKingSquares)==0)){
                 //if there are no intermediate pieces and if the enemy is not attacking the origin squares of the rook, king, or any pieces in between
                 return true;
             }return false; //if either of those conditions are false, you cannot castle
@@ -782,7 +971,7 @@ public class CheckValidConditions {
             //1) no pieces in the way
             //2) no pieces checking either the rook, king, or any of the empty squares in between
             long totalBoard = Runner.controlAndSeparation.condenseBoard(pos.getCurrentBoard());
-            if(((totalBoard & shortCastleCapitalIntermediateSpaces)==0) && ((getAttackingSquaresByCasing(pos, 'l') & shortCastleCapitalAllInvolvedSpaces)==0)){
+            if(((totalBoard & shortCastleCapitalIntermediateSpaces)==0) && ((getAttackingSquaresByCasingCastling(pos, 'l') & shortCastleCapitalKingSquares)==0)){
                 //if there are no intermediate pieces and if the enemy is not attacking the origin squares of the rook, king, or any pieces in between
                 return true;
             }return false; //if either of those conditions are false, you cannot castle
@@ -796,7 +985,7 @@ public class CheckValidConditions {
             //1) no pieces in the way
             //2) no pieces checking either the rook, king, or any of the empty squares in between
             long totalBoard = Runner.controlAndSeparation.condenseBoard(pos.getCurrentBoard());
-            if(((totalBoard & longCastleLowerCaseIntermediateSpaces)==0) && ((getAttackingSquaresByCasing(pos, 'c') & longCastleLowerCaseAllInvolvedSpaces)==0)){
+            if(((totalBoard & longCastleLowerCaseIntermediateSpaces)==0) && ((getAttackingSquaresByCasingCastling(pos, 'c') & longCastleLowerCaseKingSquares)==0)){
                 //if there are no intermediate pieces and if the enemy is not attacking the origin squares of the rook, king, or any pieces in between
                 return true;
             }return false; //if either of those conditions are false, you cannot castle
@@ -810,7 +999,7 @@ public class CheckValidConditions {
             //1) no pieces in the way
             //2) no pieces checking either the rook, king, or any of the empty squares in between
             long totalBoard = Runner.controlAndSeparation.condenseBoard(pos.getCurrentBoard());
-            if(((totalBoard & shortCastleLowerCaseIntermediateSpaces)==0) && ((getAttackingSquaresByCasing(pos, 'c') & shortCastleLowerCaseAllInvolvedSpaces)==0)){
+            if(((totalBoard & shortCastleLowerCaseIntermediateSpaces)==0) && ((getAttackingSquaresByCasingCastling(pos, 'c') & shortCastleLowerCaseKingSquares)==0)){
                 //if there are no intermediate pieces and if the enemy is not attacking the origin squares of the rook, king, or any pieces in between
                 return true;
             }return false; //if either of those conditions are false, you cannot castle
@@ -1372,21 +1561,23 @@ public class CheckValidConditions {
     public long getAttackingSquaresByCasing(Position pos, char casing){
         long attackingSquares = 0l;
         //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
+
+        //castlelogic for rooks and kings should be more efficient as castling has nothing to do with spaces attacked.
         if(casing=='l'){
             //capital
-            attackingSquares |= getLowerCaseRookMoves(pos);
+            attackingSquares |= getLowerCaseRookMovesCastleLogic(pos);
             attackingSquares |= getLowerCaseKnightMoves(pos);
             attackingSquares |= getLowerCaseBishopMoves(pos);
             attackingSquares |= getLowerCaseQueenMoves(pos);
-            attackingSquares |= getLowerCaseKingMoves(pos);
+            attackingSquares |= getLowerCaseKingMovesCastleLogic(pos);
             attackingSquares |= getLowerCasePawnThreatenedSpaces(pos);
         }else if(casing=='c'){
             //capital
-            attackingSquares |= getCapitalRookMoves(pos);
+            attackingSquares |= getCapitalRookMovesCastleLogic(pos);
             attackingSquares |= getCapitalKnightMoves(pos);
             attackingSquares |= getCapitalBishopMoves(pos);
             attackingSquares |= getCapitalQueenMoves(pos);
-            attackingSquares |= getCapitalKingMoves(pos);
+            attackingSquares |= getCapitalKingMovesCastleLogic(pos);
             attackingSquares |= getCapitalPawnThreatenedSpaces(pos);
         }else{
             System.out.println("Fatal: Error in Get Attacking Squares By Casing. Invalid Character.");
@@ -1394,19 +1585,21 @@ public class CheckValidConditions {
 
         return attackingSquares;
     }
-    public long getAttackingSquaresByCasingNoKing(Position pos, char casing){
+    private long getAttackingSquaresByCasingNoKing(Position pos, char casing){
         long attackingSquares = 0l;
         //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
         if(casing=='l'){
             //capital
-            attackingSquares |= getLowerCaseRookMoves(pos);
+            //have to put castlelogic for stackoverflow
+            attackingSquares |= getLowerCaseRookMovesCastleLogic(pos);
             attackingSquares |= getLowerCaseKnightMoves(pos);
             attackingSquares |= getLowerCaseBishopMoves(pos);
             attackingSquares |= getLowerCaseQueenMoves(pos);
             attackingSquares |= getLowerCasePawnThreatenedSpaces(pos);
         }else if(casing=='c'){
             //lower case
-            attackingSquares |= getCapitalRookMoves(pos);
+            //have to put castlelogic for stackoverflow
+            attackingSquares |= getCapitalRookMovesCastleLogic(pos);
             attackingSquares |= getCapitalKnightMoves(pos);
             attackingSquares |= getCapitalBishopMoves(pos);
             attackingSquares |= getCapitalQueenMoves(pos);
@@ -1417,6 +1610,33 @@ public class CheckValidConditions {
 
         return attackingSquares;
     }
+    private long getAttackingSquaresByCasingCastling(Position pos, char casing){
+        long attackingSquares = 0l;
+        //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
+        if(casing=='l'){
+            //capital
+            attackingSquares |= getLowerCaseRookMovesCastleLogic(pos);
+            attackingSquares |= getLowerCaseKnightMoves(pos);
+            attackingSquares |= getLowerCaseBishopMoves(pos);
+            attackingSquares |= getLowerCaseQueenMoves(pos);
+            attackingSquares |= getLowerCaseKingMovesCastleLogic(pos);
+            attackingSquares |= getLowerCasePawnThreatenedSpaces(pos);
+        }else if(casing=='c'){
+            //capital
+            attackingSquares |= getCapitalRookMovesCastleLogic(pos);
+            attackingSquares |= getCapitalKnightMoves(pos);
+            attackingSquares |= getCapitalBishopMoves(pos);
+            attackingSquares |= getCapitalQueenMoves(pos);
+            attackingSquares |= getCapitalKingMovesCastleLogic(pos);
+            attackingSquares |= getCapitalPawnThreatenedSpaces(pos);
+        }else{
+            System.out.println("Fatal: Error in Get Attacking Squares By Casing. Invalid Character.");
+        }
+
+        return attackingSquares;
+    }
+
+
 
 
 
