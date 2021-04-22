@@ -82,9 +82,7 @@ public class CheckValidConditions {
     }
 
 
-    //1) Convert Pawns to Use Position Object - Check
-    //2) Make Rooks and Kings Accept Castling: utilizing position object - check for position, not for castling!!
-    //3) That should be it for these methods!! :)
+    //These methods do not check for pins. This requires minor searching.
 
 
     //////////////////////////////////////////////POSITION METHODS//////////////////////////////////////////////////////////
@@ -116,7 +114,7 @@ public class CheckValidConditions {
     //- getLowerCaseKingMoves
 
     //ROOKS / KINGS NORMAL
-    //-
+    //- Tested all lightly -> will test more a little later.
 
 
     //Public Pawn Methods
@@ -612,6 +610,7 @@ public class CheckValidConditions {
 
 
 
+    //may not need to have logic here for rook because it is redundant. It never will add a space which is not already there... Leave for now
 
     //Rooks//////////////// -> Castle with King with Board Position History
     public long getCapitalRookMoves(Position pos){
@@ -643,12 +642,12 @@ public class CheckValidConditions {
         }
 
 
-        if(capitalCanCastleLong(pos)){
-            possibleMoves |= capitalRookLongCastleSquare;
-        }
-        if(capitalCanCastleShort(pos)){
-            possibleMoves |= capitalRookShortCastleSquare;
-        }
+//        if(capitalCanCastleLong(pos)){
+//            possibleMoves |= capitalRookLongCastleSquare;
+//        }
+//        if(capitalCanCastleShort(pos)){
+//            possibleMoves |= capitalRookShortCastleSquare;
+//        }
 
         return possibleMoves;
     }
@@ -676,49 +675,50 @@ public class CheckValidConditions {
             goodPieces = goodPieces|currentBoard[i];
         }
 
-        long castleAddition = 0l;
-        //if capital can castle long (both the capital left rook and the capital king haven't moved), and the piece you want is the rook on the left rook starting square,
-        //then you must want to move the rook on the a file starting square which cannot have moved yet.
-        //THINKING HERE LAST!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //(think an else if is okay because you are only selecting a single piece at once. Slightly more efficient.)
-        if(capitalCanCastleLong(pos) && ((thisPiece & capitalAFileRookStartSquare)!=0)){
-            castleAddition |= capitalRookLongCastleSquare;
-        }else if(capitalCanCastleShort(pos) && ((thisPiece & capitalHFileRookStartSquare)!=0)){
-            castleAddition |= capitalRookShortCastleSquare;
-        }
+//        long castleAddition = 0l;
+//        //if capital can castle long (both the capital left rook and the capital king haven't moved), and the piece you want is the rook on the left rook starting square,
+//        //then you must want to move the rook on the a file starting square which cannot have moved yet.
+//        //THINKING HERE LAST!!!!!!!!!!!!!!!!!!!!!!!!!!
+//        //(think an else if is okay because you are only selecting a single piece at once. Slightly more efficient.)
+//        if(capitalCanCastleLong(pos) && ((thisPiece & capitalAFileRookStartSquare)!=0)){
+//            castleAddition |= capitalRookLongCastleSquare;
+//        }else if(capitalCanCastleShort(pos) && ((thisPiece & capitalHFileRookStartSquare)!=0)){
+//            castleAddition |= capitalRookShortCastleSquare;
+//        }
+//        return castleAddition | getVerticalHorizontalMovesSingle(goodPieces, badPieces, thisPiece);
 
-        return castleAddition | getVerticalHorizontalMovesSingle(goodPieces, badPieces, thisPiece);
+        return getVerticalHorizontalMovesSingle(goodPieces, badPieces, thisPiece);
     }
-    private long getCapitalRookMovesCastleLogic(Position pos){
-        Long[] currentBoard = pos.getCurrentBoard();
-
-        //Position 6//
-
-        long possibleMoves = 0l;
-
-        long allPieces = 0l;
-        long badPieces = 0l;
-        long goodPieces = 0l;
-
-        //initializes a bitboard of all pieces
-        for (int i = 0; i < currentBoard.length; i++) {
-            allPieces = allPieces|currentBoard[i];
-        }
-        for (int i = 0; i < currentBoard.length/2; i++) {
-            badPieces = badPieces|currentBoard[i];
-        }
-        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
-            goodPieces = goodPieces|currentBoard[i];
-        }
-
-        Long[] bitboards = Runner.controlAndSeparation.splitBitboard(currentBoard[6]);
-        for (int i = 0; i < bitboards.length; i++) {
-            possibleMoves |= getVerticalHorizontalMovesSingle(goodPieces, badPieces, bitboards[i]);
-        }
-
-
-        return possibleMoves;
-    }
+//    private long getCapitalRookThreatenedSpaces(Position pos){
+//        Long[] currentBoard = pos.getCurrentBoard();
+//
+//        //Position 6//
+//
+//        long possibleMoves = 0l;
+//
+//        long allPieces = 0l;
+//        long badPieces = 0l;
+//        long goodPieces = 0l;
+//
+//        //initializes a bitboard of all pieces
+//        for (int i = 0; i < currentBoard.length; i++) {
+//            allPieces = allPieces|currentBoard[i];
+//        }
+//        for (int i = 0; i < currentBoard.length/2; i++) {
+//            badPieces = badPieces|currentBoard[i];
+//        }
+//        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
+//            goodPieces = goodPieces|currentBoard[i];
+//        }
+//
+//        Long[] bitboards = Runner.controlAndSeparation.splitBitboard(currentBoard[6]);
+//        for (int i = 0; i < bitboards.length; i++) {
+//            possibleMoves |= getVerticalHorizontalMovesSingle(goodPieces, badPieces, bitboards[i]);
+//        }
+//
+//
+//        return possibleMoves;
+//    }
 
     public long getLowerCaseRookMoves(Position pos){
 
@@ -748,12 +748,12 @@ public class CheckValidConditions {
             possibleMoves |= getVerticalHorizontalMovesSingle(goodPieces, badPieces, bitboards[i]);
         }
 
-        if(lowerCaseCanCastleLong(pos)){
-            possibleMoves |= lowerCaseRookLongCastleSquare;
-        }
-        if(lowerCaseCanCastleShort(pos)){
-            possibleMoves |= lowerCaseRookShortCastleSquare;
-        }
+//        if(lowerCaseCanCastleLong(pos)){
+//            possibleMoves |= lowerCaseRookLongCastleSquare;
+//        }
+//        if(lowerCaseCanCastleShort(pos)){
+//            possibleMoves |= lowerCaseRookShortCastleSquare;
+//        }
 
 
         return possibleMoves;
@@ -782,50 +782,51 @@ public class CheckValidConditions {
             goodPieces = goodPieces|currentBoard[i];
         }
 
-        long castleAddition = 0l;
-        //if capital can castle long (both the capital left rook and the capital king haven't moved), and the piece you want is the rook on the left rook starting square,
-        //then you must want to move the rook on the a file starting square which cannot have moved yet.
-        //THINKING HERE LAST!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //(think an else if is okay because you are only selecting a single piece at once. Slightly more efficient.)
-        if(lowerCaseCanCastleLong(pos) && ((thisPiece & lowerCaseAFileRookStartSquare)!=0)){
-            castleAddition |= lowerCaseRookLongCastleSquare;
-        }else if(lowerCaseCanCastleShort(pos) && ((thisPiece & lowerCaseHFileRookStartSquare)!=0)){
-            castleAddition |= lowerCaseRookShortCastleSquare;
-        }
+//        long castleAddition = 0l;
+//        //if capital can castle long (both the capital left rook and the capital king haven't moved), and the piece you want is the rook on the left rook starting square,
+//        //then you must want to move the rook on the a file starting square which cannot have moved yet.
+//        //THINKING HERE LAST!!!!!!!!!!!!!!!!!!!!!!!!!!
+//        //(think an else if is okay because you are only selecting a single piece at once. Slightly more efficient.)
+//        if(lowerCaseCanCastleLong(pos) && ((thisPiece & lowerCaseAFileRookStartSquare)!=0)){
+//            castleAddition |= lowerCaseRookLongCastleSquare;
+//        }else if(lowerCaseCanCastleShort(pos) && ((thisPiece & lowerCaseHFileRookStartSquare)!=0)){
+//            castleAddition |= lowerCaseRookShortCastleSquare;
+//        }
+//        return castleAddition | getVerticalHorizontalMovesSingle(goodPieces, badPieces, thisPiece);
 
-        return castleAddition | getVerticalHorizontalMovesSingle(goodPieces, badPieces, thisPiece);
+        return getVerticalHorizontalMovesSingle(goodPieces, badPieces, thisPiece);
 
     }
-    private long getLowerCaseRookMovesCastleLogic(Position pos){
-
-        Long[] currentBoard = pos.getCurrentBoard();
-
-        //Position 0//
-
-        long possibleMoves = 0l;
-
-        long allPieces = 0l;
-        long badPieces = 0l;
-        long goodPieces = 0l;
-
-        //initializes a bitboard of all pieces
-        for (int i = 0; i < currentBoard.length; i++) {
-            allPieces = allPieces|currentBoard[i];
-        }
-        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
-            badPieces = badPieces|currentBoard[i];
-        }
-        for (int i = 0; i < currentBoard.length/2; i++) {
-            goodPieces = goodPieces|currentBoard[i];
-        }
-
-        Long[] bitboards = Runner.controlAndSeparation.splitBitboard(currentBoard[0]);
-        for (int i = 0; i < bitboards.length; i++) {
-            possibleMoves |= getVerticalHorizontalMovesSingle(goodPieces, badPieces, bitboards[i]);
-        }
-
-        return possibleMoves;
-    }
+//    private long getLowerCaseRookThreatenedSpaces(Position pos){
+//
+//        Long[] currentBoard = pos.getCurrentBoard();
+//
+//        //Position 0//
+//
+//        long possibleMoves = 0l;
+//
+//        long allPieces = 0l;
+//        long badPieces = 0l;
+//        long goodPieces = 0l;
+//
+//        //initializes a bitboard of all pieces
+//        for (int i = 0; i < currentBoard.length; i++) {
+//            allPieces = allPieces|currentBoard[i];
+//        }
+//        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
+//            badPieces = badPieces|currentBoard[i];
+//        }
+//        for (int i = 0; i < currentBoard.length/2; i++) {
+//            goodPieces = goodPieces|currentBoard[i];
+//        }
+//
+//        Long[] bitboards = Runner.controlAndSeparation.splitBitboard(currentBoard[0]);
+//        for (int i = 0; i < bitboards.length; i++) {
+//            possibleMoves |= getVerticalHorizontalMovesSingle(goodPieces, badPieces, bitboards[i]);
+//        }
+//
+//        return possibleMoves;
+//    }
     ///////////////////////
 
 
@@ -861,10 +862,9 @@ public class CheckValidConditions {
         }
 
 
-
-        return movesetGeneral & (~getAttackingSquaresByCasingNoKing(pos, 'l'));
+        return movesetGeneral & (~getAttackingSquaresByCasing(pos, 'l'));
     }
-    private long getCapitalKingMovesCastleLogic(Position pos){
+    private long getCapitalKingThreatenedSpaces(Position pos){
 
         Long[] currentBoard = pos.getCurrentBoard();
 
@@ -880,13 +880,7 @@ public class CheckValidConditions {
         movesetGeneral |= (currentBoard[10]<<7 & (~aFile));
         movesetGeneral |= (currentBoard[10]<<8);
 
-        //capital pieces start at index len/2
-        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
-            movesetGeneral = movesetGeneral&(~currentBoard[i]);
-        }
-
-
-        return movesetGeneral & (~getAttackingSquaresByCasingNoKing(pos, 'l'));
+        return movesetGeneral;
     }
     public long getLowerCaseKingMoves(Position pos){
 
@@ -917,11 +911,11 @@ public class CheckValidConditions {
             movesetGeneral |= lowerCaseKingShortCastleSquare;
         }
 
-        return movesetGeneral & (~getAttackingSquaresByCasingNoKing(pos, 'c'));
+        return movesetGeneral & (~getAttackingSquaresByCasing(pos, 'c'));
 
 
     }
-    private long getLowerCaseKingMovesCastleLogic(Position pos){
+    private long getLowerCaseKingThreatenedSpaces(Position pos){
 
         Long[] currentBoard = pos.getCurrentBoard();
 
@@ -937,12 +931,7 @@ public class CheckValidConditions {
         movesetGeneral |= (currentBoard[4]<<7 & (~aFile));
         movesetGeneral |= (currentBoard[4]<<8);
 
-        //capital pieces start at index len/2
-        for (int i = 0; i < currentBoard.length/2; i++) {
-            movesetGeneral = movesetGeneral&(~currentBoard[i]);
-        }
-
-        return movesetGeneral & (~getAttackingSquaresByCasingNoKing(pos, 'c'));
+        return movesetGeneral;
 
     }
     /////////////////////////
@@ -957,7 +946,7 @@ public class CheckValidConditions {
             //1) no pieces in the way
             //2) no pieces checking either the rook, king, or any of the empty squares in between
             long totalBoard = Runner.controlAndSeparation.condenseBoard(pos.getCurrentBoard());
-            if(((totalBoard & longCastleCapitalIntermediateSpaces)==0) && ((getAttackingSquaresByCasingCastling(pos, 'l') & longCastleCapitalKingSquares)==0)){
+            if(((totalBoard & longCastleCapitalIntermediateSpaces)==0) && ((getAttackingSquaresByCasing(pos, 'l') & longCastleCapitalKingSquares)==0)){
                 //if there are no intermediate pieces and if the enemy is not attacking the origin squares of the rook, king, or any pieces in between
                 return true;
             }return false; //if either of those conditions are false, you cannot castle
@@ -971,7 +960,7 @@ public class CheckValidConditions {
             //1) no pieces in the way
             //2) no pieces checking either the rook, king, or any of the empty squares in between
             long totalBoard = Runner.controlAndSeparation.condenseBoard(pos.getCurrentBoard());
-            if(((totalBoard & shortCastleCapitalIntermediateSpaces)==0) && ((getAttackingSquaresByCasingCastling(pos, 'l') & shortCastleCapitalKingSquares)==0)){
+            if(((totalBoard & shortCastleCapitalIntermediateSpaces)==0) && ((getAttackingSquaresByCasing(pos, 'l') & shortCastleCapitalKingSquares)==0)){
                 //if there are no intermediate pieces and if the enemy is not attacking the origin squares of the rook, king, or any pieces in between
                 return true;
             }return false; //if either of those conditions are false, you cannot castle
@@ -985,7 +974,7 @@ public class CheckValidConditions {
             //1) no pieces in the way
             //2) no pieces checking either the rook, king, or any of the empty squares in between
             long totalBoard = Runner.controlAndSeparation.condenseBoard(pos.getCurrentBoard());
-            if(((totalBoard & longCastleLowerCaseIntermediateSpaces)==0) && ((getAttackingSquaresByCasingCastling(pos, 'c') & longCastleLowerCaseKingSquares)==0)){
+            if(((totalBoard & longCastleLowerCaseIntermediateSpaces)==0) && ((getAttackingSquaresByCasing(pos, 'c') & longCastleLowerCaseKingSquares)==0)){
                 //if there are no intermediate pieces and if the enemy is not attacking the origin squares of the rook, king, or any pieces in between
                 return true;
             }return false; //if either of those conditions are false, you cannot castle
@@ -999,7 +988,7 @@ public class CheckValidConditions {
             //1) no pieces in the way
             //2) no pieces checking either the rook, king, or any of the empty squares in between
             long totalBoard = Runner.controlAndSeparation.condenseBoard(pos.getCurrentBoard());
-            if(((totalBoard & shortCastleLowerCaseIntermediateSpaces)==0) && ((getAttackingSquaresByCasingCastling(pos, 'c') & shortCastleLowerCaseKingSquares)==0)){
+            if(((totalBoard & shortCastleLowerCaseIntermediateSpaces)==0) && ((getAttackingSquaresByCasing(pos, 'c') & shortCastleLowerCaseKingSquares)==0)){
                 //if there are no intermediate pieces and if the enemy is not attacking the origin squares of the rook, king, or any pieces in between
                 return true;
             }return false; //if either of those conditions are false, you cannot castle
@@ -1007,11 +996,6 @@ public class CheckValidConditions {
     }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
 
 
     //Knight Moves///////////////////////////////////
@@ -1558,411 +1542,94 @@ public class CheckValidConditions {
 
 
     //Attacking Squares of Casing ('c' = capital piece attacks, 'l' = lower case piece attacks)//
+
+    //the general method to get the squares attacked by a player.
     public long getAttackingSquaresByCasing(Position pos, char casing){
         long attackingSquares = 0l;
         //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
 
-        //castlelogic for rooks and kings should be more efficient as castling has nothing to do with spaces attacked.
+        //Threatened Spaces methods: (King used to avoid castling and attack avoid logic) (Rook used to avoid castling logic) (Pawns to only take threatened single diagonal squares)
         if(casing=='l'){
-            //capital
-            attackingSquares |= getLowerCaseRookMovesCastleLogic(pos);
+            //lowerCase
+            attackingSquares |= getLowerCaseRookMoves(pos);        //attackingSquares |= getLowerCaseRookThreatenedSpaces(pos);
             attackingSquares |= getLowerCaseKnightMoves(pos);
             attackingSquares |= getLowerCaseBishopMoves(pos);
             attackingSquares |= getLowerCaseQueenMoves(pos);
-            attackingSquares |= getLowerCaseKingMovesCastleLogic(pos);
+            attackingSquares |= getLowerCaseKingThreatenedSpaces(pos);
             attackingSquares |= getLowerCasePawnThreatenedSpaces(pos);
         }else if(casing=='c'){
             //capital
-            attackingSquares |= getCapitalRookMovesCastleLogic(pos);
+            attackingSquares |= getCapitalRookMoves(pos);            //attackingSquares |= getCapitalRookThreatenedSpaces(pos);
             attackingSquares |= getCapitalKnightMoves(pos);
             attackingSquares |= getCapitalBishopMoves(pos);
             attackingSquares |= getCapitalQueenMoves(pos);
-            attackingSquares |= getCapitalKingMovesCastleLogic(pos);
+            attackingSquares |= getCapitalKingThreatenedSpaces(pos);
             attackingSquares |= getCapitalPawnThreatenedSpaces(pos);
         }else{
             System.out.println("Fatal: Error in Get Attacking Squares By Casing. Invalid Character.");
         }
-
-        return attackingSquares;
-    }
-    private long getAttackingSquaresByCasingNoKing(Position pos, char casing){
-        long attackingSquares = 0l;
-        //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
-        if(casing=='l'){
-            //capital
-            //have to put castlelogic for stackoverflow
-            attackingSquares |= getLowerCaseRookMovesCastleLogic(pos);
-            attackingSquares |= getLowerCaseKnightMoves(pos);
-            attackingSquares |= getLowerCaseBishopMoves(pos);
-            attackingSquares |= getLowerCaseQueenMoves(pos);
-            attackingSquares |= getLowerCasePawnThreatenedSpaces(pos);
-        }else if(casing=='c'){
-            //lower case
-            //have to put castlelogic for stackoverflow
-            attackingSquares |= getCapitalRookMovesCastleLogic(pos);
-            attackingSquares |= getCapitalKnightMoves(pos);
-            attackingSquares |= getCapitalBishopMoves(pos);
-            attackingSquares |= getCapitalQueenMoves(pos);
-            attackingSquares |= getCapitalPawnThreatenedSpaces(pos);
-        }else{
-            System.out.println("Fatal: Error in Get Attacking Squares By Casing. Invalid Character.");
-        }
-
-        return attackingSquares;
-    }
-    private long getAttackingSquaresByCasingCastling(Position pos, char casing){
-        long attackingSquares = 0l;
-        //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
-        if(casing=='l'){
-            //capital
-            attackingSquares |= getLowerCaseRookMovesCastleLogic(pos);
-            attackingSquares |= getLowerCaseKnightMoves(pos);
-            attackingSquares |= getLowerCaseBishopMoves(pos);
-            attackingSquares |= getLowerCaseQueenMoves(pos);
-            attackingSquares |= getLowerCaseKingMovesCastleLogic(pos);
-            attackingSquares |= getLowerCasePawnThreatenedSpaces(pos);
-        }else if(casing=='c'){
-            //capital
-            attackingSquares |= getCapitalRookMovesCastleLogic(pos);
-            attackingSquares |= getCapitalKnightMoves(pos);
-            attackingSquares |= getCapitalBishopMoves(pos);
-            attackingSquares |= getCapitalQueenMoves(pos);
-            attackingSquares |= getCapitalKingMovesCastleLogic(pos);
-            attackingSquares |= getCapitalPawnThreatenedSpaces(pos);
-        }else{
-            System.out.println("Fatal: Error in Get Attacking Squares By Casing. Invalid Character.");
-        }
-
         return attackingSquares;
     }
 
-
-
-
-
-
-
-
-    ///////////////////////////////////////////END POSITION METHODS/////////////////////////////////////////////////////////////
-
-
-
-
-    ////////Pawn Moves Combined Without En Passant///////////////////////////////////
-//    public long getCapitalPawnCombined(Long[] currentBoard){
-//        return getCapitalPawnForwardMoves(currentBoard)|getCapitalPawnAttacksWithoutEnPassant(currentBoard);
+//    //the method used by only the kings which does not take into account either king in the places attacked by the other player
+//    private long getAttackingSquaresByCasingNoKing(Position pos, char casing){
+//        long attackingSquares = 0l;
+//        //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
+//        if(casing=='l'){
+//            //capital
+//            //have to put castlelogic for stackoverflow
+//            attackingSquares |= getLowerCaseRookMovesCastleLogic(pos);
+//            attackingSquares |= getLowerCaseKnightMoves(pos);
+//            attackingSquares |= getLowerCaseBishopMoves(pos);
+//            attackingSquares |= getLowerCaseQueenMoves(pos);
+//            attackingSquares |= getLowerCasePawnThreatenedSpaces(pos);
+//        }else if(casing=='c'){
+//            //lower case
+//            //have to put castlelogic for stackoverflow
+//            attackingSquares |= getCapitalRookMovesCastleLogic(pos);
+//            attackingSquares |= getCapitalKnightMoves(pos);
+//            attackingSquares |= getCapitalBishopMoves(pos);
+//            attackingSquares |= getCapitalQueenMoves(pos);
+//            attackingSquares |= getCapitalPawnThreatenedSpaces(pos);
+//        }else{
+//            System.out.println("Fatal: Error in Get Attacking Squares By Casing. Invalid Character.");
+//        }
+//
+//        return attackingSquares;
 //    }
-//    public long getCapitalPawnCombined(long thisPiece, Long[] currentBoard){
-//        //index 11
-////        //newBoard is a copy of currentBoard, but with just the moves that that thisPiece can make if it was the only piece of its type on the board
-//        Long[] newBoard = Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 11, thisPiece);
-//
-//        //attacks substituted with thisPiece
-//
-//        //Position 11//
-//        //aFile makes sure right pawn still works. Take compliment of a file -> If it is not in the aFile, then it is okay
-//        long pawnAttacksRight = (thisPiece<<7)&(~aFile);
-//        //h file makes sure left pawn still works. Same thing as aFile with hFile
-//        long pawnAttacksLeft = (thisPiece<<9)&(~hFile);
-//        //bitboard of all places you can move to without taking into account if they have pieces or not
-//        long combined = pawnAttacksLeft|pawnAttacksRight;
-//        //spaces with pieces on them
-//        long withPieces= 0l;
-//        //for loop only iterates over lower case pieces because capital can only capture lower case diagonally with pawns
-//        for (int i = 0; i < currentBoard.length/2; i++) {
-//            withPieces = withPieces|currentBoard[i];
-//        }
-//        long attacks = combined&withPieces;
-//
-//        //moves need to be recalculated because can move twice forward -> (!!Substitute the array of pawns for just the one pawn thisPiece bitboard!!)
-//        long pawnMovesOne = thisPiece<<8;
-//        //excludes bad moves one move forward
-//        for (int i = 0; i < currentBoard.length; i++) {
-//            pawnMovesOne = pawnMovesOne^currentBoard[i]&pawnMovesOne;
-//        }
-//        //spaces that work in the fourth file because there are no pieces in the 3rd file before it
-//        long pawnMovesTwo = ((rank2<<8)&pawnMovesOne)<<8;
-//        //Excludes spaces in the fourth file with pieces on them
-//        for (int i = 0; i < currentBoard.length; i++) {
-//            pawnMovesTwo = pawnMovesTwo^currentBoard[i]&pawnMovesTwo;
-//        }
-//        long pawnForwardCombined = pawnMovesOne|pawnMovesTwo;
-//
-//
-//        return pawnForwardCombined | attacks;
-//    }
-//    public long getLowerCasePawnCombined(Long[] currentBoard){
-//        return getLowerCasePawnDownwardsMoves(currentBoard)|getLowerCasePawnAttacksWithoutEnPassant(currentBoard);
-//    }
-//    public long getLowerCasePawnCombined(long thisPiece, Long[] currentBoard){
-//        //index 5
-////        //newBoard is a copy of currentBoard, but with just the moves that that thisPiece can make if it was the only piece of its type on the board
-//        Long[] newBoard = Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 5, thisPiece);
-//
-//        //attacks recalculation
-//        //Position 5//
-//        //aFile makes sure right pawn still works. Take compliment of a file -> If it is not in the aFile, then it is okay
-//        long pawnAttacksRight = (thisPiece>>>7)&(~hFile);
-//        //h file makes sure left pawn still works. Same thing as aFile with hFile
-//        long pawnAttacksLeft = (thisPiece>>>9)&(~aFile);
-//        //bitboard of all places you can move to without taking into account if they have pieces or not
-//        long combined = pawnAttacksLeft|pawnAttacksRight;
-//        //spaces with pieces on them
-//        long withPieces= 0l;
-//        //for loop only iterates over capital pieces (See Capital Piece Method for Better Description)
-//        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
-//            withPieces = withPieces|currentBoard[i];
+//    private long getAttackingSquaresByCasingCastling(Position pos, char casing){
+//        long attackingSquares = 0l;
+//        //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
+//        if(casing=='l'){
+//            //capital
+//            attackingSquares |= getLowerCaseRookMovesCastleLogic(pos);
+//            attackingSquares |= getLowerCaseKnightMoves(pos);
+//            attackingSquares |= getLowerCaseBishopMoves(pos);
+//            attackingSquares |= getLowerCaseQueenMoves(pos);
+//            attackingSquares |= getLowerCaseKingMovesCastleLogic(pos);
+//            attackingSquares |= getLowerCasePawnThreatenedSpaces(pos);
+//        }else if(casing=='c'){
+//            //capital
+//            attackingSquares |= getCapitalRookMovesCastleLogic(pos);
+//            attackingSquares |= getCapitalKnightMoves(pos);
+//            attackingSquares |= getCapitalBishopMoves(pos);
+//            attackingSquares |= getCapitalQueenMoves(pos);
+//            attackingSquares |= getCapitalKingMovesCastleLogic(pos);
+//            attackingSquares |= getCapitalPawnThreatenedSpaces(pos);
+//        }else{
+//            System.out.println("Fatal: Error in Get Attacking Squares By Casing. Invalid Character.");
 //        }
 //
-//        //geometrically and with pieces bitboard returned
-//        long attacks = combined&withPieces;
-//
-//
-//        //Position 5//
-//        long pawnMovesOne = thisPiece>>>8;
-//        //excludes bad moves one move downwards
-//        for (int i = 0; i < currentBoard.length; i++) {
-//            pawnMovesOne = pawnMovesOne^currentBoard[i]&pawnMovesOne;
-//        }
-//        //spaces that work in the fourth file because there are no pieces in the 3rd file before it
-//        long pawnMovesTwo = ((rank7>>>8)&pawnMovesOne)>>>8;
-//        //Excludes spaces in the fourth file with pieces on them
-//        for (int i = 0; i < currentBoard.length; i++) {
-//            pawnMovesTwo = pawnMovesTwo^currentBoard[i]&pawnMovesTwo;
-//        }
-//        long pawnDownwardsCombined = pawnMovesOne|pawnMovesTwo;
-//
-//
-//        return pawnDownwardsCombined | attacks;
+//        return attackingSquares;
 //    }
 
 
-//
-//    //Knight Attacks Special//
-//    public long getCapitalKnightAttacks(Long[] currentBoard){
-//        long possibleMoves = getCapitalKnightMoves(currentBoard);
-//        long withOppositePieces = 0l;
-//
-//        //lower case pieces (pieces you attack) go from 0 to len/2
-//        for (int i = 0; i < currentBoard.length/2; i++) {
-//            withOppositePieces = withOppositePieces|currentBoard[i];
-//        }
-//
-//        return possibleMoves&withOppositePieces;
-//    }
-//    public long getLowerCaseKnightAttacks(Long[] currentBoard){
-//        long possibleMoves = getLowerCaseKnightMoves(currentBoard);
-//        long withOppositePieces = 0l;
-//
-//        //capital pieces (pieces you attack) go from len/2 to len
-//        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
-//            withOppositePieces = withOppositePieces|currentBoard[i];
-//        }
-//
-//        return possibleMoves&withOppositePieces;
-//    }
-//    /////////////////////////
-//
-//
-//
-//
-//
-//
-//
 
-    //Pawns (Threatening Squares - Done, Possible Squares To Move To/Attack - Including En Passant)
-
-    ////////Pawn Moves Combined With En Passant///////////////////////////////////
-//    public long getCapitalPawnCombinedWithEnPassant(Long[] currentBoard, Long[] currentBoardHistory){
-//        return getCapitalPawnForwardMoves(currentBoard)|getCapitalPawnAttacks(currentBoard, currentBoardHistory);
-//    }
-//    public long getLowerCasePawnCombinedWithEnPassant(Long[] currentBoard, Long[] currentBoardHistory){
-//        return getLowerCasePawnDownwardsMoves(currentBoard)|getLowerCasePawnAttacks(currentBoard, currentBoardHistory);
-//    }
-
-    //Supporting Methods... Pawns Combined With EnPassant//
-
-
-    ////////Pawn Attacks Including En Passant////////////////////////////
-//    private long getCapitalPawnAttacks(Long[] currentBoard, Long[] currentBoardHistory){
-//
-//            long allAttacks = getCapitalPawnAttacksWithoutEnPassant(currentBoard);
-//            //En Passant  (Lower Case pawns at position 5)// - If my bitboards are all the same and an enemy pawn disappears from my attack, I can still attack that square and
-//            //remove that pawn through en passant
-//            long enPassantAttackBitboardAddition = 0l;
-//            boolean iWasCaptured = false;
-//            //iterates through capital pieces and checks using xOR statement whether any pieces were changed from the last bitboard to this one. If one was changed,
-//            //the xOR statement would show greater than 1 and this means a piece of yours was captured making an en passant impossible.
-//            for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
-//                if((currentBoard[i]^currentBoardHistory[i])!=0){
-//                    iWasCaptured=true;
-//                }
-//            }
-//            //sets boolean if it moved 2 spaces or not
-//            boolean moved2 = false;
-//            //finds the odd pawn out (does technically include starting space as well because of xOR, but doesn't matter) and checks that it is on rank 5 and not on rank6
-//            long movedToRank5 = ((currentBoard[5]^currentBoardHistory[5])&rank5); //Runner.mainBoard.visualizeBitboard(movedToRank5);
-//            long movedToRank6 = ((currentBoard[5]^currentBoardHistory[5])&rank6); //Runner.mainBoard.visualizeBitboard(movedToRank6);
-//            //for some reason have to put &rank6 or the operation doesn't work correctly entirely
-//            long intermediateSpace = ((currentBoard[5]^currentBoardHistory[5])>>>8)&rank6;
-//            if((movedToRank5!=0) && (movedToRank6==0)){
-//                moved2 = true;
-//            }
-//            System.out.println(moved2);
-//
-//            //if you were not captured, an en passant is still possible, but you need to check to make sure that the available attack squares for your pawns
-//            //has changed. We do this with an xOR statment to check for difference between the current pawn attacking spaces and the ones one turn ago.
-//            if(moved2 && !iWasCaptured && ((intermediateSpace&getCapitalPawnThreatenedSpaces(currentBoard))!=0)){ //there is an en passant available
-//                enPassantAttackBitboardAddition |= intermediateSpace;
-//            }
-//
-//            //geometrically and with pieces bitboard returned
-//            return allAttacks|enPassantAttackBitboardAddition;
-//        }
-//    private long getLowerCasePawnAttacks(Long[] currentBoard, Long[] currentBoardHistory){
-//        long allAttacks = getLowerCasePawnAttacksWithoutEnPassant(currentBoard);
-//        //En Passant  (Capital Pawns at Position 11)// - If my bitboards are all the same and an enemy pawn disappears from my attack, I can still attack that square and
-//        //remove that pawn through en passant
-//        long enPassantAttackBitboardAddition = 0l;
-//        boolean iWasCaptured = false;
-//        //iterates through capital pieces and checks using xOR statement whether any pieces were changed from the last bitboard to this one. If one was changed,
-//        //the xOR statement would show greater than 1 and this means a piece of yours was captured making an en passant impossible.
-//        for (int i = 0; i < currentBoard.length/2; i++) {
-//            if((currentBoard[i]^currentBoardHistory[i])!=0){
-//                iWasCaptured=true;
-//            }
-//        }
-//        //sets boolean if it moved 2 spaces or not
-//        boolean moved2 = false;
-//        //finds the odd pawn out (does technically include starting space as well because of xOR, but doesn't matter) and checks that it is on rank 5 and not on rank6
-//        long movedToRank5 = ((currentBoard[11]^currentBoardHistory[11])&rank4); //Runner.mainBoard.visualizeBitboard(movedToRank5);
-//        long movedToRank6 = ((currentBoard[11]^currentBoardHistory[11])&rank3); //Runner.mainBoard.visualizeBitboard(movedToRank6);
-//        //for some reason have to put &rank3 or the operation doesn't work correctly entirely
-//        long intermediateSpace = ((currentBoard[11]^currentBoardHistory[11])<<8)&rank3;
-//        if((movedToRank5!=0) && (movedToRank6==0)){
-//            moved2 = true;
-//        }
-//        System.out.println(moved2);
-//
-//        //if you were not captured, an en passant is still possible, but you need to check to make sure that the available attack squares for your pawns
-//        //has changed. We do this with an xOR statment to check for difference between the current pawn attacking spaces and the ones one turn ago.
-//        if(moved2 && !iWasCaptured && ((intermediateSpace&getLowerCasePawnThreatenedSpaces(currentBoard))!=0)){ //there is an en passant available
-//            enPassantAttackBitboardAddition |= intermediateSpace;
-//        }
-//
-//        //geometrically and with pieces bitboard returned
-//        return allAttacks|enPassantAttackBitboardAddition;
-//
-//    }
-
-    ////////Pawn Attacks Excluding En Passant////////////////////////////
-//    private long getCapitalPawnAttacksWithoutEnPassant(Long currentBoard[]){
-//            //Position 11//
-//            //aFile makes sure right pawn still works. Take compliment of a file -> If it is not in the aFile, then it is okay
-//            long pawnAttacksRight = (currentBoard[11]<<7)&(~aFile);
-//            //h file makes sure left pawn still works. Same thing as aFile with hFile
-//            long pawnAttacksLeft = (currentBoard[11]<<9)&(~hFile);
-//            //bitboard of all places you can move to without taking into account if they have pieces or not
-//            long combined = pawnAttacksLeft|pawnAttacksRight;
-//            //spaces with pieces on them
-//            long withPieces= 0l;
-//            //for loop only iterates over lower case pieces because capital can only capture lower case diagonally with pawns
-//            for (int i = 0; i < currentBoard.length/2; i++) {
-//                withPieces = withPieces|currentBoard[i];
-//            }
-//            return combined&withPieces;
-//        }
-//    private long getLowerCasePawnAttacksWithoutEnPassant(Long[] currentBoard){
-//        //Position 5//
-//        //aFile makes sure right pawn still works. Take compliment of a file -> If it is not in the aFile, then it is okay
-//        long pawnAttacksRight = (currentBoard[5]>>>7)&(~hFile);
-//        //h file makes sure left pawn still works. Same thing as aFile with hFile
-//        long pawnAttacksLeft = (currentBoard[5]>>>9)&(~aFile);
-//        //bitboard of all places you can move to without taking into account if they have pieces or not
-//        long combined = pawnAttacksLeft|pawnAttacksRight;
-//        //spaces with pieces on them
-//        long withPieces= 0l;
-//        //for loop only iterates over capital pieces (See Capital Piece Method for Better Description)
-//        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
-//            withPieces = withPieces|currentBoard[i];
-//        }
-//
-//        //geometrically and with pieces bitboard returned
-//        return combined&withPieces;
-//    }
-
-    ////////Pawn En Passant Moves (Used only in BitboardControlAndSeparation) (May remove in favor of position object later within BitboardControlAndSeparation)////////////////////////////
-//    public long getCapitalEnPassantMoves(Long[] currentBoard, Long[] currentBoardHistory){
-//
-//        long allAttacks = getCapitalPawnAttacksWithoutEnPassant(currentBoard);
-//        //En Passant  (Lower Case pawns at position 5)// - If my bitboards are all the same and an enemy pawn disappears from my attack, I can still attack that square and
-//        //remove that pawn through en passant
-//        long enPassantAttackBitboardAddition = 0l;
-//        boolean iWasCaptured = false;
-//        //iterates through capital pieces and checks using xOR statement whether any pieces were changed from the last bitboard to this one. If one was changed,
-//        //the xOR statement would show greater than 1 and this means a piece of yours was captured making an en passant impossible.
-//        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
-//            if((currentBoard[i]^currentBoardHistory[i])!=0){
-//                iWasCaptured=true;
-//            }
-//        }
-//        //sets boolean if it moved 2 spaces or not
-//        boolean moved2 = false;
-//        //finds the odd pawn out (does technically include starting space as well because of xOR, but doesn't matter) and checks that it is on rank 5 and not on rank6
-//        long movedToRank5 = ((currentBoard[5]^currentBoardHistory[5])&rank5); //Runner.mainBoard.visualizeBitboard(movedToRank5);
-//        long movedToRank6 = ((currentBoard[5]^currentBoardHistory[5])&rank6); //Runner.mainBoard.visualizeBitboard(movedToRank6);
-//        //for some reason have to put &rank6 or the operation doesn't work correctly entirely
-//        long intermediateSpace = ((currentBoard[5]^currentBoardHistory[5])>>>8)&rank6;
-//        if((movedToRank5!=0) && (movedToRank6==0)){
-//            moved2 = true;
-//        }
-//
-//        //if you were not captured, an en passant is still possible, but you need to check to make sure that the available attack squares for your pawns
-//        //has changed. We do this with an xOR statment to check for difference between the current pawn attacking spaces and the ones one turn ago.
-//        if(moved2 && !iWasCaptured && ((intermediateSpace&getCapitalPawnThreatenedSpaces(currentBoard))!=0)){ //there is an en passant available
-//
-//            enPassantAttackBitboardAddition |= intermediateSpace;
-//        }
-//
-//        //geometrically and with pieces bitboard returned
-//        return enPassantAttackBitboardAddition;
-//    }
-//    public long getLowerCaseEnPassantMoves(Long[] currentBoard, Long[] currentBoardHistory){
-//        long allAttacks = getLowerCasePawnAttacksWithoutEnPassant(currentBoard);
-//        //En Passant  (Capital Pawns at Position 11)// - If my bitboards are all the same and an enemy pawn disappears from my attack, I can still attack that square and
-//        //remove that pawn through en passant
-//        long enPassantAttackBitboardAddition = 0l;
-//        boolean iWasCaptured = false;
-//        //iterates through capital pieces and checks using xOR statement whether any pieces were changed from the last bitboard to this one. If one was changed,
-//        //the xOR statement would show greater than 1 and this means a piece of yours was captured making an en passant impossible.
-//        for (int i = 0; i < currentBoard.length/2; i++) {
-//            if((currentBoard[i]^currentBoardHistory[i])!=0){
-//                iWasCaptured=true;
-//            }
-//        }
-//        //sets boolean if it moved 2 spaces or not
-//        boolean moved2 = false;
-//        //finds the odd pawn out (does technically include starting space as well because of xOR, but doesn't matter) and checks that it is on rank 5 and not on rank6
-//        long movedToRank5 = ((currentBoard[11]^currentBoardHistory[11])&rank4); //Runner.mainBoard.visualizeBitboard(movedToRank5);
-//        long movedToRank6 = ((currentBoard[11]^currentBoardHistory[11])&rank3); //Runner.mainBoard.visualizeBitboard(movedToRank6);
-//        //for some reason have to put &rank6 or the operation doesn't work correctly entirely
-//        long intermediateSpace = ((currentBoard[11]^currentBoardHistory[11])<<8)&rank3;
-//        if((movedToRank5!=0) && (movedToRank6==0)){
-//            moved2 = true;
-//        }
-//        System.out.println(moved2);
-//
-//        //if you were not captured, an en passant is still possible, but you need to check to make sure that the available attack squares for your pawns
-//        //has changed. We do this with an xOR statment to check for difference between the current pawn attacking spaces and the ones one turn ago.
-//        if(moved2 && !iWasCaptured && ((intermediateSpace&getLowerCasePawnThreatenedSpaces(currentBoard))!=0)){ //there is an en passant available
-//            enPassantAttackBitboardAddition |= intermediateSpace;
-//        }
-//
-//        //geometrically and with pieces bitboard returned
-//        return enPassantAttackBitboardAddition;
-//    }
-    ///////////////////////////////////////////////////////////////////////////////
-
+    //for kings:
+    //the problem is that for the king to figure out where to move, it has to look at what spaces are currently being attacked by the enemy team. When it does this, it checks where the enemy king
+    //is attacking which calls where the black king is attacking, which calls where the white king is attacking, etc...
+    //the solution: Make a method which just takes into account all of the spaces the enemy king can attack, but not move to. This is in a similar light to the pawnThreatenedSpaces, but instead of
+    //it being solely for efficiency, it is to work around the stackoverflow error.
 
 
 

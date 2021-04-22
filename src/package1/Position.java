@@ -199,6 +199,24 @@ public class Position {
         }
         ////////////////////
 
+
+
+
+        //CASTLING//
+        //if the piece you selected is a king and the to square is bit shifted either two to the left (long castle) or two to the right (short castle), then it is castling
+
+        ////////////////////
+
+
+        //PROMOTIONS//
+
+
+        ///////////////////
+
+
+
+
+
         //updates history as well...
         forceUpdatePosition(copyBoard);
 
