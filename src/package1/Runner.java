@@ -28,11 +28,24 @@ public class Runner {
 
         long thisPiece = mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000000000", 2);
 
-        mainBoard.visualizeBitboardArray(mainBoard.mainPosition.getCurrentBoard());
 
-        mainBoard.visualizeBitboard(checkValidConditions.getCapitalKingMoves(mainBoard.mainPosition));
+        mainBoard.drawGameBoard(mainBoard.mainPosition.getCurrentBoard());
 
+        System.out.println(mainBoard.mainPosition.getLowerCaseAFileRookHasMoved());
+        System.out.println(mainBoard.mainPosition.getLowerCaseKingHasMoved());
+        mainBoard.mainPosition.fromToMove("e8", "c8");
+//        System.out.println(mainBoard.mainPosition.getCapitalHFileRookHasMoved());
+//        System.out.println(mainBoard.mainPosition.getCapitalKingHasMoved());
+//        mainBoard.mainPosition.fromToMove("e7", "e8");
+//        System.out.println(mainBoard.mainPosition.getCapitalHFileRookHasMoved());
+//        System.out.println(mainBoard.mainPosition.getCapitalKingHasMoved());
+//        mainBoard.mainPosition.fromToMove("e8", "c8");
+        System.out.println(mainBoard.mainPosition.getLowerCaseAFileRookHasMoved());
+        System.out.println(mainBoard.mainPosition.getLowerCaseKingHasMoved());
 
+        //mainBoard.mainPosition.fromToMove("e2", "e4");
+
+        mainBoard.drawGameBoard(mainBoard.mainPosition.getCurrentBoard());
 
 //        mainBoard.visualizeBitboardArray(mainBoard.mainPosition.getCurrentBoardHistory());
 //        mainBoard.visualizeBitboardArray(mainBoard.mainPosition.getCurrentBoard());

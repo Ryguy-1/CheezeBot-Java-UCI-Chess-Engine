@@ -160,8 +160,75 @@ public class Position {
         }
         ////////////
 
-        //removes the bits from each bitboard which matches the bits in the from or to bitboards/////////////
 
+        //you have two current bits in a long. you want one of those bits to change to a new bit, but want to keep the other the same.
+
+        //CASTLING//
+        //if the piece you selected is a king and the to square is bit shifted either two to the left (long castle) or two to the right (short castle), then it is castling
+        //capital king = position 10; capital rook = position 6;
+
+        if(((fromBitboard & copyBoard[10])!=0l) && (toBitboard == fromBitboard<<2) && !capitalAFileRookHasMoved && !capitalKingHasMoved){
+            //you are castling to the left
+            //set the king equal to the space it's moved to
+            copyBoard[10] = toBitboard;
+            //set the rook to the inner space (right of king one)
+            copyBoard[6] = ((copyBoard[6] ^ Runner.checkValidConditions.capitalAFileRookStartSquare) | (toBitboard>>>1));
+            //sets states for king and rook
+            capitalAFileRookHasMoved = true;
+            capitalKingHasMoved = true;
+            //returns before anything else is done...
+            forceUpdatePosition(copyBoard);
+            return;
+        }else if(((fromBitboard & copyBoard[10])!=0l) && (toBitboard == fromBitboard>>>2)  && !capitalHFileRookHasMoved && !capitalKingHasMoved){
+            //you are castling to the right
+            //set the king equal to the space it's moved to
+            copyBoard[10] = toBitboard;
+            //set the rook to the inner space (left of king one)
+            copyBoard[6] = ((copyBoard[6] ^ Runner.checkValidConditions.capitalHFileRookStartSquare) | (toBitboard<<1));
+            //sets states for king and rook
+            capitalHFileRookHasMoved = true;
+            capitalKingHasMoved = true;
+            //returns before anything else is done...
+            forceUpdatePosition(copyBoard);
+            return;
+        }//Lower Case King = position 4; capital rook = position 0;
+        else if(((fromBitboard & copyBoard[4])!=0l) && (toBitboard == fromBitboard<<2)  && !lowerCaseAFileRookHasMoved && !lowerCaseKingHasMoved){
+            //you are castling to the left
+            //set the king equal to the space it's moved to
+            copyBoard[4] = toBitboard;
+            //set the rook to the inner space (right of king one)
+            copyBoard[0] = ((copyBoard[0] ^ Runner.checkValidConditions.lowerCaseAFileRookStartSquare) | (toBitboard>>>1));
+            //sets states for king and rook
+            lowerCaseAFileRookHasMoved = true;
+            lowerCaseKingHasMoved = true;
+            //returns before anything else is done...
+            forceUpdatePosition(copyBoard);
+            return;
+        }else if(((fromBitboard & copyBoard[4])!=0l) && (toBitboard == fromBitboard>>>2)  && !lowerCaseHFileRookHasMoved && !lowerCaseKingHasMoved){
+            //you are castling to the right
+            //set the king equal to the space it's moved to
+            copyBoard[4] = toBitboard;
+            //set the rook to the inner space (left of king one)
+            copyBoard[0] = ((copyBoard[0] ^ Runner.checkValidConditions.lowerCaseHFileRookStartSquare) | (toBitboard<<1));
+            //sets states for king and rook
+            lowerCaseHFileRookHasMoved = true;
+            lowerCaseKingHasMoved = true;
+            //returns before anything else is done...
+            forceUpdatePosition(copyBoard);
+            return;
+        }
+
+
+        ////////////////////
+
+
+
+
+
+
+        //STANDARD PROCEDURES...////////////////////////////////////// (if not a promotion or a castle)///////////////////////////////
+
+        //removes the bits from each bitboard which matches the bits in the from or to bitboards/////////////
         //For loops done individually because need to remove the bit first from the "to" spot, then alter the bit in the other spot
         for (int i = 0; i < copyBoard.length; i++) {
             //replace the 1 of the matching from bitboard with a 0 -> moved To deleted and added to original bitboard back after loop
@@ -199,22 +266,27 @@ public class Position {
         }
         ////////////////////
 
-
-
-
-        //CASTLING//
-        //if the piece you selected is a king and the to square is bit shifted either two to the left (long castle) or two to the right (short castle), then it is castling
-
-        ////////////////////
-
-
-        //PROMOTIONS//
-
-
-        ///////////////////
-
-
-
+        //Sets states for kings//
+        //capital king = position 10
+        if((copyBoard[10] & toBitboard)!=0l){ //"toBitboard" because it has already been updated to that position by this time!
+            capitalKingHasMoved = true;
+        }else if((copyBoard[4] & toBitboard)!=0l){ //lower case king = position 4
+            lowerCaseKingHasMoved = true;
+        }
+        //Sets states for rooks//
+        //capital rooks = position 6
+        //lower case rooks = position 0
+        //if you previously had a rook on the a file for capital and now you don't, then you moved the a file rook. pogu
+        else if(((currentBoard[6] ^ copyBoard[6]) ^ toBitboard) == Runner.checkValidConditions.capitalAFileRookStartSquare){ //"toBitboard" xor statement to get rid of the square that said piece was moved to. Isolates the square the rook should start on
+            //the piece you moved was the Capital A File Rook
+            capitalAFileRookHasMoved = true;
+        }else if(((currentBoard[6] ^ copyBoard[6]) ^ toBitboard) == Runner.checkValidConditions.capitalHFileRookStartSquare){
+            capitalHFileRookHasMoved = true;
+        }else if(((currentBoard[0] ^ copyBoard[0]) ^ toBitboard) == Runner.checkValidConditions.lowerCaseAFileRookStartSquare){
+            lowerCaseAFileRookHasMoved = true;
+        }else if(((currentBoard[0] ^ copyBoard[0]) ^ toBitboard) == Runner.checkValidConditions.lowerCaseHFileRookStartSquare){
+            lowerCaseHFileRookHasMoved = true;
+        }
 
 
         //updates history as well...
@@ -240,6 +312,69 @@ public class Position {
             copyBoard[i]=currentBoard[i];
         }
         ////////////
+
+        //CASTLING//
+        //if the piece you selected is a king and the to square is bit shifted either two to the left (long castle) or two to the right (short castle), then it is castling
+        //capital king = position 10; capital rook = position 6;
+
+        if(((from & copyBoard[10])!=0l) && (to == from<<2) && !capitalAFileRookHasMoved && !capitalKingHasMoved){
+            //you are castling to the left
+            //set the king equal to the space it's moved to
+            copyBoard[10] = to;
+            //set the rook to the inner space (right of king one)
+            copyBoard[6] = ((copyBoard[6] ^ Runner.checkValidConditions.capitalAFileRookStartSquare) | (to>>>1));
+            //sets states for king and rook
+            capitalAFileRookHasMoved = true;
+            capitalKingHasMoved = true;
+            //returns before anything else is done...
+            forceUpdatePosition(copyBoard);
+            return;
+        }else if(((from & copyBoard[10])!=0l) && (to == from>>>2)  && !capitalHFileRookHasMoved && !capitalKingHasMoved){
+            //you are castling to the right
+            //set the king equal to the space it's moved to
+            copyBoard[10] = to;
+            //set the rook to the inner space (left of king one)
+            copyBoard[6] = ((copyBoard[6] ^ Runner.checkValidConditions.capitalHFileRookStartSquare) | (to<<1));
+            //sets states for king and rook
+            capitalHFileRookHasMoved = true;
+            capitalKingHasMoved = true;
+            //returns before anything else is done...
+            forceUpdatePosition(copyBoard);
+            return;
+        }//Lower Case King = position 4; capital rook = position 0;
+        else if(((from & copyBoard[4])!=0l) && (to == from<<2)  && !lowerCaseAFileRookHasMoved && !lowerCaseKingHasMoved){
+            //you are castling to the left
+            //set the king equal to the space it's moved to
+            copyBoard[4] = to;
+            //set the rook to the inner space (right of king one)
+            copyBoard[0] = ((copyBoard[0] ^ Runner.checkValidConditions.lowerCaseAFileRookStartSquare) | (to>>>1));
+            //sets states for king and rook
+            lowerCaseAFileRookHasMoved = true;
+            lowerCaseKingHasMoved = true;
+            //returns before anything else is done...
+            forceUpdatePosition(copyBoard);
+            return;
+        }else if(((from & copyBoard[4])!=0l) && (to == from>>>2)  && !lowerCaseHFileRookHasMoved && !lowerCaseKingHasMoved){
+            //you are castling to the right
+            //set the king equal to the space it's moved to
+            copyBoard[4] = to;
+            //set the rook to the inner space (left of king one)
+            copyBoard[0] = ((copyBoard[0] ^ Runner.checkValidConditions.lowerCaseHFileRookStartSquare) | (to<<1));
+            //sets states for king and rook
+            lowerCaseHFileRookHasMoved = true;
+            lowerCaseKingHasMoved = true;
+            //returns before anything else is done...
+            forceUpdatePosition(copyBoard);
+            return;
+        }
+
+
+        ////////////////////
+
+
+
+
+        //STANDARD PROCEDURES...////////////////////////////////////// (if not a promotion or a castle)///////////////////////////////
 
         //removes the bits from each bitboard which matches the bits in the from or to bitboards/////////////
 
@@ -280,6 +415,29 @@ public class Position {
             }
         }
         ////////////////////
+
+        //Sets states for kings//
+        //capital king = position 10
+        if((copyBoard[10] & to)!=0l){ //"toBitboard" because it has already been updated to that position by this time!
+            capitalKingHasMoved = true;
+        }else if((copyBoard[4] & to)!=0l){ //lower case king = position 4
+            lowerCaseKingHasMoved = true;
+        }
+        //Sets states for rooks//
+        //capital rooks = position 6
+        //lower case rooks = position 0
+        //if you previously had a rook on the a file for capital and now you don't, then you moved the a file rook. pogu
+        else if(((currentBoard[6] ^ copyBoard[6]) ^ to) == Runner.checkValidConditions.capitalAFileRookStartSquare){ //"toBitboard" xor statement to get rid of the square that said piece was moved to. Isolates the square the rook should start on
+            //the piece you moved was the Capital A File Rook
+            capitalAFileRookHasMoved = true;
+        }else if(((currentBoard[6] ^ copyBoard[6]) ^ to) == Runner.checkValidConditions.capitalHFileRookStartSquare){
+            capitalHFileRookHasMoved = true;
+        }else if(((currentBoard[0] ^ copyBoard[0]) ^ to) == Runner.checkValidConditions.lowerCaseAFileRookStartSquare){
+            lowerCaseAFileRookHasMoved = true;
+        }else if(((currentBoard[0] ^ copyBoard[0]) ^ to) == Runner.checkValidConditions.lowerCaseHFileRookStartSquare){
+            lowerCaseHFileRookHasMoved = true;
+        }
+
         forceUpdatePosition(copyBoard);
     }
 
