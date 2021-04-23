@@ -640,15 +640,6 @@ public class CheckValidConditions {
         for (int i = 0; i < bitboards.length; i++) {
             possibleMoves |= getVerticalHorizontalMovesSingle(goodPieces, badPieces, bitboards[i]);
         }
-
-
-//        if(capitalCanCastleLong(pos)){
-//            possibleMoves |= capitalRookLongCastleSquare;
-//        }
-//        if(capitalCanCastleShort(pos)){
-//            possibleMoves |= capitalRookShortCastleSquare;
-//        }
-
         return possibleMoves;
     }
     public long getCapitalRookMoves(long thisPiece, Position pos){
@@ -674,51 +665,8 @@ public class CheckValidConditions {
         for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
             goodPieces = goodPieces|currentBoard[i];
         }
-
-//        long castleAddition = 0l;
-//        //if capital can castle long (both the capital left rook and the capital king haven't moved), and the piece you want is the rook on the left rook starting square,
-//        //then you must want to move the rook on the a file starting square which cannot have moved yet.
-//        //THINKING HERE LAST!!!!!!!!!!!!!!!!!!!!!!!!!!
-//        //(think an else if is okay because you are only selecting a single piece at once. Slightly more efficient.)
-//        if(capitalCanCastleLong(pos) && ((thisPiece & capitalAFileRookStartSquare)!=0)){
-//            castleAddition |= capitalRookLongCastleSquare;
-//        }else if(capitalCanCastleShort(pos) && ((thisPiece & capitalHFileRookStartSquare)!=0)){
-//            castleAddition |= capitalRookShortCastleSquare;
-//        }
-//        return castleAddition | getVerticalHorizontalMovesSingle(goodPieces, badPieces, thisPiece);
-
         return getVerticalHorizontalMovesSingle(goodPieces, badPieces, thisPiece);
     }
-//    private long getCapitalRookThreatenedSpaces(Position pos){
-//        Long[] currentBoard = pos.getCurrentBoard();
-//
-//        //Position 6//
-//
-//        long possibleMoves = 0l;
-//
-//        long allPieces = 0l;
-//        long badPieces = 0l;
-//        long goodPieces = 0l;
-//
-//        //initializes a bitboard of all pieces
-//        for (int i = 0; i < currentBoard.length; i++) {
-//            allPieces = allPieces|currentBoard[i];
-//        }
-//        for (int i = 0; i < currentBoard.length/2; i++) {
-//            badPieces = badPieces|currentBoard[i];
-//        }
-//        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
-//            goodPieces = goodPieces|currentBoard[i];
-//        }
-//
-//        Long[] bitboards = Runner.controlAndSeparation.splitBitboard(currentBoard[6]);
-//        for (int i = 0; i < bitboards.length; i++) {
-//            possibleMoves |= getVerticalHorizontalMovesSingle(goodPieces, badPieces, bitboards[i]);
-//        }
-//
-//
-//        return possibleMoves;
-//    }
 
     public long getLowerCaseRookMoves(Position pos){
 
@@ -748,14 +696,6 @@ public class CheckValidConditions {
             possibleMoves |= getVerticalHorizontalMovesSingle(goodPieces, badPieces, bitboards[i]);
         }
 
-//        if(lowerCaseCanCastleLong(pos)){
-//            possibleMoves |= lowerCaseRookLongCastleSquare;
-//        }
-//        if(lowerCaseCanCastleShort(pos)){
-//            possibleMoves |= lowerCaseRookShortCastleSquare;
-//        }
-
-
         return possibleMoves;
     }
     public long getLowerCaseRookMoves(long thisPiece, Position pos){
@@ -781,53 +721,10 @@ public class CheckValidConditions {
         for (int i = 0; i < currentBoard.length/2; i++) {
             goodPieces = goodPieces|currentBoard[i];
         }
-
-//        long castleAddition = 0l;
-//        //if capital can castle long (both the capital left rook and the capital king haven't moved), and the piece you want is the rook on the left rook starting square,
-//        //then you must want to move the rook on the a file starting square which cannot have moved yet.
-//        //THINKING HERE LAST!!!!!!!!!!!!!!!!!!!!!!!!!!
-//        //(think an else if is okay because you are only selecting a single piece at once. Slightly more efficient.)
-//        if(lowerCaseCanCastleLong(pos) && ((thisPiece & lowerCaseAFileRookStartSquare)!=0)){
-//            castleAddition |= lowerCaseRookLongCastleSquare;
-//        }else if(lowerCaseCanCastleShort(pos) && ((thisPiece & lowerCaseHFileRookStartSquare)!=0)){
-//            castleAddition |= lowerCaseRookShortCastleSquare;
-//        }
-//        return castleAddition | getVerticalHorizontalMovesSingle(goodPieces, badPieces, thisPiece);
-
         return getVerticalHorizontalMovesSingle(goodPieces, badPieces, thisPiece);
 
     }
-//    private long getLowerCaseRookThreatenedSpaces(Position pos){
-//
-//        Long[] currentBoard = pos.getCurrentBoard();
-//
-//        //Position 0//
-//
-//        long possibleMoves = 0l;
-//
-//        long allPieces = 0l;
-//        long badPieces = 0l;
-//        long goodPieces = 0l;
-//
-//        //initializes a bitboard of all pieces
-//        for (int i = 0; i < currentBoard.length; i++) {
-//            allPieces = allPieces|currentBoard[i];
-//        }
-//        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
-//            badPieces = badPieces|currentBoard[i];
-//        }
-//        for (int i = 0; i < currentBoard.length/2; i++) {
-//            goodPieces = goodPieces|currentBoard[i];
-//        }
-//
-//        Long[] bitboards = Runner.controlAndSeparation.splitBitboard(currentBoard[0]);
-//        for (int i = 0; i < bitboards.length; i++) {
-//            possibleMoves |= getVerticalHorizontalMovesSingle(goodPieces, badPieces, bitboards[i]);
-//        }
-//
-//        return possibleMoves;
-//    }
-    ///////////////////////
+
 
 
     //King Moves -> Castle with Rook with Board Position History
