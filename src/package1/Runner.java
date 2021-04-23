@@ -31,17 +31,17 @@ public class Runner {
 
         mainBoard.drawGameBoard(mainBoard.mainPosition.getCurrentBoard());
 
-        System.out.println(mainBoard.mainPosition.getLowerCaseAFileRookHasMoved());
-        System.out.println(mainBoard.mainPosition.getLowerCaseKingHasMoved());
-        mainBoard.mainPosition.fromToMove("e8", "c8");
+//        System.out.println(mainBoard.mainPosition.getLowerCaseAFileRookHasMoved());
+//        System.out.println(mainBoard.mainPosition.getLowerCaseKingHasMoved());
+        mainBoard.mainPosition.fromToMove("b2b1n");
 //        System.out.println(mainBoard.mainPosition.getCapitalHFileRookHasMoved());
 //        System.out.println(mainBoard.mainPosition.getCapitalKingHasMoved());
 //        mainBoard.mainPosition.fromToMove("e7", "e8");
 //        System.out.println(mainBoard.mainPosition.getCapitalHFileRookHasMoved());
 //        System.out.println(mainBoard.mainPosition.getCapitalKingHasMoved());
 //        mainBoard.mainPosition.fromToMove("e8", "c8");
-        System.out.println(mainBoard.mainPosition.getLowerCaseAFileRookHasMoved());
-        System.out.println(mainBoard.mainPosition.getLowerCaseKingHasMoved());
+//        System.out.println(mainBoard.mainPosition.getLowerCaseAFileRookHasMoved());
+//        System.out.println(mainBoard.mainPosition.getLowerCaseKingHasMoved());
 
         //mainBoard.mainPosition.fromToMove("e2", "e4");
 

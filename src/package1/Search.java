@@ -48,7 +48,7 @@ public class Search {
                 Long[] singleMoveBitboards = Runner.controlAndSeparation.splitBitboard(possibleMoves);
                 //loop through all of the single moves in singleMoveBitboards and use the Move function to move them, and set the board equal to a new board array.
                 for (int k = 0; k < singleMoveBitboards.length; k++) {
-                    if(!pos.moveLeadsToCheck(currentBoard[i][j], singleMoveBitboards[k], 'c')){
+                    if(!pos.moveLeadsToCheck(currentBoard[i][j], singleMoveBitboards[k], 'c', "")){
                         return false;
                     }
                 }
@@ -57,7 +57,6 @@ public class Search {
         //returns true if the king has nowhere to go. Like this because can be used to calculate stalemates if it is in "checkmate" and not in check
         return true;
     }
-
     ////////////////////////////////////////////////
 
     public boolean lowerCaseIsInCheckmate(Position pos){
@@ -106,7 +105,7 @@ public class Search {
                 Long[] singleMoveBitboards = Runner.controlAndSeparation.splitBitboard(possibleMoves);
                 //loop through all of the single moves in singleMoveBitboards and use the Move function to move them, and set the board equal to a new board array.
                 for (int k = 0; k < singleMoveBitboards.length; k++) {
-                    if(!pos.moveLeadsToCheck(currentBoard[i][j], singleMoveBitboards[k], 'l')){
+                    if(!pos.moveLeadsToCheck(currentBoard[i][j], singleMoveBitboards[k], 'l', "")){
                         return false;
                     }
                 }

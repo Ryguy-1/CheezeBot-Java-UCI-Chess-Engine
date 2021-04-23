@@ -128,7 +128,11 @@ public class Position {
     }
 
     //method used in the Position class for updating - Need to update
-    public void fromToMove(String from, String to){
+    public void fromToMove(String fromTo){
+
+        String from = fromTo.substring(0, 2);
+        String to = fromTo.substring(2, 4);
+        String promotion; try{ promotion = fromTo.substring(4); }catch(Exception e){ promotion = ""; } //not always a promotion
 
         //if to and from are the same, there is no move, so return the same bitboard array
         if(from.equals(to)){
@@ -219,11 +223,9 @@ public class Position {
         }
 
 
+        System.out.println("Promotion = |" + promotion + "| ");
+
         ////////////////////
-
-
-
-
 
 
         //STANDARD PROCEDURES...////////////////////////////////////// (if not a promotion or a castle)///////////////////////////////
@@ -238,7 +240,7 @@ public class Position {
         }
         for (int i = 0; i < copyBoard.length; i++) {
             //replace the 1 of the matching from bitboard with a 0 -> moved From simply deleted
-            if((currentBoard[i]&fromBitboard)!=0l){
+            if(((currentBoard[i]&fromBitboard)!=0l) && promotion.equals("")){ //and make sure there is no promotion
                 copyBoard[i] ^= fromBitboard;
                 //this is also the bitboard in the array which we will add the toBitboard bit to... (save a step)
                 copyBoard[i] |= toBitboard;
@@ -246,8 +248,44 @@ public class Position {
                 if(i< copyBoard.length/2){
                     casing='l';
                 }//else casing is already initialized to 'c'
-
+            }else if(((currentBoard[i]&fromBitboard)!=0l) && !promotion.equals("")){
+                copyBoard[i] ^= fromBitboard;
+                //REMOVED THE STEP WHERE YOU ADDED THE TOBITBOARD TO -> DO IT AFTERWARDS
+                //set casing while you have the array there
+                if(i< copyBoard.length/2){
+                    casing='l';
+                }//else casing is already initialized to 'c'
             }
+        }
+
+        //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
+
+        //add the toBitboard to the proper bitboard in copyBoard for promotions
+        switch(promotion){
+            case "q":
+                if(casing == 'l'){
+                    copyBoard[3] |= toBitboard; //3 = lc queen
+                }else{
+                    copyBoard[9] |= toBitboard; //9 = c queen
+                }break;
+            case "b":
+                if(casing == 'l'){
+                    copyBoard[2] |= toBitboard; //3 = lc bishop
+                }else{
+                    copyBoard[8] |= toBitboard; //9 = c bishop
+                }break;
+            case "n":
+                if(casing == 'l'){
+                    copyBoard[1] |= toBitboard; //3 = lc knight
+                }else{
+                    copyBoard[7] |= toBitboard; //9 = c knight
+                }break;
+            case "r":
+                if(casing == 'l'){
+                    copyBoard[0] |= toBitboard; //3 = lc rook
+                }else{
+                    copyBoard[6] |= toBitboard; //9 = c rook
+                }break;
         }
 
         //EN PASSANT SPECIAL REMOVE/////////
@@ -293,7 +331,7 @@ public class Position {
         forceUpdatePosition(copyBoard);
 
     }
-    public void fromToMove(long from, long to){
+    public void fromToMove(long from, long to, String optionalPromotion){
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //ASSUMES ALL CALCULATIONS ABOUT IT BEING AN APPROPRIATE MOVE HAVE BEEN DONE PREVIOUSLY. JUST EXECUTES THE DIRECTIONS. CASEBLIND//
@@ -387,7 +425,7 @@ public class Position {
         }
         for (int i = 0; i < copyBoard.length; i++) {
             //replace the 1 of the matching from bitboard with a 0 -> moved From simply deleted
-            if((currentBoard[i]&from)!=0l){
+            if((currentBoard[i]&from)!=0l  && optionalPromotion.equals("")){
                 copyBoard[i] ^= from;
                 //this is also the bitboard in the array which we will add the toBitboard bit to... (save a step)
                 copyBoard[i] |= to;
@@ -396,7 +434,44 @@ public class Position {
                     casing='l';
                 }//else casing is already initialized to 'c'
 
+            }else if(((currentBoard[i]&from)!=0l) && !optionalPromotion.equals("")){
+                copyBoard[i] ^= from;
+                //REMOVED THE STEP WHERE YOU ADDED THE TOBITBOARD TO -> DO IT AFTERWARDS
+                //set casing while you have the array there
+                if(i< copyBoard.length/2){
+                    casing='l';
+                }//else casing is already initialized to 'c'
             }
+        }
+
+        //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
+
+        //add the toBitboard to the proper bitboard in copyBoard for promotions
+        switch(optionalPromotion){
+            case "q":
+                if(casing == 'l'){
+                    copyBoard[3] |= to; //3 = lc queen
+                }else{
+                    copyBoard[9] |= to; //9 = c queen
+                }break;
+            case "b":
+                if(casing == 'l'){
+                    copyBoard[2] |= to; //3 = lc bishop
+                }else{
+                    copyBoard[8] |= to; //9 = c bishop
+                }break;
+            case "n":
+                if(casing == 'l'){
+                    copyBoard[1] |= to; //3 = lc knight
+                }else{
+                    copyBoard[7] |= to; //9 = c knight
+                }break;
+            case "r":
+                if(casing == 'l'){
+                    copyBoard[0] |= to; //3 = lc rook
+                }else{
+                    copyBoard[6] |= to; //9 = c rook
+                }break;
         }
 
 
@@ -441,12 +516,12 @@ public class Position {
         forceUpdatePosition(copyBoard);
     }
 
-    public boolean moveLeadsToCheck(String from, String to, char pieceInCheck){
+    public boolean moveLeadsToCheck(String fromTo, char pieceInCheck){
 
         //create new Position with same history to check for check in new position once moved
         Position testingPosition = new Position(currentBoard, currentBoardHistory);
         //move the piece in new object from from to to.
-        testingPosition.fromToMove(from, to);
+        testingPosition.fromToMove(fromTo);
 
         //cannot do auto casing because it may choose the wrong piece on accident if you check the enemy, but you are not in check anymore -> Niche, but can be avoided easily.
         //char casing = getCasing(testingPosition, from);
@@ -461,12 +536,12 @@ public class Position {
         return false;
     }
 
-    public boolean moveLeadsToCheck(long from, long to, char pieceInCheck){
+    public boolean moveLeadsToCheck(long from, long to, char pieceInCheck, String optionalPromotion){
 
         //create new Position with same history to check for check in new position once moved
         Position testingPosition = new Position(currentBoard, currentBoardHistory);
         //move the piece in new object from from to to.
-        testingPosition.fromToMove(from, to);
+        testingPosition.fromToMove(from, to, optionalPromotion);
 
         //cannot do auto casing because it may choose the wrong piece on accident if you check the enemy, but you are not in check anymore -> Niche, but can be avoided easily.
         //char casing = getCasing(testingPosition, from);
