@@ -46,6 +46,7 @@ public class Search {
                 }
                 // for each possible move, make a new array of single move bitboards.
                 Long[] singleMoveBitboards = Runner.controlAndSeparation.splitBitboard(possibleMoves);
+
                 //loop through all of the single moves in singleMoveBitboards and use the Move function to move them, and set the board equal to a new board array.
                 for (int k = 0; k < singleMoveBitboards.length; k++) {
                     if(!pos.moveLeadsToCheck(currentBoard[i][j], singleMoveBitboards[k], 'c', "")){

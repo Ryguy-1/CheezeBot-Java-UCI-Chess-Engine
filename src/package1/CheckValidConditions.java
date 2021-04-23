@@ -837,7 +837,7 @@ public class CheckValidConditions {
     //untested
     private boolean capitalCanCastleLong(Position pos){
         //if either the AFile(left) rook or the king have moved, return false as this is immediately illegal
-        if(pos.getCapitalAFileRookHasMoved() || pos.getCapitalKingHasMoved()){
+        if(pos.getCapitalAFileRookHasMoved() || pos.getCapitalKingHasMoved() || Runner.search.capitalIsInCheck(pos)){
             return false;
         }else{ //otherwise, if neither have moved it is legal as long as there are...
             //1) no pieces in the way
@@ -851,7 +851,7 @@ public class CheckValidConditions {
     }
     private boolean capitalCanCastleShort(Position pos){
         //if either the AFile(left) rook or the king have moved, return false as this is immediately illegal
-        if(pos.getCapitalHFileRookHasMoved() || pos.getCapitalKingHasMoved()){
+        if(pos.getCapitalHFileRookHasMoved() || pos.getCapitalKingHasMoved() || Runner.search.capitalIsInCheck(pos)){
             return false;
         }else{ //otherwise, if neither have moved it is legal as long as there are...
             //1) no pieces in the way
@@ -865,7 +865,7 @@ public class CheckValidConditions {
     }
     private boolean lowerCaseCanCastleLong(Position pos){
         //if either the AFile(left) rook or the king have moved, return false as this is immediately illegal
-        if(pos.getLowerCaseAFileRookHasMoved() || pos.getLowerCaseKingHasMoved()){
+        if(pos.getLowerCaseAFileRookHasMoved() || pos.getLowerCaseKingHasMoved() || Runner.search.lowerCaseIsInCheck(pos)){
             return false;
         }else{ //otherwise, if neither have moved it is legal as long as there are...
             //1) no pieces in the way
@@ -879,7 +879,7 @@ public class CheckValidConditions {
     }
     private boolean lowerCaseCanCastleShort(Position pos){
         //if either the AFile(left) rook or the king have moved, return false as this is immediately illegal
-        if(pos.getLowerCaseHFileRookHasMoved() || pos.getLowerCaseKingHasMoved()){
+        if(pos.getLowerCaseHFileRookHasMoved() || pos.getLowerCaseKingHasMoved() || Runner.search.lowerCaseIsInCheck(pos)){
             return false;
         }else{ //otherwise, if neither have moved it is legal as long as there are...
             //1) no pieces in the way

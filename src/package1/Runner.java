@@ -29,21 +29,26 @@ public class Runner {
         long thisPiece = mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000000000", 2);
 
 
+        mainBoard.mainPosition.setCapitalAFileRookHasMoved(true);
+        mainBoard.mainPosition.setCapitalHFileRookHasMoved(true);
+        mainBoard.mainPosition.setLowerCaseAFileRookHasMoved(true);
+        mainBoard.mainPosition.setLowerCaseHFileRookHasMoved(true);
+        mainBoard.mainPosition.setCapitalKingHasMoved(true);
+        mainBoard.mainPosition.setLowerCaseKingHasMoved(true);
         mainBoard.drawGameBoard(mainBoard.mainPosition.getCurrentBoard());
 
-//        System.out.println(mainBoard.mainPosition.getLowerCaseAFileRookHasMoved());
-//        System.out.println(mainBoard.mainPosition.getLowerCaseKingHasMoved());
-        mainBoard.mainPosition.fromToMove("b2b1n");
-//        System.out.println(mainBoard.mainPosition.getCapitalHFileRookHasMoved());
-//        System.out.println(mainBoard.mainPosition.getCapitalKingHasMoved());
-//        mainBoard.mainPosition.fromToMove("e7", "e8");
-//        System.out.println(mainBoard.mainPosition.getCapitalHFileRookHasMoved());
-//        System.out.println(mainBoard.mainPosition.getCapitalKingHasMoved());
-//        mainBoard.mainPosition.fromToMove("e8", "c8");
-//        System.out.println(mainBoard.mainPosition.getLowerCaseAFileRookHasMoved());
-//        System.out.println(mainBoard.mainPosition.getLowerCaseKingHasMoved());
+        mainBoard.mainPosition.fromToMove("b2b4");
 
-        //mainBoard.mainPosition.fromToMove("e2", "e4");
+        //mainBoard.visualizeBitboard(checkValidConditions.getLowerCasePawnCombined(mainBoard.mainPosition));
+
+        System.out.println("Capital is in Checkmate: " + search.capitalIsInCheckmate(mainBoard.mainPosition));
+        System.out.println("Lower Case is in Checkmate: " + search.lowerCaseIsInCheckmate(mainBoard.mainPosition));
+        System.out.println();
+        System.out.println("Capital is in Check: " + search.capitalIsInCheck(mainBoard.mainPosition));
+        System.out.println("Lower Case is in Check: " + search.lowerCaseIsInCheck(mainBoard.mainPosition));
+        System.out.println();
+        System.out.println("Capital is in Stalemate: " + search.capitalIsInStalemate(mainBoard.mainPosition));
+        System.out.println("Lower Case is in Stalemate: " + search.lowerCaseIsInStalemate(mainBoard.mainPosition));
 
         mainBoard.drawGameBoard(mainBoard.mainPosition.getCurrentBoard());
 
