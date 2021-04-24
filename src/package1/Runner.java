@@ -41,6 +41,8 @@ public class Runner {
 
         //mainBoard.visualizeBitboard(checkValidConditions.getLowerCasePawnCombined(mainBoard.mainPosition));
 
+        mainBoard.drawGameBoard(mainBoard.mainPosition.getCurrentBoard());
+
         System.out.println("Capital is in Checkmate: " + search.capitalIsInCheckmate(mainBoard.mainPosition));
         System.out.println("Lower Case is in Checkmate: " + search.lowerCaseIsInCheckmate(mainBoard.mainPosition));
         System.out.println();
@@ -50,11 +52,10 @@ public class Runner {
         System.out.println("Capital is in Stalemate: " + search.capitalIsInStalemate(mainBoard.mainPosition));
         System.out.println("Lower Case is in Stalemate: " + search.lowerCaseIsInStalemate(mainBoard.mainPosition));
 
-        mainBoard.drawGameBoard(mainBoard.mainPosition.getCurrentBoard());
+
 
 //        mainBoard.visualizeBitboardArray(mainBoard.mainPosition.getCurrentBoardHistory());
 //        mainBoard.visualizeBitboardArray(mainBoard.mainPosition.getCurrentBoard());
 
     }
 }
-
