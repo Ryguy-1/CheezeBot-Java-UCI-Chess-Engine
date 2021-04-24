@@ -322,48 +322,6 @@ public class CheckValidConditions {
 
 
         return attacksTotal | forwardOnly;
-
-//        Long[] currentBoard = pos.getCurrentBoard();
-//
-//        //index 5
-////        //newBoard is a copy of currentBoard, but with just the moves that that thisPiece can make if it was the only piece of its type on the board
-//        Long[] newBoard = Runner.controlAndSeparation.changeBitboardArrayIndex(currentBoard, 5, thisPiece);
-//
-//        //attacks recalculation
-//        //Position 5//
-//        //aFile makes sure right pawn still works. Take compliment of a file -> If it is not in the aFile, then it is okay
-//        long pawnAttacksRight = (thisPiece>>>7)&(~hFile);
-//        //h file makes sure left pawn still works. Same thing as aFile with hFile
-//        long pawnAttacksLeft = (thisPiece>>>9)&(~aFile);
-//        //bitboard of all places you can move to without taking into account if they have pieces or not
-//        long combined = pawnAttacksLeft|pawnAttacksRight;
-//        //spaces with pieces on them
-//        long withPieces= 0l;
-//        //for loop only iterates over capital pieces (See Capital Piece Method for Better Description)
-//        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
-//            withPieces = withPieces|currentBoard[i];
-//        }
-//
-//        //geometrically and with pieces bitboard returned
-//        long attacks = combined&withPieces;
-//
-//
-//        //Position 5//
-//        long pawnMovesOne = thisPiece>>>8;
-//        //excludes bad moves one move downwards
-//        for (int i = 0; i < currentBoard.length; i++) {
-//            pawnMovesOne = pawnMovesOne^currentBoard[i]&pawnMovesOne;
-//        }
-//        //spaces that work in the fourth file because there are no pieces in the 3rd file before it
-//        long pawnMovesTwo = ((rank7>>>8)&pawnMovesOne)>>>8;
-//        //Excludes spaces in the fourth file with pieces on them
-//        for (int i = 0; i < currentBoard.length; i++) {
-//            pawnMovesTwo = pawnMovesTwo^currentBoard[i]&pawnMovesTwo;
-//        }
-//        long pawnDownwardsCombined = pawnMovesOne|pawnMovesTwo;
-//
-//
-//        return pawnDownwardsCombined | attacks;
     }
     //Private (Supporting) Pawn Methods..
     ////////Pawn Moves Forward///////////////////////////////////
@@ -1467,68 +1425,6 @@ public class CheckValidConditions {
         }
         return attackingSquares;
     }
-
-//    //the method used by only the kings which does not take into account either king in the places attacked by the other player
-//    private long getAttackingSquaresByCasingNoKing(Position pos, char casing){
-//        long attackingSquares = 0l;
-//        //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
-//        if(casing=='l'){
-//            //capital
-//            //have to put castlelogic for stackoverflow
-//            attackingSquares |= getLowerCaseRookMovesCastleLogic(pos);
-//            attackingSquares |= getLowerCaseKnightMoves(pos);
-//            attackingSquares |= getLowerCaseBishopMoves(pos);
-//            attackingSquares |= getLowerCaseQueenMoves(pos);
-//            attackingSquares |= getLowerCasePawnThreatenedSpaces(pos);
-//        }else if(casing=='c'){
-//            //lower case
-//            //have to put castlelogic for stackoverflow
-//            attackingSquares |= getCapitalRookMovesCastleLogic(pos);
-//            attackingSquares |= getCapitalKnightMoves(pos);
-//            attackingSquares |= getCapitalBishopMoves(pos);
-//            attackingSquares |= getCapitalQueenMoves(pos);
-//            attackingSquares |= getCapitalPawnThreatenedSpaces(pos);
-//        }else{
-//            System.out.println("Fatal: Error in Get Attacking Squares By Casing. Invalid Character.");
-//        }
-//
-//        return attackingSquares;
-//    }
-//    private long getAttackingSquaresByCasingCastling(Position pos, char casing){
-//        long attackingSquares = 0l;
-//        //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
-//        if(casing=='l'){
-//            //capital
-//            attackingSquares |= getLowerCaseRookMovesCastleLogic(pos);
-//            attackingSquares |= getLowerCaseKnightMoves(pos);
-//            attackingSquares |= getLowerCaseBishopMoves(pos);
-//            attackingSquares |= getLowerCaseQueenMoves(pos);
-//            attackingSquares |= getLowerCaseKingMovesCastleLogic(pos);
-//            attackingSquares |= getLowerCasePawnThreatenedSpaces(pos);
-//        }else if(casing=='c'){
-//            //capital
-//            attackingSquares |= getCapitalRookMovesCastleLogic(pos);
-//            attackingSquares |= getCapitalKnightMoves(pos);
-//            attackingSquares |= getCapitalBishopMoves(pos);
-//            attackingSquares |= getCapitalQueenMoves(pos);
-//            attackingSquares |= getCapitalKingMovesCastleLogic(pos);
-//            attackingSquares |= getCapitalPawnThreatenedSpaces(pos);
-//        }else{
-//            System.out.println("Fatal: Error in Get Attacking Squares By Casing. Invalid Character.");
-//        }
-//
-//        return attackingSquares;
-//    }
-
-
-
-    //for kings:
-    //the problem is that for the king to figure out where to move, it has to look at what spaces are currently being attacked by the enemy team. When it does this, it checks where the enemy king
-    //is attacking which calls where the black king is attacking, which calls where the white king is attacking, etc...
-    //the solution: Make a method which just takes into account all of the spaces the enemy king can attack, but not move to. This is in a similar light to the pawnThreatenedSpaces, but instead of
-    //it being solely for efficiency, it is to work around the stackoverflow error.
-
-
 
 
 }
