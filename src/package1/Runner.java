@@ -26,8 +26,6 @@ public class Runner {
 
 
 
-        long thisPiece = mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000000000", 2);
-
 
         mainBoard.mainPosition.setCapitalAFileRookHasMoved(true);
         mainBoard.mainPosition.setCapitalHFileRookHasMoved(true);
@@ -36,13 +34,14 @@ public class Runner {
         mainBoard.mainPosition.setCapitalKingHasMoved(true);
         mainBoard.mainPosition.setLowerCaseKingHasMoved(true);
         mainBoard.drawGameBoard(mainBoard.mainPosition.getCurrentBoard());
+        //to make a move, do it here for testing...
+        long thisPiece = mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000000000", 2); //if you want to reference a specific piece, just change a bit in this long and use the reference
 
-        mainBoard.mainPosition.fromToMove("b2b4");
 
-        //mainBoard.visualizeBitboard(checkValidConditions.getLowerCasePawnCombined(mainBoard.mainPosition));
 
+
+        //////////////////////////////////////////
         mainBoard.drawGameBoard(mainBoard.mainPosition.getCurrentBoard());
-
         System.out.println("Capital is in Checkmate: " + search.capitalIsInCheckmate(mainBoard.mainPosition));
         System.out.println("Lower Case is in Checkmate: " + search.lowerCaseIsInCheckmate(mainBoard.mainPosition));
         System.out.println();
