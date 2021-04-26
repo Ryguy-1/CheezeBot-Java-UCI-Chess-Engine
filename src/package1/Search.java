@@ -1,5 +1,7 @@
 package package1;
 
+import java.util.ArrayList;
+
 public class Search {
 
     /////////////////Capital///////////////////
@@ -139,5 +141,101 @@ public class Search {
         }
         return false;
     }
+
+    //returns the possible moves for a casing given a position object in algebraic notation
+    public String[] getPossibleMovesByCasing(Position pos, char casing){
+        Long[][] currentBoard = Runner.controlAndSeparation.splitBitboardArray(pos.getCurrentBoard());
+        ArrayList<String> possibleMovesList = new ArrayList<>();
+        //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
+
+        //capital vs lower case
+        if(casing == 'c') {
+            for (int i = currentBoard.length / 2; i < currentBoard.length; i++) {
+                for (int j = 0; j < currentBoard[i].length; j++) {
+                    //only have to evaluate the piece string once now
+                    String thisPieceString = Runner.controlAndSeparation.singleBitBitboardToString(currentBoard[i][j]);
+                    // get all of its possible moves.
+                    long possibleMoves = 0l;
+                    switch (i) {
+                        case 6:
+                            possibleMoves = Runner.checkValidConditions.getCapitalRookMoves(currentBoard[i][j], pos);
+                            break;
+                        case 7:
+                            possibleMoves = Runner.checkValidConditions.getCapitalKnightMoves(currentBoard[i][j], pos);
+                            break;
+                        case 8:
+                            possibleMoves = Runner.checkValidConditions.getCapitalBishopMoves(currentBoard[i][j], pos);
+                            break;
+                        case 9:
+                            possibleMoves = Runner.checkValidConditions.getCapitalQueenMoves(currentBoard[i][j], pos);
+                            break;
+                        case 10:
+                            possibleMoves = Runner.checkValidConditions.getCapitalKingMoves(pos);
+                            break;
+                        case 11:
+                            possibleMoves = Runner.checkValidConditions.getCapitalPawnCombined(currentBoard[i][j], pos);
+                            break;
+                    }
+                    // for each possible moveset of a piece, make a new array of single move bitboards for that piece
+                    Long[] singleMoveBitboards = Runner.controlAndSeparation.splitBitboard(possibleMoves);
+                    for (int k = 0; k < singleMoveBitboards.length; k++) {
+                        //if the move does not lead to check for yourself
+                        if(!pos.moveLeadsToCheck(currentBoard[i][j], singleMoveBitboards[k], 'c', "")){
+                            //turns the square the piece is on and the square it moves to into algebraic notation to add to the movelist
+                            possibleMovesList.add(thisPieceString + Runner.controlAndSeparation.singleBitBitboardToString(singleMoveBitboards[k]));
+                        }
+                    }
+                }
+            }
+        }else if(casing == 'l'){
+            for (int i = 0; i < currentBoard.length/2; i++) {
+                for (int j = 0; j < currentBoard[i].length; j++) {
+                    //only have to evaluate the piece string once now
+                    String thisPieceString = Runner.controlAndSeparation.singleBitBitboardToString(currentBoard[i][j]);
+                    // get all of its possible moves.
+                    long possibleMoves = 0l;
+                    switch (i) {
+                        case 0:
+                            possibleMoves = Runner.checkValidConditions.getLowerCaseRookMoves(currentBoard[i][j], pos);
+                            break;
+                        case 1:
+                            possibleMoves = Runner.checkValidConditions.getLowerCaseKnightMoves(currentBoard[i][j], pos);
+                            break;
+                        case 2:
+                            possibleMoves = Runner.checkValidConditions.getLowerCaseBishopMoves(currentBoard[i][j], pos);
+                            break;
+                        case 3:
+                            possibleMoves = Runner.checkValidConditions.getLowerCaseQueenMoves(currentBoard[i][j], pos);
+                            break;
+                        case 4:
+                            possibleMoves = Runner.checkValidConditions.getLowerCaseKingMoves(pos);
+                            break;
+                        case 5:
+                            possibleMoves = Runner.checkValidConditions.getLowerCasePawnCombined(currentBoard[i][j], pos);
+                            break;
+                    }
+                    // for each possible moveset of a piece, make a new array of single move bitboards for that piece
+                    Long[] singleMoveBitboards = Runner.controlAndSeparation.splitBitboard(possibleMoves);
+                    for (int k = 0; k < singleMoveBitboards.length; k++) {
+                        //if the move does not lead to check for yourself
+                        if(!pos.moveLeadsToCheck(currentBoard[i][j], singleMoveBitboards[k], 'c', "")){
+                            //turns the square the piece is on and the square it moves to into algebraic notation to add to the movelist
+                            possibleMovesList.add(thisPieceString + Runner.controlAndSeparation.singleBitBitboardToString(singleMoveBitboards[k]));
+                        }
+                    }
+                }
+            }
+        }
+
+        //change the ArrayList back to an Array to return
+        String[] finalMoveset = new String[possibleMovesList.size()];
+        for (int i = 0; i < finalMoveset.length; i++) {
+            finalMoveset[i] = possibleMovesList.get(i);
+        }
+
+        //return the final list of moves
+        return finalMoveset;
+    }
+
 
 }

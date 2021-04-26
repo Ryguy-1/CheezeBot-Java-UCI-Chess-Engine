@@ -5,13 +5,21 @@ public class Runner {
     public static CheckValidConditions checkValidConditions;
     public static BitboardControlAndSeparation controlAndSeparation;
     public static Search search;
+    public static BoardEvaluation boardEvaluation;
+    public static ZobristHash zobristHash;
+    public static Minimax minimax;
     public static UCI uci;
-    public static void main(String[] args) {
+
+    //change later so it doesn't throw the clonenotsupportexexception
+    public static void main(String[] args) throws CloneNotSupportedException{
         //initialize mainBoard FIRST
         mainBoard = new MainBoard();
         checkValidConditions = new CheckValidConditions();
         controlAndSeparation = new BitboardControlAndSeparation();
         search = new Search();
+        boardEvaluation = new BoardEvaluation();
+        zobristHash = new ZobristHash();
+        minimax = new Minimax();
         uci = new UCI();
 
 
@@ -19,12 +27,6 @@ public class Runner {
 //NEXT: Test all checkmate, mate, stalemates, etc..., along with making sure CheckValidConditions methods are perfect.
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
 
 
         mainBoard.mainPosition.setCapitalAFileRookHasMoved(true);
@@ -39,9 +41,18 @@ public class Runner {
 
 
 
+        System.out.println();
+        Position bestPositionEvaluated = minimax.minimax(mainBoard.mainPosition, 6, true, Minimax.MIN, Minimax.MAX);
+
+        System.out.println(bestPositionEvaluated.getBestMove());
+        System.out.println(bestPositionEvaluated.getBestMoves());
+        System.out.println(bestPositionEvaluated.getBoardEvaluation());
+        System.out.println();
+
 
         //////////////////////////////////////////
         mainBoard.drawGameBoard(mainBoard.mainPosition.getCurrentBoard());
+        System.out.println("Ranking: " + boardEvaluation.getBoardRanking(mainBoard.mainPosition));
         System.out.println("Capital is in Checkmate: " + search.capitalIsInCheckmate(mainBoard.mainPosition));
         System.out.println("Lower Case is in Checkmate: " + search.lowerCaseIsInCheckmate(mainBoard.mainPosition));
         System.out.println();

@@ -1,8 +1,9 @@
 package package1;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
-public class Position {
+public class Position implements Cloneable{
     //The intent of this class is to encapsulate whether the lower case and upper case kings, and all four rooks have moved.
     //Also, holds the history board and the chain of moves which have led up to that board in a STACK!! of moves.
 
@@ -19,6 +20,30 @@ public class Position {
             {"a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2"},
             {"a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"}
     };
+/////////////////////////////Temperamental Minimax Code////////////////
+    private String bestMove = "";
+    public void updateBestMove(String bestMove){
+        this.bestMove = bestMove;
+    }
+    public String getBestMove(){
+        return bestMove;
+    }
+
+
+    private Stack<String> bestMoves = new Stack<>();
+    public void pushBestMove(String bestMove){
+        bestMoves.push(bestMove);
+    }
+    public void popBestMove(){
+        bestMoves.pop();
+    }
+    public Stack<String> getBestMoves(){
+        return bestMoves;
+    }
+    public void setBestMoves(Stack<String> bestMoves){
+        this.bestMoves = (Stack<String>)bestMoves.clone();
+    }
+///////////////////////////////////////////////////////////
 
     ////////////////////////
     private boolean capitalAFileRookHasMoved = false;
@@ -33,7 +58,17 @@ public class Position {
 
     private Long[] currentBoardHistory = new Long[12];
     private Long[] currentBoard = new Long[12];
-    private Stack<String> moves = new Stack<>();
+
+    //////////////////////////////////////////////////
+    //can be used later to track sequence of moves. Not used yet!!
+    private ArrayList<String> movesToCurrent = new ArrayList<>();
+    public ArrayList<String> getMovesToCurrent(){
+        return movesToCurrent;
+    }
+    public void addMove(String fromTo){
+        movesToCurrent.add(fromTo);
+    }
+    //////////////////////////////////
 
 
     Position(Long[] currentBoard){
@@ -109,6 +144,11 @@ public class Position {
     }
 
 
+    //used in minimax
+    public int getBoardEvaluation(){
+        return Runner.boardEvaluation.getBoardRanking(this);
+    }
+
     public Long[] getCurrentBoard(){
         return currentBoard;
     }
@@ -116,13 +156,7 @@ public class Position {
         return currentBoardHistory;
     }
 
-//    public void revertOneMove(){ //you lose history when you do this...
-//        for (int i = 0; i < currentBoardHistory.length; i++) {
-//            currentBoard[i] = currentBoardHistory[i];
-//        }
-//    }
-
-    public void forceUpdatePosition(Long[] newBoard){
+    private void forceUpdatePosition(Long[] newBoard){
         currentBoardHistory = currentBoard;
         currentBoard = newBoard;
     }
@@ -223,7 +257,7 @@ public class Position {
         }
 
 
-        System.out.println("Promotion = |" + promotion + "| ");
+        //System.out.println("Promotion = |" + promotion + "| ");
 
         ////////////////////
 
@@ -331,6 +365,7 @@ public class Position {
         forceUpdatePosition(copyBoard);
 
     }
+
     public void fromToMove(long from, long to, String optionalPromotion){
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -605,5 +640,10 @@ public class Position {
         return referenceArray;
     }
 
+    //to clone this object somewhere else (ex in search potentially)
+    public Object clone() throws CloneNotSupportedException
+    {
+        return super.clone();
+    }
 
 }
