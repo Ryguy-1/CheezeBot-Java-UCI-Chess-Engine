@@ -29,6 +29,12 @@ public class BoardEvaluation {
 
     public int getBoardRanking(Position pos){
         int totalAdv = 0;
+        //checks for checkmates before all else
+        if(Runner.search.capitalIsInCheckmate(pos)){
+            return -100_000;
+        }else if(Runner.search.lowerCaseIsInCheckmate(pos)){
+            return 100_000;
+        }
         totalAdv+=getPieceAdvantage(pos)*materialMultiplier;
         totalAdv+=getMobilityAdvantage(pos)*mobilityMultiplier;
         return totalAdv;
