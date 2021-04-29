@@ -55,8 +55,12 @@ public class Minimax {
                 Position tempPosition = minimax(childPos, depth-1, false, alpha, beta);
 
                 //checks if the move is better
-                if(tempPosition.getBoardEvaluation()>bestValue && tempPosition.getMovesToCurrent().size()<=leastMoves){
-                    //if move is better, update bestValue and bestPosition (that already has the move list within it.
+                if (tempPosition.getBoardEvaluation() > bestValue) {
+                    leastMoves = tempPosition.getMovesToCurrent().size();
+                    bestValue = tempPosition.getBoardEvaluation();
+                    bestPosition = tempPosition;
+                    //if it is the same evaluation and less moves, it should also go
+                } else if (tempPosition.getBoardEvaluation()==bestValue && tempPosition.getMovesToCurrent().size()<leastMoves) {
                     leastMoves = tempPosition.getMovesToCurrent().size();
                     bestValue = tempPosition.getBoardEvaluation();
                     bestPosition = tempPosition;
@@ -95,8 +99,13 @@ public class Minimax {
                 Position tempPosition = minimax(childPos, depth-1, true, alpha, beta);
 
                 //checks if the move is better
-                if (tempPosition.getBoardEvaluation() < bestValue && tempPosition.getMovesToCurrent().size()<=leastMoves) {
-                    //if move is better, update bestValue and bestPosition (that already has the move list within it.
+                //if it is a better evaluation, it should go every time.
+                if (tempPosition.getBoardEvaluation() < bestValue) {
+                    leastMoves = tempPosition.getMovesToCurrent().size();
+                    bestValue = tempPosition.getBoardEvaluation();
+                    bestPosition = tempPosition;
+                    //if it is the same evaluation and less moves, it should also go
+                } else if (tempPosition.getBoardEvaluation()==bestValue && tempPosition.getMovesToCurrent().size()<leastMoves) {
                     leastMoves = tempPosition.getMovesToCurrent().size();
                     bestValue = tempPosition.getBoardEvaluation();
                     bestPosition = tempPosition;

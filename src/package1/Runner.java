@@ -12,8 +12,7 @@ public class Runner {
     public static Minimax minimax;
     public static UCI uci;
 
-    //change later so it doesn't throw the clonenotsupportexexception
-    public static void main(String[] args) throws CloneNotSupportedException{
+    public static void main(String[] args){
         //initialize mainBoard FIRST
         mainBoard = new MainBoard();
         checkValidConditions = new CheckValidConditions();
