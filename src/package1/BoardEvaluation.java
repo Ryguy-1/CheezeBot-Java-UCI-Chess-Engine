@@ -16,6 +16,8 @@ public class BoardEvaluation {
     private static final int materialMultiplier = 5;
     private static final int mobilityMultiplier = 1;
 
+    private static final int acceptStalemateDifference = 50;
+
     private static final int numActiveFactors = 1;
 
     //piece values for material advantage
@@ -31,12 +33,23 @@ public class BoardEvaluation {
         int totalAdv = 0;
         //checks for checkmates before all else
         if(Runner.search.capitalIsInCheckmate(pos)){
-            return -100_000;
+            return -Integer.MAX_VALUE;
         }else if(Runner.search.lowerCaseIsInCheckmate(pos)){
-            return 100_000;
+            return Integer.MAX_VALUE;
+
         }
         totalAdv+=getPieceAdvantage(pos)*materialMultiplier;
         totalAdv+=getMobilityAdvantage(pos)*mobilityMultiplier;
+        //then checks for stalemates.
+        if(Runner.search.capitalIsInStalemate(pos) && totalAdv<(-acceptStalemateDifference)){ //if capital is in stalemate and losing by more than acceptStalemateDifference, it tries to stalemate.
+            return Integer.MAX_VALUE/2; //stalemate does not compare to checkmate
+        }else if(Runner.search.capitalIsInStalemate(pos) && totalAdv>acceptStalemateDifference){
+            return Integer.MIN_VALUE/2;
+        }else if(Runner.search.lowerCaseIsInStalemate(pos) && totalAdv>acceptStalemateDifference){//if lower case is in stalemate and losing by more than acceptStalemateDifference, it tries to stalemate.
+            return Integer.MIN_VALUE/2;
+        }else if(Runner.search.lowerCaseIsInStalemate(pos) && totalAdv<(-acceptStalemateDifference)){
+            return Integer.MAX_VALUE/2;
+        }
         return totalAdv;
     }
 

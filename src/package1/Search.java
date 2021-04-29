@@ -218,7 +218,7 @@ public class Search {
                     Long[] singleMoveBitboards = Runner.controlAndSeparation.splitBitboard(possibleMoves);
                     for (int k = 0; k < singleMoveBitboards.length; k++) {
                         //if the move does not lead to check for yourself
-                        if(!pos.moveLeadsToCheck(currentBoard[i][j], singleMoveBitboards[k], 'c', "")){
+                        if(!pos.moveLeadsToCheck(currentBoard[i][j], singleMoveBitboards[k], 'l', "")){
                             //turns the square the piece is on and the square it moves to into algebraic notation to add to the movelist
                             possibleMovesList.add(thisPieceString + Runner.controlAndSeparation.singleBitBitboardToString(singleMoveBitboards[k]));
                         }

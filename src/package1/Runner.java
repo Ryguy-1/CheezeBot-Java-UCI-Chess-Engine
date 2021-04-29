@@ -39,22 +39,19 @@ public class Runner {
         mainBoard.mainPosition.setLowerCaseKingHasMoved(true);
         mainBoard.drawGameBoard(mainBoard.mainPosition.getCurrentBoard());
         //to make a move, do it here for testing...
-        long thisPiece = mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000000000", 2); //if you want to reference a specific piece, just change a bit in this long and use the reference
+        long thisPiece = mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000000000", 3); //if you want to reference a specific piece, just change a bit in this long and use the reference
 
         //System.out.println(controlAndSeparation.splitBitboard(checkValidConditions.getPseudoLegalMoves(mainBoard.mainPosition, 'c')).length);
 
         System.out.println();
         //call minimax
-        Position bestPositionEvaluated = minimax.minimax(mainBoard.mainPosition, 6, true, Minimax.MIN, Minimax.MAX);
+        Position bestPositionEvaluated = minimax.minimax(mainBoard.mainPosition, 3, false, Minimax.MIN, Minimax.MAX);
 
         //print out some values from the minimax evaluation
         System.out.println(bestPositionEvaluated.getMovesToCurrent());
         System.out.println("Best Move: " + bestPositionEvaluated.getMovesToCurrent().get(0));
         System.out.println();
-        for (int i = 0; i < bestPositionEvaluated.getMovesToCurrent().size(); i++) {
-           mainBoard.mainPosition.fromToMove(bestPositionEvaluated.getMovesToCurrent().get(i));
-           mainBoard.drawGameBoard(mainBoard.mainPosition.getCurrentBoard());
-        }
+        mainBoard.mainPosition = bestPositionEvaluated;
 
         //////////////////////////////////////////
         mainBoard.drawGameBoard(mainBoard.mainPosition.getCurrentBoard());
