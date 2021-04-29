@@ -117,20 +117,20 @@ public class BitboardControlAndSeparation {
         return copyBoard;
     }
 
-    public Long[] getCapitalPieces(Long[] currentBoard){
-        Long[] halfPieces = new Long[currentBoard.length/2];
+    public Long[] getCapitalPieces(Position pos){
+        Long[] halfPieces = new Long[pos.getCurrentBoard().length/2];
         byte counter = 0;
-        for (int i = currentBoard.length/2; i < currentBoard.length; i++) {
-            halfPieces[counter] = currentBoard[i];
+        for (int i = pos.getCurrentBoard().length/2; i < pos.getCurrentBoard().length; i++) {
+            halfPieces[counter] = pos.getCurrentBoard()[i];
             counter++;
         }
         return halfPieces;
     }
 
-    public Long[] getLowerCasePieces(Long[] currentBoard){
-        Long[] halfPieces = new Long[currentBoard.length/2];
-        for (int i = 0; i < currentBoard.length/2; i++) {
-            halfPieces[i] = currentBoard[i];
+    public Long[] getLowerCasePieces(Position pos){
+        Long[] halfPieces = new Long[pos.getCurrentBoard().length/2];
+        for (int i = 0; i < pos.getCurrentBoard().length/2; i++) {
+            halfPieces[i] = pos.getCurrentBoard()[i];
         }
         return halfPieces;
     }

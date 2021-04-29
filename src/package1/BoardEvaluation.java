@@ -15,6 +15,7 @@ public class BoardEvaluation {
     //Spend time later figuring out mobility advantages
     private static final int materialMultiplier = 20;
     private static final int mobilityMultiplier = 1;
+    private static final int attackingPiecesMultiplier = 5;
     private static final int checkAdder = 30;
 
     private static final int acceptStalemateDifference = 200;
@@ -22,7 +23,7 @@ public class BoardEvaluation {
     private static final int checkmateWeight = (Integer.MAX_VALUE/2); //HAS TO BE -1 BECAUSE MIN AND MAX VALUES IN MINIMAX ARE INTEGER.MAX_VALUE. THROWS ERROR OTHERWISE.
     private static final int stalemateWeight = (Integer.MAX_VALUE/4);
 
-    private static final int numActiveFactors = 1;
+    private static final int numActiveFactors = 2;
 
     //piece values for material advantage
     private static final int pawnValue = 1;
@@ -43,6 +44,7 @@ public class BoardEvaluation {
         }
         totalAdv+=getPieceAdvantage(pos)*materialMultiplier;
         totalAdv+=getMobilityAdvantage(pos)*mobilityMultiplier;
+        totalAdv+=getAttackingPiecesAdvantage(pos)*attackingPiecesMultiplier;
         totalAdv+=checkAdder;
         //then checks for stalemates.
         if(Runner.search.capitalIsInStalemate(pos) && totalAdv<(-acceptStalemateDifference)){ //if capital is in stalemate and losing by more than acceptStalemateDifference, it tries to stalemate.
@@ -122,6 +124,21 @@ public class BoardEvaluation {
     private int getMobilityAdvantage(Position pos){
         return Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.getPseudoLegalMoves(pos, 'c')).length
                 - Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.getPseudoLegalMoves(pos, 'l')).length;
+    }
+
+    public int getAttackingPiecesAdvantage(Position pos){
+        int totalValue = 0;
+        long capitalAttackingSquares = Runner.checkValidConditions.getAttackingSquaresByCasing(pos, 'c');
+        long lowerCaseAttackingSquares = Runner.checkValidConditions.getAttackingSquaresByCasing(pos, 'l');
+        long capitalPieceSquares = Runner.controlAndSeparation.condenseBoard(Runner.controlAndSeparation.getCapitalPieces(pos));
+        long lowerCasePieceSquares = Runner.controlAndSeparation.condenseBoard(Runner.controlAndSeparation.getLowerCasePieces(pos));
+
+        long capitalPiecesAttacked = lowerCaseAttackingSquares | capitalPieceSquares;
+        long lowerCasePiecesAttacked = capitalAttackingSquares | lowerCasePieceSquares;
+
+        totalValue -= Runner.controlAndSeparation.splitBitboard(capitalPiecesAttacked).length + Runner.controlAndSeparation.splitBitboard(lowerCasePiecesAttacked).length;
+
+        return totalValue;
     }
 
     //see chessProgrammingWiki for interesting study on Pawn Advantage with a Formula. Implement LATER.

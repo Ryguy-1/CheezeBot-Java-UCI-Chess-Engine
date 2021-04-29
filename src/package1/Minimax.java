@@ -22,11 +22,16 @@ public class Minimax {
     public Position minimax(Position pos, int depth, boolean isMaximizingPlayer, int alpha, int beta){
 
         if(depth==0){
-            if(Runner.search.capitalIsInCheckmate(pos)){
-                System.out.println("capital is in checkmate");
-            } else if (Runner.search.lowerCaseIsInCheckmate(pos)) {
-                System.out.println("lower case is in checkmate");
-            }
+//            if(Runner.search.capitalIsInCheckmate(pos)){
+//                System.out.println("capital is in checkmate");
+//                System.out.println(pos.getMovesToCurrent());
+//                Runner.mainBoard.drawGameBoard(pos.getCurrentBoard());
+//            } else if (Runner.search.lowerCaseIsInCheckmate(pos)) {
+//                System.out.println("lower case is in checkmate");
+//                System.out.println(pos.getMovesToCurrent());
+//                Runner.mainBoard.drawGameBoard(pos.getCurrentBoard());
+//            }
+            //^^ commenting out draws out all of the possible ways each player could get checkmate from starting point.
             return pos;
         }
 
@@ -77,9 +82,6 @@ public class Minimax {
             int leastMoves = MAX;
             Position bestPosition = null;
             String[] possibleMoves = Runner.search.getPossibleMovesByCasing(pos, 'l');
-            for (int i = 0; i < possibleMoves.length; i++) {
-                System.out.println(possibleMoves[i]);
-            }
             //if there are no moves, you have reached a leaf, so return it
             if (possibleMoves.length==0) {
                 return pos;
