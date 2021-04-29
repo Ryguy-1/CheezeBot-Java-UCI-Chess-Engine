@@ -44,13 +44,12 @@ public class Minimax {
                     //if move is better, update bestValue and bestPosition (that already has the move list within it.
                     bestValue = tempPosition.getBoardEvaluation();
                     bestPosition = tempPosition;
-                    System.out.println("found better move with "+ possibleMoves[i]);
                 }
 //                //need to come back to understand the alpha beta pruning
-//                alpha = Math.max(alpha, bestValue);
-//                if(beta <= alpha){
-//                    break;
-//                }
+                alpha = Math.max(alpha, bestValue);
+                if(beta <= alpha){
+                    break;
+                }
             }
             return bestPosition;
         }else{ //Lower Case
@@ -73,10 +72,10 @@ public class Minimax {
                     bestPosition = tempPosition;
                 }
 //                //Need to come back to understand the alpha beta pruning
-//                beta = Math.min(beta, bestValue);
-//                if(beta <= alpha){
-//                    break;
-//                }
+                beta = Math.min(beta, bestValue);
+                if(beta <= alpha){
+                    break;
+                }
             }
             return bestPosition;
         }

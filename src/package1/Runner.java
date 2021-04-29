@@ -45,7 +45,7 @@ public class Runner {
 
         System.out.println();
         //call minimax
-        Position bestPositionEvaluated = minimax.minimax(mainBoard.mainPosition, 4, true, Minimax.MIN, Minimax.MAX);
+        Position bestPositionEvaluated = minimax.minimax(mainBoard.mainPosition, 5, true, Minimax.MIN, Minimax.MAX);
 
         //print out some values from the minimax evaluation
         System.out.println(bestPositionEvaluated.getMovesToCurrent());
@@ -53,6 +53,7 @@ public class Runner {
         System.out.println();
         for (int i = 0; i < bestPositionEvaluated.getMovesToCurrent().size(); i++) {
            mainBoard.mainPosition.fromToMove(bestPositionEvaluated.getMovesToCurrent().get(i));
+           mainBoard.drawGameBoard(mainBoard.mainPosition.getCurrentBoard());
         }
 
         //////////////////////////////////////////

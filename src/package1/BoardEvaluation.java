@@ -30,7 +30,7 @@ public class BoardEvaluation {
     public int getBoardRanking(Position pos){
         int totalAdv = 0;
         totalAdv+=getPieceAdvantage(pos)*materialMultiplier;
-        totalAdv+=getMobilityAdvantage(pos);
+        totalAdv+=getMobilityAdvantage(pos)*mobilityMultiplier;
         return totalAdv;
     }
 
