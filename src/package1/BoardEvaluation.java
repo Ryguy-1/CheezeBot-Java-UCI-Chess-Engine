@@ -11,6 +11,11 @@ public class BoardEvaluation {
     //Capital = maximize
     //Lower Case = minimize
 
+
+    //Spend time later figuring out mobility advantages
+    private static final int materialMultiplier = 5;
+    private static final int mobilityMultiplier = 1;
+
     private static final int numActiveFactors = 1;
 
     //piece values for material advantage
@@ -24,8 +29,8 @@ public class BoardEvaluation {
 
     public int getBoardRanking(Position pos){
         int totalAdv = 0;
-        totalAdv+=getPieceAdvantage(pos);
-
+        totalAdv+=getPieceAdvantage(pos)*materialMultiplier;
+        totalAdv+=getMobilityAdvantage(pos);
         return totalAdv;
     }
 
@@ -89,6 +94,12 @@ public class BoardEvaluation {
         return totalCount;
     }
 
+    //to make faster, but slightly less accurate, only uses pseudo-legal moves, not fully legal moves necessarily. (just methods in CheckValidConditions)
+    //just counts the total number of squares that are included by pseudo-legal moves.
+    private int getMobilityAdvantage(Position pos){
+        return Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.getPseudoLegalMoves(pos, 'c')).length
+                - Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.getPseudoLegalMoves(pos, 'l')).length;
+    }
 
     //see chessProgrammingWiki for interesting study on Pawn Advantage with a Formula. Implement LATER.
     private double getPawnAdvantage(){

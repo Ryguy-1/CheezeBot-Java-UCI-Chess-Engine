@@ -3,7 +3,7 @@ package package1;
 import java.util.ArrayList;
 import java.util.Stack;
 
-public class Position implements Cloneable{
+public class Position{
     //The intent of this class is to encapsulate whether the lower case and upper case kings, and all four rooks have moved.
     //Also, holds the history board and the chain of moves which have led up to that board in a STACK!! of moves.
 
@@ -20,30 +20,6 @@ public class Position implements Cloneable{
             {"a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2"},
             {"a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"}
     };
-/////////////////////////////Temperamental Minimax Code////////////////
-    private String bestMove = "";
-    public void updateBestMove(String bestMove){
-        this.bestMove = bestMove;
-    }
-    public String getBestMove(){
-        return bestMove;
-    }
-
-
-    private Stack<String> bestMoves = new Stack<>();
-    public void pushBestMove(String bestMove){
-        bestMoves.push(bestMove);
-    }
-    public void popBestMove(){
-        bestMoves.pop();
-    }
-    public Stack<String> getBestMoves(){
-        return bestMoves;
-    }
-    public void setBestMoves(Stack<String> bestMoves){
-        this.bestMoves = (Stack<String>)bestMoves.clone();
-    }
-///////////////////////////////////////////////////////////
 
     ////////////////////////
     private boolean capitalAFileRookHasMoved = false;
@@ -69,6 +45,10 @@ public class Position implements Cloneable{
         movesToCurrent.add(fromTo);
     }
     //////////////////////////////////
+
+    public int getBoardEvaluation(){ //can be optimized later...
+        return Runner.boardEvaluation.getBoardRanking(this);
+    }
 
 
     Position(Long[] currentBoard){
@@ -141,12 +121,6 @@ public class Position implements Cloneable{
     }
     public void setLowerCaseKingHasMoved(boolean lowerCaseKingHasMoved) {
         this.lowerCaseKingHasMoved = lowerCaseKingHasMoved;
-    }
-
-
-    //used in minimax
-    public int getBoardEvaluation(){
-        return Runner.boardEvaluation.getBoardRanking(this);
     }
 
     public Long[] getCurrentBoard(){
@@ -640,10 +614,29 @@ public class Position implements Cloneable{
         return referenceArray;
     }
 
-    //to clone this object somewhere else (ex in search potentially)
-    public Object clone() throws CloneNotSupportedException
-    {
-        return super.clone();
+
+    //Every time add new member variable, need to update this. Clone method wasn't working, so did it manually.
+    public Position getPositionCopy(){
+        Long[] newCurrentBoard = getBitboardArrayCopy(currentBoard);
+        Long[] newCurrentBoardHistory = getBitboardArrayCopy(currentBoardHistory);
+        Position newPosition = new Position(newCurrentBoard, newCurrentBoardHistory);
+        newPosition.setCapitalAFileRookHasMoved(capitalAFileRookHasMoved);
+        newPosition.setCapitalHFileRookHasMoved(capitalHFileRookHasMoved);
+        newPosition.setCapitalKingHasMoved(capitalKingHasMoved);
+        newPosition.setLowerCaseAFileRookHasMoved(lowerCaseAFileRookHasMoved);
+        newPosition.setLowerCaseHFileRookHasMoved(lowerCaseHFileRookHasMoved);
+        newPosition.setLowerCaseKingHasMoved(lowerCaseKingHasMoved);
+        for (int i = 0; i < movesToCurrent.size(); i++) {
+            newPosition.addMove(movesToCurrent.get(i));
+        }
+        return newPosition;
+    }
+
+    private Long[] getBitboardArrayCopy(Long[] bitboardArray){
+        Long[] newBitboard = new Long[bitboardArray.length];
+        for (int i = 0; i < bitboardArray.length; i++) {
+            newBitboard[i] = bitboardArray[i];
+        }return newBitboard;
     }
 
 }

@@ -1,5 +1,7 @@
 package package1;
 
+import java.util.Stack;
+
 public class Runner {
     public static MainBoard mainBoard;
     public static CheckValidConditions checkValidConditions;
@@ -39,16 +41,19 @@ public class Runner {
         //to make a move, do it here for testing...
         long thisPiece = mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000000000", 2); //if you want to reference a specific piece, just change a bit in this long and use the reference
 
-
+        //System.out.println(controlAndSeparation.splitBitboard(checkValidConditions.getPseudoLegalMoves(mainBoard.mainPosition, 'c')).length);
 
         System.out.println();
-        Position bestPositionEvaluated = minimax.minimax(mainBoard.mainPosition, 6, true, Minimax.MIN, Minimax.MAX);
+        //call minimax
+        Position bestPositionEvaluated = minimax.minimax(mainBoard.mainPosition, 4, true, Minimax.MIN, Minimax.MAX);
 
-        System.out.println(bestPositionEvaluated.getBestMove());
-        System.out.println(bestPositionEvaluated.getBestMoves());
-        System.out.println(bestPositionEvaluated.getBoardEvaluation());
+        //print out some values from the minimax evaluation
+        System.out.println(bestPositionEvaluated.getMovesToCurrent());
+        System.out.println("Best Move: " + bestPositionEvaluated.getMovesToCurrent().get(0));
         System.out.println();
-
+        for (int i = 0; i < bestPositionEvaluated.getMovesToCurrent().size(); i++) {
+           mainBoard.mainPosition.fromToMove(bestPositionEvaluated.getMovesToCurrent().get(i));
+        }
 
         //////////////////////////////////////////
         mainBoard.drawGameBoard(mainBoard.mainPosition.getCurrentBoard());

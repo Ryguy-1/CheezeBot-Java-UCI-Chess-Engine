@@ -1426,5 +1426,32 @@ public class CheckValidConditions {
         return attackingSquares;
     }
 
+    public long getPseudoLegalMoves(Position pos, char casing){
+        long attackingSquares = 0l;
+        //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
+
+        //Threatened Spaces methods: (King used to avoid castling and attack avoid logic) (Rook used to avoid castling logic) (Pawns to only take threatened single diagonal squares)
+        if(casing=='l'){
+            //lowerCase
+            attackingSquares |= getLowerCaseRookMoves(pos);        //attackingSquares |= getLowerCaseRookThreatenedSpaces(pos);
+            attackingSquares |= getLowerCaseKnightMoves(pos);
+            attackingSquares |= getLowerCaseBishopMoves(pos);
+            attackingSquares |= getLowerCaseQueenMoves(pos);
+            attackingSquares |= getLowerCaseKingMoves(pos);
+            attackingSquares |= getLowerCasePawnCombined(pos);
+        }else if(casing=='c'){
+            //capital
+            attackingSquares |= getCapitalRookMoves(pos);            //attackingSquares |= getCapitalRookThreatenedSpaces(pos);
+            attackingSquares |= getCapitalKnightMoves(pos);
+            attackingSquares |= getCapitalBishopMoves(pos);
+            attackingSquares |= getCapitalQueenMoves(pos);
+            attackingSquares |= getCapitalKingMoves(pos);
+            attackingSquares |= getCapitalPawnCombined(pos);
+        }else{
+            System.out.println("Fatal: Error in Get Attacking Squares By Casing. Invalid Character.");
+        }
+        return attackingSquares;
+    }
+
 
 }

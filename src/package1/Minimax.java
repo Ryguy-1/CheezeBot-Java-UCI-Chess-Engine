@@ -27,77 +27,58 @@ public class Minimax {
         }
 
         if(isMaximizingPlayer){ //Capital
-            int bestValue = MIN;
+            int bestValue = MIN; //initialize a best value
+            Position bestPosition = null; //initialize a best position
             String[] possibleMoves = Runner.search.getPossibleMovesByCasing(pos, 'c');
             //get all possible moves here...
             for (int i = 0; i < possibleMoves.length; i++) {
                 //clone position object into new child objects which can have their own moves done on them
-                Position childPos;
-                try{
-                    childPos = (Position)pos.clone();
-                }catch(Exception e){
-                    childPos = null;
-                    System.out.println("Could Not Clone Position Object. Fatal.");
-                }
+                Position childPos = pos.getPositionCopy();
                 //create a new child position to move and evaluate
-                childPos.fromToMove(possibleMoves[i]);
-                //evaluate that move and set it equal to a new position object to use in calculations -> important because this new one will come back with a best move embedded within.
-                Position minimaxCalcPosition = minimax(childPos, depth-1, false, alpha, beta);
-                //if the board of the new one is better than the bestValue board...
-                if(minimaxCalcPosition.getBoardEvaluation()>bestValue){
-                    //best value becomes this board evaluation
-                    bestValue = minimaxCalcPosition.getBoardEvaluation();
-                    //list of bestMoves
-                    //first update the stack to that of its new best predecessor
-                    pos.setBestMoves(minimaxCalcPosition.getBestMoves());
-                    //then push onto the stack the new best move
-                    pos.pushBestMove(possibleMoves[i]); //push the new move to the best moves of its predecessor
-                    //this position's best move is now updated as a node with a best move to be returned later...
-                    pos.updateBestMove(possibleMoves[i]);
+                childPos.fromToMove(possibleMoves[i]); //make the move
+                childPos.addMove(possibleMoves[i]); //adds the move to that arraylist for that child
+                //Gets the result from minimax
+                Position tempPosition = minimax(childPos, depth-1, false, alpha, beta);
+                //checks if the move is better
+                if(tempPosition.getBoardEvaluation()>bestValue){
+                    //if move is better, update bestValue and bestPosition (that already has the move list within it.
+                    bestValue = tempPosition.getBoardEvaluation();
+                    bestPosition = tempPosition;
+                    System.out.println("found better move with "+ possibleMoves[i]);
                 }
 //                //need to come back to understand the alpha beta pruning
-                alpha = Math.max(alpha, bestValue);
-                if(beta <= alpha){
-                    break;
-                }
+//                alpha = Math.max(alpha, bestValue);
+//                if(beta <= alpha){
+//                    break;
+//                }
             }
-            return pos;
+            return bestPosition;
         }else{ //Lower Case
             int bestValue = MAX;
             String[] possibleMoves = Runner.search.getPossibleMovesByCasing(pos, 'l');
+            Position bestPosition = null;
             //get all possible moves here...
             for (int i = 0; i < possibleMoves.length; i++) {
                 //clone position object into new child objects which can have their own moves done on them
-                Position childPos;
-                try {
-                    childPos = (Position) pos.clone();
-                } catch (Exception e) {
-                    childPos = null;
-                    System.out.println("Could Not Clone Position Object. Fatal.");
-                }
+                Position childPos = pos.getPositionCopy();
                 //create a new child position to move and evaluate
-                childPos.fromToMove(possibleMoves[i]);
-                //evaluate that move and set it equal to a new position object to use in calculations -> important because this new one will come back with a best move embedded within.
-                Position minimaxCalcPosition = minimax(childPos, depth-1, true, alpha, beta);
-                //if the board of the new one is better than the bestValue board...
-                if(minimaxCalcPosition.getBoardEvaluation()<bestValue){
-                    //best value becomes this board evaluation
-                    bestValue = minimaxCalcPosition.getBoardEvaluation();
-                    //list of bestMoves
-                    //first update the stack to that of its new best predecessor
-                    pos.setBestMoves(minimaxCalcPosition.getBestMoves());
-                    //then push onto the stack the new best move
-                    pos.pushBestMove(possibleMoves[i]); //push the new move to the best moves of its predecessor
-                    //this position's best move is now updated as a node with a best move to be returned later...
-                    pos.updateBestMove(possibleMoves[i]);
+                childPos.fromToMove(possibleMoves[i]); //make the move
+                childPos.addMove(possibleMoves[i]); //adds the move to that arraylist for that child
+                //Gets the result from minimax
+                Position tempPosition = minimax(childPos, depth-1, true, alpha, beta);
+                //checks if the move is better
+                if(tempPosition.getBoardEvaluation()<bestValue){
+                    //if move is better, update bestValue and bestPosition (that already has the move list within it.
+                    bestValue = tempPosition.getBoardEvaluation();
+                    bestPosition = tempPosition;
                 }
 //                //Need to come back to understand the alpha beta pruning
-                beta = Math.min(beta, bestValue);
-                if(beta <= alpha){
-                    break;
-                }
+//                beta = Math.min(beta, bestValue);
+//                if(beta <= alpha){
+//                    break;
+//                }
             }
-            return pos;
+            return bestPosition;
         }
     }
 
