@@ -45,7 +45,7 @@ public class Runner {
 
         System.out.println();
         //call minimax
-        Position bestPositionEvaluated = minimax.minimax(mainBoard.mainPosition, 3, false, Minimax.MIN, Minimax.MAX);
+        Position bestPositionEvaluated = minimax.minimax(mainBoard.mainPosition, 4, false, Minimax.MIN, Minimax.MAX);
 
         //print out some values from the minimax evaluation
         System.out.println(bestPositionEvaluated.getMovesToCurrent());

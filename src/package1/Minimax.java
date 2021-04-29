@@ -22,79 +22,91 @@ public class Minimax {
     public Position minimax(Position pos, int depth, boolean isMaximizingPlayer, int alpha, int beta){
 
         if(depth==0){
+            if(Runner.search.capitalIsInCheckmate(pos)){
+                System.out.println("capital is in checkmate");
+            } else if (Runner.search.lowerCaseIsInCheckmate(pos)) {
+                System.out.println("lower case is in checkmate");
+            }
             return pos;
         }
 
         if(isMaximizingPlayer){ //Capital
             int bestValue = MIN; //initialize a best value
+            int leastMoves = MAX;
             Position bestPosition = null; //initialize a best position
             String[] possibleMoves = Runner.search.getPossibleMovesByCasing(pos, 'c');
-            //both checkmates and stalemates cause null pointer exceptions
-            //if you don't have any possible moves, it's because the opponent has put you in checkmate or stalemate
-            if(possibleMoves.length==0){ //you have no moves
+
+            //if there are no moves, you have reached a leaf, so return it
+            if (possibleMoves.length==0) {
                 return pos;
             }
+
             //get all possible moves here...
             for (int i = 0; i < possibleMoves.length; i++) {
+
                 //clone position object into new child objects which can have their own moves done on them
                 Position childPos = pos.getPositionCopy();
+
                 //create a new child position to move and evaluate
-                System.out.println(childPos.getMovesToCurrent() + " cap1");
                 childPos.fromToMove(possibleMoves[i]); //make the move
                 childPos.addMove(possibleMoves[i]); //adds the move to that arraylist for that child
-                //Gets the result from minimax
-                System.out.println("Depth cap: " + depth);
 
+                //Gets the result from minimax
                 Position tempPosition = minimax(childPos, depth-1, false, alpha, beta);
-                System.out.println(childPos.getMovesToCurrent() + " cap2");
+
                 //checks if the move is better
-                if(tempPosition.getBoardEvaluation()>bestValue){
+                if(tempPosition.getBoardEvaluation()>bestValue && tempPosition.getMovesToCurrent().size()<=leastMoves){
                     //if move is better, update bestValue and bestPosition (that already has the move list within it.
+                    leastMoves = tempPosition.getMovesToCurrent().size();
                     bestValue = tempPosition.getBoardEvaluation();
                     bestPosition = tempPosition;
                 }
 //                //need to come back to understand the alpha beta pruning
-//                alpha = Math.max(alpha, bestValue);
-//                if(beta <= alpha){
-//                    break;
-//                }
+                alpha = Math.max(alpha, bestValue);
+                if(beta <= alpha){
+                    break;
+                }
             }
             return bestPosition;
         }else{ //Lower Case
             int bestValue = MAX;
+            int leastMoves = MAX;
             Position bestPosition = null;
             String[] possibleMoves = Runner.search.getPossibleMovesByCasing(pos, 'l');
             for (int i = 0; i < possibleMoves.length; i++) {
                 System.out.println(possibleMoves[i]);
             }
-            //both checkmates and stalemates cause null pointer exceptions
-            //if you don't have any possible moves, it's because the opponent has put you in checkmate or stalemate
-            if(possibleMoves.length==0){ //you have no moves
+            //if there are no moves, you have reached a leaf, so return it
+            if (possibleMoves.length==0) {
                 return pos;
             }
+
             //get all possible moves here...
             for (int i = 0; i < possibleMoves.length; i++) {
-                System.out.println(i + " ==================================================================");
+
                 //clone position object into new child objects which can have their own moves done on them
                 Position childPos = pos.getPositionCopy();
+
                 //create a new child position to move and evaluate
                 childPos.fromToMove(possibleMoves[i]); //make the move
                 childPos.addMove(possibleMoves[i]); //adds the move to that arraylist for that child
+
                 //Gets the result from minimax
-                System.out.println("Depth lc: " + depth);
                 Position tempPosition = minimax(childPos, depth-1, true, alpha, beta);
-                System.out.println(childPos.getMovesToCurrent() + " lc2");
+
                 //checks if the move is better
-                if(tempPosition.getBoardEvaluation()<bestValue){
+                if (tempPosition.getBoardEvaluation() < bestValue && tempPosition.getMovesToCurrent().size()<=leastMoves) {
                     //if move is better, update bestValue and bestPosition (that already has the move list within it.
+                    leastMoves = tempPosition.getMovesToCurrent().size();
                     bestValue = tempPosition.getBoardEvaluation();
                     bestPosition = tempPosition;
                 }
+
 //                //Need to come back to understand the alpha beta pruning
-//                beta = Math.min(beta, bestValue);
-//                if(beta <= alpha){
-//                    break;
-//                }
+                beta = Math.min(beta, bestValue);
+                if(beta <= alpha){
+                    break;
+                }
             }
             return bestPosition;
         }

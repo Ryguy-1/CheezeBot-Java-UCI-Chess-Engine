@@ -13,10 +13,14 @@ public class BoardEvaluation {
 
 
     //Spend time later figuring out mobility advantages
-    private static final int materialMultiplier = 5;
+    private static final int materialMultiplier = 20;
     private static final int mobilityMultiplier = 1;
+    private static final int checkAdder = 30;
 
-    private static final int acceptStalemateDifference = 50;
+    private static final int acceptStalemateDifference = 200;
+
+    private static final int checkmateWeight = (Integer.MAX_VALUE/2); //HAS TO BE -1 BECAUSE MIN AND MAX VALUES IN MINIMAX ARE INTEGER.MAX_VALUE. THROWS ERROR OTHERWISE.
+    private static final int stalemateWeight = (Integer.MAX_VALUE/4);
 
     private static final int numActiveFactors = 1;
 
@@ -33,22 +37,22 @@ public class BoardEvaluation {
         int totalAdv = 0;
         //checks for checkmates before all else
         if(Runner.search.capitalIsInCheckmate(pos)){
-            return -Integer.MAX_VALUE;
+            return -checkmateWeight;
         }else if(Runner.search.lowerCaseIsInCheckmate(pos)){
-            return Integer.MAX_VALUE;
-
+            return checkmateWeight;
         }
         totalAdv+=getPieceAdvantage(pos)*materialMultiplier;
         totalAdv+=getMobilityAdvantage(pos)*mobilityMultiplier;
+        totalAdv+=checkAdder;
         //then checks for stalemates.
         if(Runner.search.capitalIsInStalemate(pos) && totalAdv<(-acceptStalemateDifference)){ //if capital is in stalemate and losing by more than acceptStalemateDifference, it tries to stalemate.
-            return Integer.MAX_VALUE/2; //stalemate does not compare to checkmate
+            return stalemateWeight; //stalemate does not compare to checkmate
         }else if(Runner.search.capitalIsInStalemate(pos) && totalAdv>acceptStalemateDifference){
-            return Integer.MIN_VALUE/2;
+            return -stalemateWeight;
         }else if(Runner.search.lowerCaseIsInStalemate(pos) && totalAdv>acceptStalemateDifference){//if lower case is in stalemate and losing by more than acceptStalemateDifference, it tries to stalemate.
-            return Integer.MIN_VALUE/2;
+            return -stalemateWeight;
         }else if(Runner.search.lowerCaseIsInStalemate(pos) && totalAdv<(-acceptStalemateDifference)){
-            return Integer.MAX_VALUE/2;
+            return stalemateWeight;
         }
         return totalAdv;
     }
@@ -131,5 +135,7 @@ public class BoardEvaluation {
         System.out.println(df.format(num));
         return Double.parseDouble(df.format(num));
     }
+
+
 
 }
