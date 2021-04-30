@@ -45,14 +45,12 @@ public class MainBoard {
     //temp random generator
     Random random;
 
-
-
     MainBoard(){
-        initializeBoard();
+        initializeNewBoard();
         random = new Random();
     }
 
-    private void initializeBoard(){
+    public void initializeNewBoard(){
 
         Long[] mainBoardInitializer = new Long[12];
 
