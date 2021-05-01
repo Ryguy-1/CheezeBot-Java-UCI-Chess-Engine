@@ -179,10 +179,20 @@ public class Search {
                     // for each possible moveset of a piece, make a new array of single move bitboards for that piece
                     Long[] singleMoveBitboards = Runner.controlAndSeparation.splitBitboard(possibleMoves);
                     for (int k = 0; k < singleMoveBitboards.length; k++) {
+                        boolean canPromote = false;
+                        //if there is a capital rook on the 8th rank, it can promote
+                        if(((singleMoveBitboards[k] & Runner.checkValidConditions.rank8)!=0) && i==11){ //and it is a capital pawn (i==11)
+                            canPromote = true;
+                        }
                         //if the move does not lead to check for yourself
-                        if(!pos.moveLeadsToCheck(currentBoard[i][j], singleMoveBitboards[k], 'c', "")){
+                        if(!pos.moveLeadsToCheck(currentBoard[i][j], singleMoveBitboards[k], 'c', "")){ //keep this with no optional promotion because it cannot prevent check or checkmate within one move... saves work
                             //turns the square the piece is on and the square it moves to into algebraic notation to add to the movelist
-                            possibleMovesList.add(thisPieceString + Runner.controlAndSeparation.singleBitBitboardToString(singleMoveBitboards[k]));
+                            if(canPromote){ //if you can promote, it adds the promotions for queens and rooks as possibilities for promotion
+                                possibleMovesList.add(thisPieceString + Runner.controlAndSeparation.singleBitBitboardToString(singleMoveBitboards[k])+"q");
+                                possibleMovesList.add(thisPieceString + Runner.controlAndSeparation.singleBitBitboardToString(singleMoveBitboards[k])+"r");
+                            }else {//otherwise, no promotion for you
+                                possibleMovesList.add(thisPieceString + Runner.controlAndSeparation.singleBitBitboardToString(singleMoveBitboards[k]));
+                            }
                         }
                     }
                 }
@@ -217,10 +227,20 @@ public class Search {
                     // for each possible moveset of a piece, make a new array of single move bitboards for that piece
                     Long[] singleMoveBitboards = Runner.controlAndSeparation.splitBitboard(possibleMoves);
                     for (int k = 0; k < singleMoveBitboards.length; k++) {
+                        boolean canPromote = false;
+                        //if there is a capital rook on the 8th rank, it can promote
+                        if(((singleMoveBitboards[k] & Runner.checkValidConditions.rank1)!=0) && i==5){ //and it is a lowercase pawn
+                            canPromote = true;
+                        }
                         //if the move does not lead to check for yourself
-                        if(!pos.moveLeadsToCheck(currentBoard[i][j], singleMoveBitboards[k], 'l', "")){
+                        if(!pos.moveLeadsToCheck(currentBoard[i][j], singleMoveBitboards[k], 'l', "")){ //keep this with no optional promotion because it cannot prevent check or checkmate within one move... saves work
                             //turns the square the piece is on and the square it moves to into algebraic notation to add to the movelist
-                            possibleMovesList.add(thisPieceString + Runner.controlAndSeparation.singleBitBitboardToString(singleMoveBitboards[k]));
+                            if(canPromote){ //if you can promote, it adds the promotions for queens and rooks as possibilities for promotion
+                                possibleMovesList.add(thisPieceString + Runner.controlAndSeparation.singleBitBitboardToString(singleMoveBitboards[k])+"q");
+                                possibleMovesList.add(thisPieceString + Runner.controlAndSeparation.singleBitBitboardToString(singleMoveBitboards[k])+"r");
+                            }else {//otherwise, no promotion for you
+                                possibleMovesList.add(thisPieceString + Runner.controlAndSeparation.singleBitBitboardToString(singleMoveBitboards[k]));
+                            }
                         }
                     }
                 }

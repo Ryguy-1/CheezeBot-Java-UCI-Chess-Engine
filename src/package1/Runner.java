@@ -25,7 +25,7 @@ public class Runner {
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//NEXT: Test all checkmate, mate, stalemates, etc..., along with making sure CheckValidConditions methods are perfect.
+//NEXT: Beat 1500: Handily with 77 percent accuracy vs its 25 percent.
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -39,13 +39,13 @@ public class Runner {
 //        mainBoard.drawGameBoard(mainBoard.mainPosition.getCurrentBoard());
 //        //to make a move, do it here for testing...
 //        long thisPiece = mainBoard.parseLong("0000000000000000000000000000000000000000000000000000000000000000", 3); //if you want to reference a specific piece, just change a bit in this long and use the reference
-//
-//        //System.out.println(controlAndSeparation.splitBitboard(checkValidConditions.getPseudoLegalMoves(mainBoard.mainPosition, 'c')).length);
-//
-//
+
+        //System.out.println(controlAndSeparation.splitBitboard(checkValidConditions.getPseudoLegalMoves(mainBoard.mainPosition, 'c')).length);
+
+
 //        System.out.println();
 //        //call minimax
-//        Position bestPositionEvaluated = minimax.minimax(mainBoard.mainPosition, 4, true, Minimax.MIN, Minimax.MAX);
+//        Position bestPositionEvaluated = minimax.minimax(mainBoard.mainPosition, 1, true, Minimax.MIN, Minimax.MAX);
 //
 //        //print out some values from the minimax evaluation
 //        System.out.println(bestPositionEvaluated.getMovesToCurrent());

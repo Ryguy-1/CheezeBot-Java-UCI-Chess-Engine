@@ -4,8 +4,9 @@ import java.util.Scanner;
 
 public class UCI {
     Thread t1;
-    public static final String engineName = "Amino Beta";
+    public static final String engineName = "CheezeBot Beta";
     public static final String creditName = "Ryland";
+    public static final String version = "0.11";
     public static boolean engineRunning;
 
     public static boolean isReadyOk = true;
@@ -24,13 +25,13 @@ public class UCI {
 //            //draw initial game board
 //            Runner.mainBoard.drawGameBoard(Runner.mainBoard.mainPosition.getCurrentBoard());
 //
-//            while(programRunning){
+//            while(engineRunning){
 //                if(Runner.search.capitalIsInCheckmate(Runner.mainBoard.mainPosition)){
-//                    programRunning = false;
+//                    engineRunning = false;
 //                    System.out.println("Capital Is In Checkmate!! Good Game");
 //                    break;
 //                } else if (Runner.search.lowerCaseIsInCheckmate(Runner.mainBoard.mainPosition)) {
-//                    programRunning = false;
+//                    engineRunning = false;
 //                    System.out.println("Lower Case Is In Checkmate!! Good Game");
 //                    break;
 //                }
@@ -44,16 +45,19 @@ public class UCI {
 //                    Runner.mainBoard.drawGameBoard(Runner.mainBoard.mainPosition.getCurrentBoard());
 //                    System.out.println();
 //                if(Runner.search.capitalIsInCheckmate(Runner.mainBoard.mainPosition)){
-//                    programRunning = false;
+//                    engineRunning = false;
 //                    System.out.println("Capital Is In Checkmate!! Good Game");
 //                    break;
 //                } else if (Runner.search.lowerCaseIsInCheckmate(Runner.mainBoard.mainPosition)) {
-//                    programRunning = false;
+//                    engineRunning = false;
 //                    System.out.println("Lower Case Is In Checkmate!! Good Game");
 //                    break;
 //                }
 //                    //computer turn as lower case
-//                    Runner.mainBoard.mainPosition.fromToMove(Runner.minimax.minimax(Runner.mainBoard.mainPosition, lookAhead, false, Minimax.MIN, Minimax.MAX).getMovesToCurrent().get(0));
+//                    Position newPos = Runner.minimax.minimax(Runner.mainBoard.mainPosition, lookAhead, false, Minimax.MIN, Minimax.MAX);
+//                    Runner.mainBoard.mainPosition.fromToMove(newPos.getMovesToCurrent().get(0));
+//                    //print logic train
+//                    System.out.println(newPos.getMovesToCurrent());
 //                    //Print board for computer move
 //                    Runner.mainBoard.drawGameBoard(Runner.mainBoard.mainPosition.getCurrentBoard());
 //
@@ -80,6 +84,8 @@ public class UCI {
                     inputPosition(input);
                 } else if (input.equals("go")) {
                     inputGo();
+                }else if(input.equals("quit")){
+                    quit();
                 } else if (input.equals("drawBoard")) {
                     drawMainBoard();
                 }
@@ -88,7 +94,6 @@ public class UCI {
             }
         });
         t1.start();
-
 
     }
 
@@ -117,6 +122,7 @@ public class UCI {
 
     private void inputUCINewGame() {
         //what you call when you want to start a new game. Clear hash table, etc.
+        System.out.println("Starting new game with " + engineName + ". Version: " + version);
         Runner.mainBoard.initializeNewBoard();
     }
 
@@ -145,9 +151,16 @@ public class UCI {
         drawMainBoard();
     }
 
+    private void quit(){
+        engineRunning = false; //stop the engine from receiving commands
+        System.exit(0); //exit the program
+    }
+
     private void drawMainBoard(){
         Runner.mainBoard.drawGameBoard(Runner.mainBoard.mainPosition.getCurrentBoard());
     }
+
+
 
 }
 

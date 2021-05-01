@@ -13,17 +13,21 @@ public class BoardEvaluation {
 
 
     //Spend time later figuring out mobility advantages
-    private static final int materialMultiplier = 20;
-    private static final int mobilityMultiplier = 1;
-    private static final int attackingPiecesMultiplier = 5;
-    private static final int checkAdder = 30;
+    private static final int materialMultiplier = 60; //don't want anything to interfere with this...
+    private static final int centerControlMultiplier = 5;
+    private static final int pawnStructureMultiplier = 13;
+    private static final int attackingPiecesMultiplier = 2;
+    private static final int mobilityMultiplier = 3;
 
-    private static final int acceptStalemateDifference = 200;
+    private static final int checkAdder = 40;
+    private static final int castleAdder = 30;
+
+    private static final int acceptStalemateDifference = 300;
 
     private static final int checkmateWeight = (Integer.MAX_VALUE/2); //HAS TO BE -1 BECAUSE MIN AND MAX VALUES IN MINIMAX ARE INTEGER.MAX_VALUE. THROWS ERROR OTHERWISE.
     private static final int stalemateWeight = (Integer.MAX_VALUE/4);
 
-    private static final int numActiveFactors = 2;
+    private static final int numActiveFactors = 4; //including checkAdder.
 
     //piece values for material advantage
     private static final int pawnValue = 1;
@@ -36,17 +40,32 @@ public class BoardEvaluation {
 
     public int getBoardRanking(Position pos){
         int totalAdv = 0;
-        //checks for checkmates before all else
+        //CHECKMATES BEFORE EVERYTHING ELSE
         if(Runner.search.capitalIsInCheckmate(pos)){
             return -checkmateWeight;
         }else if(Runner.search.lowerCaseIsInCheckmate(pos)){
             return checkmateWeight;
         }
+        //OTHER VARIABLES
         totalAdv+=getPieceAdvantage(pos)*materialMultiplier;
         totalAdv+=getMobilityAdvantage(pos)*mobilityMultiplier;
         totalAdv+=getAttackingPiecesAdvantage(pos)*attackingPiecesMultiplier;
-        totalAdv+=checkAdder;
-        //then checks for stalemates.
+        totalAdv+=getCenterControlAdvantage(pos)*centerControlMultiplier;
+        totalAdv+=getPawnProtectAdvantage(pos)*pawnStructureMultiplier;
+        //CASTLING
+        if(pos.getCapitalHasCastled()){ //if you have moved a rook or king and haven't castled, this is not ideal
+            totalAdv+=castleAdder;
+        }
+        if(pos.getLowerCaseHasCastled()){
+            totalAdv-=castleAdder;
+        }
+        //CHECKING
+        if(Runner.search.capitalIsInCheck(pos)){
+            totalAdv-=checkAdder;
+        }else if(Runner.search.lowerCaseIsInCheck(pos)){
+            totalAdv+=checkAdder;
+        }
+        //STALEMATES
         if(Runner.search.capitalIsInStalemate(pos) && totalAdv<(-acceptStalemateDifference)){ //if capital is in stalemate and losing by more than acceptStalemateDifference, it tries to stalemate.
             return stalemateWeight; //stalemate does not compare to checkmate
         }else if(Runner.search.capitalIsInStalemate(pos) && totalAdv>acceptStalemateDifference){
@@ -126,7 +145,8 @@ public class BoardEvaluation {
                 - Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.getPseudoLegalMoves(pos, 'l')).length;
     }
 
-    public int getAttackingPiecesAdvantage(Position pos){
+    //gets value for how many of the opponent's pieces you are attacking
+    private int getAttackingPiecesAdvantage(Position pos){
         int totalValue = 0;
         long capitalAttackingSquares = Runner.checkValidConditions.getAttackingSquaresByCasing(pos, 'c');
         long lowerCaseAttackingSquares = Runner.checkValidConditions.getAttackingSquaresByCasing(pos, 'l');
@@ -141,9 +161,49 @@ public class BoardEvaluation {
         return totalValue;
     }
 
-    //see chessProgrammingWiki for interesting study on Pawn Advantage with a Formula. Implement LATER.
-    private double getPawnAdvantage(){
-        return 0;
+    //favors being in the center -> demotes a move which is on the outside (a, b, g, or h files)
+    private int getCenterControlAdvantage(Position pos){
+        int totalAdvantage = 0;
+
+        //moves in the center are fine. If you move to one of the two outside columns though, it will say this is slightly worse.
+
+        //iterates through lowercase pieces first
+        for (int i = 0; i < pos.getCurrentBoard().length/2; i++) {
+            Long[] piecesOfType = Runner.controlAndSeparation.splitBitboard(pos.getCurrentBoard()[i]);
+            for (int j = 0; j < piecesOfType.length; j++) {
+                //iterating through each piece
+                if(((Runner.checkValidConditions.aFile & piecesOfType[j]) != 0) || ((Runner.checkValidConditions.hFile & piecesOfType[j]) != 0)){
+                    totalAdvantage+=2; // really don't want to be on the outside
+                }else if(((Runner.checkValidConditions.bFile & piecesOfType[j]) != 0) || ((Runner.checkValidConditions.gFile & piecesOfType[j]) != 0)){
+                    totalAdvantage+=1; // don't want to be on the outside
+                }
+            }
+        }
+        //then iterates through the capital pieces
+        for (int i = pos.getCurrentBoard().length/2; i < pos.getCurrentBoard().length; i++) {
+            Long[] piecesOfType = Runner.controlAndSeparation.splitBitboard(pos.getCurrentBoard()[i]);
+            for (int j = 0; j < piecesOfType.length; j++) {
+                //iterating through each piece
+                if(((Runner.checkValidConditions.aFile & piecesOfType[j]) != 0) || ((Runner.checkValidConditions.hFile & piecesOfType[j]) != 0)){
+                    totalAdvantage-=2; // really don't want to be on the outside
+                }else if(((Runner.checkValidConditions.bFile & piecesOfType[j]) != 0) || ((Runner.checkValidConditions.gFile & piecesOfType[j]) != 0)){
+                    totalAdvantage-=1; // don't want to be on the outside
+                }
+            }
+        }
+
+        return totalAdvantage;
+    }
+
+    private int getPawnProtectAdvantage(Position pos){
+        int totalAdvantage = 0;
+
+        totalAdvantage += Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.getCapitalPawnThreatenedSpaces(pos) & pos.getCurrentBoard()[11]).length; //gets the number of spaces the pawns are threatening their own pawns -> A good thing
+        totalAdvantage -= Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.getLowerCasePawnThreatenedSpaces(pos) & pos.getCurrentBoard()[5]).length;
+
+
+
+        return totalAdvantage;
     }
 
     private double roundDoubleProperly(double num){

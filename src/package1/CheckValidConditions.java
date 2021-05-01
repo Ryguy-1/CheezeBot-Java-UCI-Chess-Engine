@@ -515,8 +515,8 @@ public class CheckValidConditions {
         //geometrically and with pieces bitboard returned
         return combined&withPieces;
     }
-    //Pawn Threatening Squares// -> En Passant Not Important
-    private long getCapitalPawnThreatenedSpaces(Position pos){
+    //Pawn Threatening Squares// -> En Passant Not Important (the first two are used in the BoardEvaluation class)
+    public long getCapitalPawnThreatenedSpaces(Position pos){
         Long[] currentBoard = pos.getCurrentBoard();
         //Position 11//
         //aFile makes sure right pawn still works. Take compliment of a file -> If it is not in the aFile, then it is okay
@@ -526,7 +526,7 @@ public class CheckValidConditions {
         //bitboard of all places you can move to without taking into account if they have pieces or not
         return pawnAttacksLeft|pawnAttacksRight;
     }
-    private long getLowerCasePawnThreatenedSpaces(Position pos){
+    public long getLowerCasePawnThreatenedSpaces(Position pos){
         Long[] currentBoard = pos.getCurrentBoard();
         //Position 5//
         //aFile makes sure right pawn still works. Take compliment of a file -> If it is not in the aFile, then it is okay
@@ -792,10 +792,10 @@ public class CheckValidConditions {
     /////////////////////////
 
 
-    //untested
-    private boolean capitalCanCastleLong(Position pos){
+
+    public boolean capitalCanCastleLong(Position pos){
         //if either the AFile(left) rook or the king have moved, return false as this is immediately illegal
-        if(pos.getCapitalAFileRookHasMoved() || pos.getCapitalKingHasMoved() || Runner.search.capitalIsInCheck(pos)){
+        if(pos.getCapitalAFileRookHasMoved() || pos.getCapitalKingHasMoved() || Runner.search.capitalIsInCheck(pos) || ((capitalAFileRookStartSquare & pos.getCurrentBoard()[6])==0)){
             return false;
         }else{ //otherwise, if neither have moved it is legal as long as there are...
             //1) no pieces in the way
@@ -807,9 +807,9 @@ public class CheckValidConditions {
             }return false; //if either of those conditions are false, you cannot castle
         }
     }
-    private boolean capitalCanCastleShort(Position pos){
+    public boolean capitalCanCastleShort(Position pos){
         //if either the AFile(left) rook or the king have moved, return false as this is immediately illegal
-        if(pos.getCapitalHFileRookHasMoved() || pos.getCapitalKingHasMoved() || Runner.search.capitalIsInCheck(pos)){
+        if(pos.getCapitalHFileRookHasMoved() || pos.getCapitalKingHasMoved() || Runner.search.capitalIsInCheck(pos) || ((capitalHFileRookStartSquare & pos.getCurrentBoard()[6])==0)){
             return false;
         }else{ //otherwise, if neither have moved it is legal as long as there are...
             //1) no pieces in the way
@@ -821,9 +821,9 @@ public class CheckValidConditions {
             }return false; //if either of those conditions are false, you cannot castle
         }
     }
-    private boolean lowerCaseCanCastleLong(Position pos){
+    public boolean lowerCaseCanCastleLong(Position pos){
         //if either the AFile(left) rook or the king have moved, return false as this is immediately illegal
-        if(pos.getLowerCaseAFileRookHasMoved() || pos.getLowerCaseKingHasMoved() || Runner.search.lowerCaseIsInCheck(pos)){
+        if(pos.getLowerCaseAFileRookHasMoved() || pos.getLowerCaseKingHasMoved() || Runner.search.lowerCaseIsInCheck(pos) || ((lowerCaseAFileRookStartSquare & pos.getCurrentBoard()[0])==0)){
             return false;
         }else{ //otherwise, if neither have moved it is legal as long as there are...
             //1) no pieces in the way
@@ -835,9 +835,9 @@ public class CheckValidConditions {
             }return false; //if either of those conditions are false, you cannot castle
         }
     }
-    private boolean lowerCaseCanCastleShort(Position pos){
+    public boolean lowerCaseCanCastleShort(Position pos){
         //if either the AFile(left) rook or the king have moved, return false as this is immediately illegal
-        if(pos.getLowerCaseHFileRookHasMoved() || pos.getLowerCaseKingHasMoved() || Runner.search.lowerCaseIsInCheck(pos)){
+        if(pos.getLowerCaseHFileRookHasMoved() || pos.getLowerCaseKingHasMoved() || Runner.search.lowerCaseIsInCheck(pos) || ((lowerCaseHFileRookStartSquare & pos.getCurrentBoard()[0])==0)){
             return false;
         }else{ //otherwise, if neither have moved it is legal as long as there are...
             //1) no pieces in the way

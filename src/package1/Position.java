@@ -21,6 +21,21 @@ public class Position{
             {"a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"}
     };
 
+    private boolean capitalHasCastled = false;
+    private boolean lowerCaseHasCastled = false;
+    public void setCapitalHasCastled(boolean capitalHasCastled){
+        this.capitalHasCastled = capitalHasCastled;
+    }
+    public void setLowerCaseHasCastled(boolean lowerCaseHasCastled){
+        this.lowerCaseHasCastled = lowerCaseHasCastled;
+    }
+    public boolean getCapitalHasCastled(){
+        return capitalHasCastled;
+    }
+    public boolean getLowerCaseHasCastled(){
+        return lowerCaseHasCastled;
+    }
+
     ////////////////////////
     private boolean capitalAFileRookHasMoved = false;
     private boolean capitalHFileRookHasMoved = false;
@@ -179,7 +194,8 @@ public class Position{
         //if the piece you selected is a king and the to square is bit shifted either two to the left (long castle) or two to the right (short castle), then it is castling
         //capital king = position 10; capital rook = position 6;
 
-        if(((fromBitboard & copyBoard[10])!=0l) && (toBitboard == fromBitboard<<2) && !capitalAFileRookHasMoved && !capitalKingHasMoved){
+        //if the starting square is the king; and there is a rook on the AFile starting square for capital; and you are moving the king 2 spaces to the left; and the a file rook hasn't moved; and the king hasn't moved
+        if(((fromBitboard & copyBoard[10])!=0l) && ((Runner.checkValidConditions.capitalAFileRookStartSquare & copyBoard[6])!=0) && (toBitboard == fromBitboard<<2) && !capitalAFileRookHasMoved && !capitalKingHasMoved){
             //you are castling to the left
             //set the king equal to the space it's moved to
             copyBoard[10] = toBitboard;
@@ -188,10 +204,11 @@ public class Position{
             //sets states for king and rook
             capitalAFileRookHasMoved = true;
             capitalKingHasMoved = true;
+            capitalHasCastled = true;
             //returns before anything else is done...
             forceUpdatePosition(copyBoard);
             return;
-        }else if(((fromBitboard & copyBoard[10])!=0l) && (toBitboard == fromBitboard>>>2)  && !capitalHFileRookHasMoved && !capitalKingHasMoved){
+        }else if(((fromBitboard & copyBoard[10])!=0l) && ((Runner.checkValidConditions.capitalHFileRookStartSquare & copyBoard[6])!=0) && (toBitboard == fromBitboard>>>2)  && !capitalHFileRookHasMoved && !capitalKingHasMoved){
             //you are castling to the right
             //set the king equal to the space it's moved to
             copyBoard[10] = toBitboard;
@@ -200,11 +217,12 @@ public class Position{
             //sets states for king and rook
             capitalHFileRookHasMoved = true;
             capitalKingHasMoved = true;
+            capitalHasCastled = true;
             //returns before anything else is done...
             forceUpdatePosition(copyBoard);
             return;
         }//Lower Case King = position 4; capital rook = position 0;
-        else if(((fromBitboard & copyBoard[4])!=0l) && (toBitboard == fromBitboard<<2)  && !lowerCaseAFileRookHasMoved && !lowerCaseKingHasMoved){
+        else if(((fromBitboard & copyBoard[4])!=0l) && ((Runner.checkValidConditions.lowerCaseAFileRookStartSquare & copyBoard[0])!=0) && (toBitboard == fromBitboard<<2)  && !lowerCaseAFileRookHasMoved && !lowerCaseKingHasMoved){
             //you are castling to the left
             //set the king equal to the space it's moved to
             copyBoard[4] = toBitboard;
@@ -213,10 +231,11 @@ public class Position{
             //sets states for king and rook
             lowerCaseAFileRookHasMoved = true;
             lowerCaseKingHasMoved = true;
+            lowerCaseHasCastled = true;
             //returns before anything else is done...
             forceUpdatePosition(copyBoard);
             return;
-        }else if(((fromBitboard & copyBoard[4])!=0l) && (toBitboard == fromBitboard>>>2)  && !lowerCaseHFileRookHasMoved && !lowerCaseKingHasMoved){
+        }else if(((fromBitboard & copyBoard[4])!=0l) && ((Runner.checkValidConditions.lowerCaseHFileRookStartSquare & copyBoard[0])!=0) && (toBitboard == fromBitboard>>>2)  && !lowerCaseHFileRookHasMoved && !lowerCaseKingHasMoved){
             //you are castling to the right
             //set the king equal to the space it's moved to
             copyBoard[4] = toBitboard;
@@ -225,6 +244,7 @@ public class Position{
             //sets states for king and rook
             lowerCaseHFileRookHasMoved = true;
             lowerCaseKingHasMoved = true;
+            lowerCaseHasCastled = true;
             //returns before anything else is done...
             forceUpdatePosition(copyBoard);
             return;
@@ -373,6 +393,7 @@ public class Position{
             //sets states for king and rook
             capitalAFileRookHasMoved = true;
             capitalKingHasMoved = true;
+            capitalHasCastled = true;
             //returns before anything else is done...
             forceUpdatePosition(copyBoard);
             return;
@@ -385,6 +406,7 @@ public class Position{
             //sets states for king and rook
             capitalHFileRookHasMoved = true;
             capitalKingHasMoved = true;
+            capitalHasCastled = true;
             //returns before anything else is done...
             forceUpdatePosition(copyBoard);
             return;
@@ -398,6 +420,7 @@ public class Position{
             //sets states for king and rook
             lowerCaseAFileRookHasMoved = true;
             lowerCaseKingHasMoved = true;
+            lowerCaseHasCastled = true;
             //returns before anything else is done...
             forceUpdatePosition(copyBoard);
             return;
@@ -410,6 +433,7 @@ public class Position{
             //sets states for king and rook
             lowerCaseHFileRookHasMoved = true;
             lowerCaseKingHasMoved = true;
+            lowerCaseHasCastled = true;
             //returns before anything else is done...
             forceUpdatePosition(copyBoard);
             return;
@@ -623,9 +647,11 @@ public class Position{
         newPosition.setCapitalAFileRookHasMoved(capitalAFileRookHasMoved);
         newPosition.setCapitalHFileRookHasMoved(capitalHFileRookHasMoved);
         newPosition.setCapitalKingHasMoved(capitalKingHasMoved);
+        newPosition.setCapitalHasCastled(capitalHasCastled);
         newPosition.setLowerCaseAFileRookHasMoved(lowerCaseAFileRookHasMoved);
         newPosition.setLowerCaseHFileRookHasMoved(lowerCaseHFileRookHasMoved);
         newPosition.setLowerCaseKingHasMoved(lowerCaseKingHasMoved);
+        newPosition.setLowerCaseHasCastled(lowerCaseHasCastled);
         for (int i = 0; i < movesToCurrent.size(); i++) {
             newPosition.addMove(movesToCurrent.get(i));
         }

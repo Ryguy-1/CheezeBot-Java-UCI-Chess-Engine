@@ -12,6 +12,7 @@ public class Minimax {
     public static final int MAX = Integer.MAX_VALUE;
     public static final int MIN = -Integer.MAX_VALUE; //Double.MIN_VALUE is still a positive number because of rollovers or something
 
+
 ////////////////////////////////////////////////////////////////////////
     //using the position object as three things...
     //1) A way to store the board and the board history to be able to generate moves
