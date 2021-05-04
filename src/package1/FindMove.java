@@ -12,6 +12,8 @@ public class FindMove {
     //Capital = maximize
     //Lower Case = minimize
 
+    public static final int openingNumber = 1;
+
     public static final int MAX = Integer.MAX_VALUE;
     public static final int MIN = -Integer.MAX_VALUE; //Double.MIN_VALUE is still a positive number because of rollovers or something
     Random random = new Random();
@@ -31,7 +33,7 @@ public class FindMove {
         Position finalPosition = pos.getPositionCopy();
         finalPosition.getMovesToCurrent().clear(); //clear past moves so can return new line with object.
         //initializes array of preffered moves to make preset.
-        String[] preferredOpening = Runner.openings.openingsWithNames[1][1].split(" ");
+        String[] preferredOpening = Runner.openings.openingsWithNames[openingNumber][1].split(" ");
 
         //if you are starting, just make the first move
         if(positionMoveHistory.size()==0){
@@ -42,8 +44,8 @@ public class FindMove {
             try{//otheriwse check if there is a move to make left
                 finalPosition.fromToMove(preferredOpening[positionMoveHistory.size()]); //tries to make the next move in the sequence if there is one. Shouldn't make the move if there isn't one...
                 System.out.println("have another move in preffered opening to make..");
-                //if there is a move to make left, move it, and check how good it was
-                int openingEval = finalPosition.getBoardEvaluation();
+                //if there is a move to make left, move it, and check how good it was with depth of 1 so basically they can't immediately take a piece
+                int openingEval = minimax(finalPosition, 2, isMaximizingPlayer, MIN, MAX).getBoardEvaluation();
                 //if the opening board is better evaluation than it was before, make the move
                 if(isMaximizingPlayer && openingEval>pos.getBoardEvaluation()){
                     System.out.println("Here 1");
@@ -52,7 +54,7 @@ public class FindMove {
                     }System.out.println("Here 2");
                     return finalPosition;
                 }else if(!isMaximizingPlayer && openingEval<pos.getBoardEvaluation()){
-                    System.out.println("Here 3");
+                    System.out.println("PositionMoveHistory = " + positionMoveHistory + ". prefferedOpening length = " + preferredOpening.length);
                     for (int i = positionMoveHistory.size(); i <preferredOpening.length; i++) {
                         finalPosition.addMove(preferredOpening[i]);
                     }System.out.println("Here 4");
@@ -64,8 +66,10 @@ public class FindMove {
             }catch (IndexOutOfBoundsException e){
                 //no next move to make, so use minimax
                 System.out.println("used minimax because no have match");
+                System.out.println("Minimax PositionMoveHistory = " + positionMoveHistory);
+                System.out.println("Position new object moves to current = " + finalPosition.getMovesToCurrent());
                 Runner.mainBoard.drawGameBoard(pos.getCurrentBoard());
-                return minimax(pos, depth, isMaximizingPlayer, MIN, MAX);
+                return minimax(finalPosition, depth, isMaximizingPlayer, MIN, MAX);
             }
         }
     }

@@ -6,7 +6,7 @@ public class UCI {
     Thread t1;
     public static final String engineName = "CheezeBot Beta";
     public static final String creditName = "Ryland";
-    public static final String version = "0.129";
+    public static final String version = "0.135";
     public static boolean engineRunning;
 
     public static boolean isReadyOk = true;
@@ -151,7 +151,7 @@ public class UCI {
         System.out.println("moves to curent hereeee: " + newPos.getMovesToCurrent());
         String bestMove = newPos.getMovesToCurrent().get(0);
         Runner.mainBoard.mainBoardMoves.add(bestMove);
-        Runner.mainBoard.mainPosition = newPos;
+        Runner.mainBoard.mainPosition.fromToMove(bestMove);
 
         System.out.println("bestmove " + bestMove);
         drawMainBoard();
