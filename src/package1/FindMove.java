@@ -12,7 +12,7 @@ public class FindMove {
     //Capital = maximize
     //Lower Case = minimize
 
-    public static final int openingNumber = 1;
+    public static final int openingNumber = 3;
 
     public static final int MAX = Integer.MAX_VALUE;
     public static final int MIN = -Integer.MAX_VALUE; //Double.MIN_VALUE is still a positive number because of rollovers or something
@@ -41,8 +41,32 @@ public class FindMove {
             finalPosition.fromToMove(preferredOpening[0]);
             return finalPosition;
         }else{
+            boolean isLegal = false;
             try{//otheriwse check if there is a move to make left
-                finalPosition.fromToMove(preferredOpening[positionMoveHistory.size()]); //tries to make the next move in the sequence if there is one. Shouldn't make the move if there isn't one...
+                String prefferedMove = preferredOpening[positionMoveHistory.size()];
+                if(isMaximizingPlayer){ //capital
+                    String[] possibleMoves = Runner.search.getPossibleMovesByCasing(finalPosition, 'c');
+                    for (int i = 0; i < possibleMoves.length; i++) {
+                        if(possibleMoves[i].equals(prefferedMove)){
+                            finalPosition.fromToMove(prefferedMove); //tries to make the next move in the sequence if there is one. Shouldn't make the move if there isn't one...
+                            isLegal = true;
+                        }
+                    }
+                }else{
+                    String[] possibleMoves = Runner.search.getPossibleMovesByCasing(finalPosition, 'l');
+                    for (int i = 0; i < possibleMoves.length; i++) {
+                        if(possibleMoves[i].equals(prefferedMove)){
+                            finalPosition.fromToMove(prefferedMove); //tries to make the next move in the sequence if there is one. Shouldn't make the move if there isn't one...
+                            isLegal = true;
+                        }
+                    }
+                }
+
+                if(!isLegal){
+                    throw new IndexOutOfBoundsException();
+                    //go to minimax if move isn't legal
+                }
+
                 System.out.println("have another move in preffered opening to make..");
                 //if there is a move to make left, move it, and check how good it was with depth of 1 so basically they can't immediately take a piece
                 int openingEval = minimax(finalPosition, 2, isMaximizingPlayer, MIN, MAX).getBoardEvaluation();
