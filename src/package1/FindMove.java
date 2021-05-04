@@ -1,16 +1,20 @@
 package package1;
 
+import javafx.geometry.Pos;
 import sun.invoke.empty.Empty;
 
+import java.util.ArrayList;
 import java.util.EmptyStackException;
+import java.util.Random;
 
-public class Minimax {
+public class FindMove {
 
     //Capital = maximize
     //Lower Case = minimize
 
     public static final int MAX = Integer.MAX_VALUE;
     public static final int MIN = -Integer.MAX_VALUE; //Double.MIN_VALUE is still a positive number because of rollovers or something
+    Random random = new Random();
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -20,7 +24,61 @@ public class Minimax {
     //3) An object that can be used to calculate the goodness of that node (a position object = a node in the minimax tree)
     /////////////////////////////////////////////////////////////////////
 
-    public Position minimax(Position pos, int depth, boolean isMaximizingPlayer, int alpha, int beta){
+
+    //isMaximizingPlayer is capital and is not is lower case
+    public Position findMove(Position pos, ArrayList<String> positionMoveHistory, int depth, boolean isMaximizingPlayer){
+        //makes position copy
+        Position finalPosition = pos.getPositionCopy();
+        finalPosition.getMovesToCurrent().clear(); //clear past moves so can return new line with object.
+        //initializes array of preffered moves to make preset.
+        String[] preferredOpening = Runner.openings.openingsWithNames[1][1].split(" ");
+
+        //if you are starting, just make the first move
+        if(positionMoveHistory.size()==0){
+            System.out.println("moved first");
+            finalPosition.fromToMove(preferredOpening[0]);
+            return finalPosition;
+        }else{
+            try{//otheriwse check if there is a move to make left
+                finalPosition.fromToMove(preferredOpening[positionMoveHistory.size()]); //tries to make the next move in the sequence if there is one. Shouldn't make the move if there isn't one...
+                System.out.println("have another move in preffered opening to make..");
+                //if there is a move to make left, move it, and check how good it was
+                int openingEval = finalPosition.getBoardEvaluation();
+                //if the opening board is better evaluation than it was before, make the move
+                if(isMaximizingPlayer && openingEval>pos.getBoardEvaluation()){
+                    System.out.println("Here 1");
+                    for (int i = positionMoveHistory.size(); i <preferredOpening.length; i++) {
+                        finalPosition.addMove(preferredOpening[i]);
+                    }System.out.println("Here 2");
+                    return finalPosition;
+                }else if(!isMaximizingPlayer && openingEval<pos.getBoardEvaluation()){
+                    System.out.println("Here 3");
+                    for (int i = positionMoveHistory.size(); i <preferredOpening.length; i++) {
+                        finalPosition.addMove(preferredOpening[i]);
+                    }System.out.println("Here 4");
+                    return finalPosition;
+                }else{ //if it was not a good move as decided by evaluation function, then just use minimax
+                    System.out.println("used minimax becasue bad opening");
+                    return minimax(pos, depth, isMaximizingPlayer, MIN, MAX);
+                }
+            }catch (IndexOutOfBoundsException e){
+                //no next move to make, so use minimax
+                System.out.println("used minimax because no have match");
+                Runner.mainBoard.drawGameBoard(pos.getCurrentBoard());
+                return minimax(pos, depth, isMaximizingPlayer, MIN, MAX);
+            }
+        }
+    }
+
+    private void printOpeningLine(String[] moves){
+        System.out.println();
+        System.out.println("Move Line: ");
+        for (int i = 0; i < moves.length; i++) {
+            System.out.print(moves[i] + ", ");
+        }
+    }
+
+    private Position minimax(Position pos, int depth, boolean isMaximizingPlayer, int alpha, int beta){
 
         if(depth==0){
 //            if(Runner.search.capitalIsInCheckmate(pos)){

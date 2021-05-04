@@ -6,7 +6,7 @@ public class UCI {
     Thread t1;
     public static final String engineName = "CheezeBot Beta";
     public static final String creditName = "Ryland";
-    public static final String version = "0.11";
+    public static final String version = "0.129";
     public static boolean engineRunning;
 
     public static boolean isReadyOk = true;
@@ -41,6 +41,7 @@ public class UCI {
 //                    System.out.print("Move FromTo (Algebraic Notation): ");
 //                    String fromTo = scanner.nextLine();
 //                    Runner.mainBoard.mainPosition.fromToMove(fromTo);
+//                    Runner.mainBoard.mainBoardMoves.add(fromTo);
 //                    //print board after my move
 //                    Runner.mainBoard.drawGameBoard(Runner.mainBoard.mainPosition.getCurrentBoard());
 //                    System.out.println();
@@ -54,15 +55,14 @@ public class UCI {
 //                    break;
 //                }
 //                    //computer turn as lower case
-//                    Position newPos = Runner.minimax.minimax(Runner.mainBoard.mainPosition, lookAhead, false, Minimax.MIN, Minimax.MAX);
-//                    Runner.mainBoard.mainPosition.fromToMove(newPos.getMovesToCurrent().get(0));
+//                    Position newPos = Runner.findMove.findMove(Runner.mainBoard.mainPosition, Runner.mainBoard.mainBoardMoves, lookAhead, false);
+//                    Runner.mainBoard.mainBoardMoves.add(newPos.getMovesToCurrent().get(Runner.mainBoard.mainBoardMoves.size()));
+//                    Runner.mainBoard.mainPosition = newPos;
 //                    //print logic train
 //                    System.out.println(newPos.getMovesToCurrent());
 //                    //Print board for computer move
 //                    Runner.mainBoard.drawGameBoard(Runner.mainBoard.mainPosition.getCurrentBoard());
-//
 //            }
-//
 //        });
 //        t1.start();
 
@@ -134,6 +134,9 @@ public class UCI {
                 playerMove = playerMove.substring(1);
             }
             Runner.mainBoard.mainPosition.fromToMove(playerMove);
+            Runner.mainBoard.mainBoardMoves.add(playerMove); //adds move to list of moves that have been made to the main board
+            System.out.println("player move was: " + playerMove);
+            drawMainBoard();
             //just for now am calling input go because it is not telling me to go for whatever reason. Testing purposes...
             inputGo();
         }else if(input.contains("fen")){
@@ -144,10 +147,13 @@ public class UCI {
     private void inputGo(){
         //search for the best move. May put this into a new thread? not sure yet.
         //computer turn as lower case
-        Position returnedPosition = Runner.minimax.minimax(Runner.mainBoard.mainPosition, lookAhead, false, Minimax.MIN, Minimax.MAX);
-        String bestMoveFound = returnedPosition.getMovesToCurrent().get(0);
-        Runner.mainBoard.mainPosition.fromToMove(bestMoveFound);
-        System.out.println("bestmove " + bestMoveFound);
+        Position newPos = Runner.findMove.findMove(Runner.mainBoard.mainPosition, Runner.mainBoard.mainBoardMoves, lookAhead, false); //doesn't add move, just finds the next position
+        System.out.println("moves to curent hereeee: " + newPos.getMovesToCurrent());
+        String bestMove = newPos.getMovesToCurrent().get(0);
+        Runner.mainBoard.mainBoardMoves.add(bestMove);
+        Runner.mainBoard.mainPosition = newPos;
+
+        System.out.println("bestmove " + bestMove);
         drawMainBoard();
     }
 

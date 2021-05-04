@@ -3,6 +3,7 @@ package package1;
 import javax.swing.*;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -37,6 +38,7 @@ public class MainBoard {
 //    };
 
     public Position mainPosition;
+    public ArrayList<String> mainBoardMoves = new ArrayList<>();
 
     private Long longEnd1 = parseLong("1000000000000000000000000000000000000000000000000000000000000000", 2);
 
@@ -129,6 +131,7 @@ public class MainBoard {
             mainBoardInitializer[i] = parseLong(tempStrings[i], 2);
 
         }
+        mainBoardMoves.clear();
         mainPosition = new Position(mainBoardInitializer);
 
     }

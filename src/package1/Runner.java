@@ -1,7 +1,5 @@
 package package1;
 
-import java.util.Stack;
-
 public class Runner {
     public static MainBoard mainBoard;
     public static CheckValidConditions checkValidConditions;
@@ -9,18 +7,20 @@ public class Runner {
     public static Search search;
     public static BoardEvaluation boardEvaluation;
     public static ZobristHash zobristHash;
-    public static Minimax minimax;
+    public static FindMove findMove;
     public static UCI uci;
+    public static Openings openings;
 
     public static void main(String[] args){
         //initialize mainBoard FIRST
+        openings = new Openings();
         mainBoard = new MainBoard();
         checkValidConditions = new CheckValidConditions();
         controlAndSeparation = new BitboardControlAndSeparation();
         search = new Search();
         boardEvaluation = new BoardEvaluation();
         zobristHash = new ZobristHash();
-        minimax = new Minimax();
+        findMove = new FindMove();
         uci = new UCI();
 
 
