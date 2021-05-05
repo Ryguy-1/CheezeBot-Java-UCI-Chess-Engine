@@ -14,7 +14,7 @@ public class Openings {
             {"Slav Defense", "d2d4 d7d5 c2c4 c7c6"},
             {"London System", "d2d4 d7d5 c1f4 g8f6 g1f3"},
             {"Sicilian Defence", "e2e4 c7c5"},
-            {"Sicilian Dragon", "e2e4 c7c5 g1f3 d7d6 d2d4 c5d4 f3d4 g8f6 b1c3 g7g6"}, //just for testing -> should add in future though because cool
+            {"Sicilian Dragon", "e2e4 c7c5 g1f3 d7d6 d2d4 c5d4 f3d4 g8f6 b1c3 g7g6 c1e3 f8g7"}, //just for testing -> should add in future though because cool
     };
 }
 

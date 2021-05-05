@@ -31,7 +31,7 @@ public class BoardEvaluation {
 
     //piece values for material advantage
     private static final int pawnValue = 1;
-    private static final int knightValue = 4;
+    private static final int knightValue = 3; //changed to 3 because a knight really should't trade for a bishop
     private static final int bishopValue = 4;
     private static final int rookValue = 6;
     private static final int queenValue = 12;
@@ -80,6 +80,10 @@ public class BoardEvaluation {
 
     //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
     private int getPieceAdvantage(Position pos){
+
+        int capitalPieceCount = Runner.controlAndSeparation.splitBitboard(Runner.controlAndSeparation.condenseBoard(Runner.controlAndSeparation.getCapitalPieces(pos))).length;
+        int lowerCasePieceCount = Runner.controlAndSeparation.splitBitboard(Runner.controlAndSeparation.condenseBoard(Runner.controlAndSeparation.getLowerCasePieces(pos))).length;
+        int pieceNumAdvantage = capitalPieceCount-lowerCasePieceCount;
 
         int totalCount = 0;
 

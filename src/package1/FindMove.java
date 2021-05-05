@@ -34,16 +34,22 @@ public class FindMove {
         finalPosition.getMovesToCurrent().clear(); //clear past moves so can return new line with object.
         //initializes array of preffered moves to make preset.
         String[] preferredOpening = Runner.openings.openingsWithNames[openingNumber][1].split(" ");
+        System.out.println("Preffered opening is: " + preferredOpening[0]);
 
         //if you are starting, just make the first move
         if(positionMoveHistory.size()==0){
-            System.out.println("moved first");
+            System.out.println("Position move history = " + positionMoveHistory);
             finalPosition.fromToMove(preferredOpening[0]);
+            for (int i = 0; i < preferredOpening.length; i++) {
+                finalPosition.addMove(preferredOpening[i]);
+            }
             return finalPosition;
         }else{
             boolean isLegal = false;
             try{//otheriwse check if there is a move to make left
                 String prefferedMove = preferredOpening[positionMoveHistory.size()];
+                System.out.println("is maximizing player 1 " + isMaximizingPlayer);
+                System.out.println("prefferedMove " + prefferedMove);
                 if(isMaximizingPlayer){ //capital
                     String[] possibleMoves = Runner.search.getPossibleMovesByCasing(finalPosition, 'c');
                     for (int i = 0; i < possibleMoves.length; i++) {
@@ -69,7 +75,7 @@ public class FindMove {
 
                 System.out.println("have another move in preffered opening to make..");
                 //if there is a move to make left, move it, and check how good it was with depth of 1 so basically they can't immediately take a piece
-                int openingEval = minimax(finalPosition, 2, isMaximizingPlayer, MIN, MAX).getBoardEvaluation();
+                int openingEval = minimax(finalPosition, 3, isMaximizingPlayer, MIN, MAX).getBoardEvaluation(); //THIS VALUE VERY SUBJECT TO CHANGE
                 //if the opening board is better evaluation than it was before, make the move
                 if(isMaximizingPlayer && openingEval>pos.getBoardEvaluation()){
                     System.out.println("Here 1");

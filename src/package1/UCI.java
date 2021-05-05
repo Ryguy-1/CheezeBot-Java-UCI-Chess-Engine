@@ -6,10 +6,11 @@ public class UCI {
     Thread t1;
     public static final String engineName = "CheezeBot Beta";
     public static final String creditName = "Ryland";
-    public static final String version = "0.136";
+    public static final String version = "0.143";
     public static boolean engineRunning;
 
     public static boolean isReadyOk = true;
+    public static boolean isMaximizingPlayer = false;
 
     public static final int lookAhead = 4;
 
@@ -124,18 +125,26 @@ public class UCI {
         //what you call when you want to start a new game. Clear hash table, etc.
         System.out.println("Starting new game with " + engineName + ". Version: " + version);
         Runner.mainBoard.initializeNewBoard();
+        isMaximizingPlayer = false;
     }
 
     private void inputPosition(String input){
         if(input.contains("startpos")){
             //the last four terms of startpos is the last move that was made
-            String playerMove = input.substring(input.length()-5);
-            if(playerMove.charAt(0)==' '){
-                playerMove = playerMove.substring(1);
+            if(input.contains("moves")){
+                String playerMove = input.substring(input.length()-5);
+                if(playerMove.charAt(0)==' '){
+                    playerMove = playerMove.substring(1);
+                }
+                Runner.mainBoard.mainPosition.fromToMove(playerMove);
+                Runner.mainBoard.mainBoardMoves.add(playerMove); //adds move to list of moves that have been made to the main board
+                System.out.println("player move was: " + playerMove);
+            }else{
+                //does not and is first move
+                System.out.println("Moving First");
+                isMaximizingPlayer = true;
             }
-            Runner.mainBoard.mainPosition.fromToMove(playerMove);
-            Runner.mainBoard.mainBoardMoves.add(playerMove); //adds move to list of moves that have been made to the main board
-            System.out.println("player move was: " + playerMove);
+
             drawMainBoard();
             //just for now am calling input go because it is not telling me to go for whatever reason. Testing purposes...
             inputGo();
@@ -147,7 +156,7 @@ public class UCI {
     private void inputGo(){
         //search for the best move. May put this into a new thread? not sure yet.
         //computer turn as lower case
-        Position newPos = Runner.findMove.findMove(Runner.mainBoard.mainPosition, Runner.mainBoard.mainBoardMoves, lookAhead, false); //doesn't add move, just finds the next position
+        Position newPos = Runner.findMove.findMove(Runner.mainBoard.mainPosition, Runner.mainBoard.mainBoardMoves, lookAhead, isMaximizingPlayer); //doesn't add move, just finds the next position
         System.out.println("moves to curent hereeee: " + newPos.getMovesToCurrent());
         String bestMove = newPos.getMovesToCurrent().get(0);
         Runner.mainBoard.mainBoardMoves.add(bestMove);

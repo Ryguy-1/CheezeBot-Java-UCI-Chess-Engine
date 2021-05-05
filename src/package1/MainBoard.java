@@ -131,7 +131,7 @@ public class MainBoard {
             mainBoardInitializer[i] = parseLong(tempStrings[i], 2);
 
         }
-        mainBoardMoves.clear();
+        mainBoardMoves = new ArrayList<>();
         mainPosition = new Position(mainBoardInitializer);
 
     }
