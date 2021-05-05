@@ -61,8 +61,9 @@ public class Position{
     }
     //////////////////////////////////
 
+    private int boardEvaluation = 0;
     public int getBoardEvaluation(){ //can be optimized later...
-        return Runner.boardEvaluation.getBoardRanking(this);
+        return boardEvaluation;
     }
 
 
@@ -357,6 +358,8 @@ public class Position{
 
         //updates history as well...
         forceUpdatePosition(copyBoard);
+        //also update boardEvaluation
+        boardEvaluation = Runner.boardEvaluation.getBoardRanking(this);
 
     }
 
@@ -547,6 +550,7 @@ public class Position{
         }
 
         forceUpdatePosition(copyBoard);
+        //do not update the board evaluation here because not used in that context
     }
 
     public boolean moveLeadsToCheck(String fromTo, char pieceInCheck){

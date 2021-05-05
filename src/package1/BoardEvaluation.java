@@ -13,13 +13,13 @@ public class BoardEvaluation {
 
 
     //Spend time later figuring out mobility advantages
-    private static final int materialMultiplier = 60; //don't want anything to interfere with this...
-    private static final int centerControlMultiplier = 5;
-    private static final int pawnStructureMultiplier = 13;
+    private static final int materialMultiplier = 100; //don't want anything to interfere with this...
+    private static final int centerControlMultiplier = 10;
+    private static final int pawnStructureMultiplier = 20;
     private static final int attackingPiecesMultiplier = 2;
     private static final int mobilityMultiplier = 3;
 
-    private static final int checkAdder = 40;
+    private static final int checkAdder = 20;
     private static final int castleAdder = 30;
 
     private static final int acceptStalemateDifference = 300;
@@ -33,9 +33,10 @@ public class BoardEvaluation {
     private static final int pawnValue = 1;
     private static final int knightValue = 3; //changed to 3 because a knight really should't trade for a bishop
     private static final int bishopValue = 4;
-    private static final int rookValue = 6;
-    private static final int queenValue = 12;
+    private static final int rookValue = 7;
+    private static final int queenValue = 14;
     private static final int kingValue = 100_000;
+
 
 
     public int getBoardRanking(Position pos){
@@ -83,7 +84,6 @@ public class BoardEvaluation {
 
         int capitalPieceCount = Runner.controlAndSeparation.splitBitboard(Runner.controlAndSeparation.condenseBoard(Runner.controlAndSeparation.getCapitalPieces(pos))).length;
         int lowerCasePieceCount = Runner.controlAndSeparation.splitBitboard(Runner.controlAndSeparation.condenseBoard(Runner.controlAndSeparation.getLowerCasePieces(pos))).length;
-        int pieceNumAdvantage = capitalPieceCount-lowerCasePieceCount;
 
         int totalCount = 0;
 

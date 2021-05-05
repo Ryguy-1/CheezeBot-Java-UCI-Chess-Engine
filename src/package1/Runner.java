@@ -29,6 +29,20 @@ public class Runner {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//
+//        long start = System.nanoTime();
+//
+//        // call the method
+//        Runner.findMove.findMove(Runner.mainBoard.mainPosition, Runner.mainBoard.mainBoardMoves, 4, true);
+//
+//        // get the end time
+//        long end = System.nanoTime();
+//
+//        // execution time
+//        long execution = end - start;
+//        System.out.println("Execution time: " + execution + " nanoseconds");
+
+
 
 //        mainBoard.mainPosition.setCapitalAFileRookHasMoved(true);
 //        mainBoard.mainPosition.setCapitalHFileRookHasMoved(true);
