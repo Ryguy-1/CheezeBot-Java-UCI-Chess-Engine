@@ -13,11 +13,11 @@ public class BoardEvaluation {
 
 
     //Spend time later figuring out mobility advantages
-    private static final int materialMultiplier = 100; //don't want anything to interfere with this...
-    private static final int centerControlMultiplier = 10;
-    private static final int pawnStructureMultiplier = 20;
-    private static final int attackingPiecesMultiplier = 2;
-    private static final int mobilityMultiplier = 3;
+    private static final int materialMultiplier = 150; //don't want anything to interfere with this...
+    private static final int centerControlMultiplier = 5;
+    private static final int pawnStructureMultiplier = 10; //was 20
+    private static final int attackingPiecesMultiplier = 1; //was 2
+    private static final int mobilityMultiplier = 3; //was 3
 
     private static final int checkAdder = 20;
     private static final int castleAdder = 30;

@@ -75,7 +75,7 @@ public class FindMove {
 
                 System.out.println("have another move in preffered opening to make..");
                 //if there is a move to make left, move it, and check how good it was with depth of 1 so basically they can't immediately take a piece
-                int openingEval = minimax(finalPosition, 2, isMaximizingPlayer, MIN, MAX).getBoardEvaluation(); //THIS VALUE VERY SUBJECT TO CHANGE
+                int openingEval = minimax(finalPosition, 2, !isMaximizingPlayer, MIN, MAX).getBoardEvaluation(); //Gets the move the opponent makes right afterwards
                 //if the opening board is better evaluation than it was before, make the move
                 if(isMaximizingPlayer && openingEval>pos.getBoardEvaluation()){
                     System.out.println("Here 1");

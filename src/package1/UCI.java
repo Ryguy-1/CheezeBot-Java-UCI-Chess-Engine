@@ -2,11 +2,14 @@ package package1;
 
 import java.util.Scanner;
 
+
+import java.util.Scanner;
+
 public class UCI {
     Thread t1;
     public static final String engineName = "CheezeBot Beta";
     public static final String creditName = "Ryland";
-    public static final String version = "0.146";
+    public static final String version = "0.150";
     public static boolean engineRunning;
 
     public static boolean isReadyOk = true;
