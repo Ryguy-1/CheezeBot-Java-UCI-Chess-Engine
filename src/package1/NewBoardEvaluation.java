@@ -17,8 +17,24 @@ public class NewBoardEvaluation {
     long capitalPawnMoveGoalMidGame = Runner.mainBoard.parseLong("0000000000000000000000000001100000111100011111100000000000000000", 2);
     long lowerCasePawnMoveGoalMidGame = Runner.mainBoard.parseLong  ("0000000000000000011111100011110000011000000000000000000000000000", 2);
     //bitboard pawns want to move to end game (closer to the other side for promotion) -> Rank before promotion because promotions.
-    long capitalPawnMoveGoalEndGame = Runner.checkValidConditions.rank7;
-    long lowerCasePawnMoveGoalEndGame = Runner.checkValidConditions.rank2;
+    long capitalPawnMoveGoalEndGame1 = Runner.checkValidConditions.rank7;
+    long lowerCasePawnMoveGoalEndGame1 = Runner.checkValidConditions.rank2;
+    //
+    long capitalPawnMoveGoalEndGame2 = Runner.checkValidConditions.rank6;
+    long lowerCasePawnMoveGoalEndGame2 = Runner.checkValidConditions.rank3;
+    //
+    long capitalPawnMoveGoalEndGame3 = Runner.checkValidConditions.rank5;
+    long lowerCasePawnMoveGoalEndGame3 = Runner.checkValidConditions.rank4;
+    //
+    long capitalPawnMoveGoalEndGame4 = Runner.checkValidConditions.rank4;
+    long lowerCasePawnMoveGoalEndGame4 = Runner.checkValidConditions.rank5;
+    //
+    long capitalPawnMoveGoalEndGame5 = Runner.checkValidConditions.rank3;
+    long lowerCasePawnMoveGoalEndGame5 = Runner.checkValidConditions.rank6;
+    //
+    long capitalPawnMoveGoalEndGame6 = Runner.checkValidConditions.rank2;
+    long lowerCasePawnMoveGoalEndGame6 = Runner.checkValidConditions.rank7;
+    ///////////////////////
 
 
 
@@ -83,17 +99,34 @@ public class NewBoardEvaluation {
         byte capitalPawnCount = 0;
         byte lowerCasePawnCount = 0;
         if(gameState==0){ //early game
-            
+            capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEarlyGame & pos.getCurrentBoard()[11]).length;
+            lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalEarlyGame & pos.getCurrentBoard()[5]).length;
+        }else if(gameState==1){
+            capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalMidGame & pos.getCurrentBoard()[11]).length;
+            lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalMidGame & pos.getCurrentBoard()[5]).length;
+        }else if(gameState==2){
+            /* Get closer to other side */
+            capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEndGame1 & pos.getCurrentBoard()[11]).length*6;
+            capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEndGame2 & pos.getCurrentBoard()[11]).length*4;
+            capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEndGame3 & pos.getCurrentBoard()[11]).length*3;
+            capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEndGame4 & pos.getCurrentBoard()[11]).length*2;
+            capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEndGame5 & pos.getCurrentBoard()[11]).length;
+            capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEndGame6 & pos.getCurrentBoard()[11]).length;
+
+            lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalEndGame1 & pos.getCurrentBoard()[5]).length*6;
+            lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalEndGame2 & pos.getCurrentBoard()[5]).length*4;
+            lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalEndGame3 & pos.getCurrentBoard()[5]).length*3;
+            lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalEndGame4 & pos.getCurrentBoard()[5]).length*2;
+            lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalEndGame5 & pos.getCurrentBoard()[5]).length;
+            lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalEndGame6 & pos.getCurrentBoard()[5]).length;
         }
 
+        //adds the states where the pawns should be to the total advantage
+        totalPawnAdvantage+= capitalPawnCount-lowerCasePawnCount;
 
         return totalPawnAdvantage;
 
     }
-
-
-
-
 
 
 }
