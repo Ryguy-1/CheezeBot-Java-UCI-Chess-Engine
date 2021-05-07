@@ -6,6 +6,7 @@ public class Runner {
     public static BitboardControlAndSeparation controlAndSeparation;
     public static Search search;
     public static BoardEvaluation boardEvaluation;
+    public static NewBoardEvaluation newBoardEvaluation;
     public static ZobristHash zobristHash;
     public static FindMove findMove;
     public static UCI uci;
@@ -19,6 +20,7 @@ public class Runner {
         controlAndSeparation = new BitboardControlAndSeparation();
         search = new Search();
         boardEvaluation = new BoardEvaluation();
+        newBoardEvaluation = new NewBoardEvaluation();
         zobristHash = new ZobristHash();
         findMove = new FindMove();
         uci = new UCI();
@@ -28,6 +30,13 @@ public class Runner {
 //NEXT: Beat 1500: Handily with 77 percent accuracy vs its 25 percent.
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        // Board Evaluation
+
+
+
+
 
 //
 //        long start = System.nanoTime();

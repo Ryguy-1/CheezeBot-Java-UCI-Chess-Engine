@@ -62,7 +62,7 @@ public class Position{
     //////////////////////////////////
 
     private int boardEvaluation = 0;
-    public int getBoardEvaluation(){ //can be optimized later...
+    public int getBoardEvaluation(){ //optimized to only be updated when needed
         return boardEvaluation;
     }
 
