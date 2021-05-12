@@ -80,7 +80,6 @@ public class NewBoardEvaluation {
 
         long capitalPawnAttacks = Runner.checkValidConditions.getCapitalPawnThreatenedSpaces(pos);
         long lowerCasePawnAttacks = Runner.checkValidConditions.getLowerCasePawnThreatenedSpaces(pos);
-        long allPieces = Runner.controlAndSeparation.condenseBoard(pos.getCurrentBoard());
 
         //Pawns like to protect their own pieces
         totalPawnAdvantage = Runner.controlAndSeparation.splitBitboard(capitalPawnAttacks&Runner.controlAndSeparation.condenseBoard(Runner.controlAndSeparation.getCapitalPieces(pos))).length
@@ -90,6 +89,8 @@ public class NewBoardEvaluation {
         /*
             Do later...
          */
+
+
 
         /*Game States:
             1. Set up small protected pyramid structure
@@ -101,11 +102,11 @@ public class NewBoardEvaluation {
         if(gameState==0){ //early game
             capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEarlyGame & pos.getCurrentBoard()[11]).length;
             lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalEarlyGame & pos.getCurrentBoard()[5]).length;
-        }else if(gameState==1){
+        }else if(gameState==1){ //mid game
             capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalMidGame & pos.getCurrentBoard()[11]).length;
             lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalMidGame & pos.getCurrentBoard()[5]).length;
-        }else if(gameState==2){
-            /* Get closer to other side */
+        }else if(gameState==2){ //end game
+            /* Get closer to other side for promotion*/
             capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEndGame1 & pos.getCurrentBoard()[11]).length*6;
             capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEndGame2 & pos.getCurrentBoard()[11]).length*4;
             capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEndGame3 & pos.getCurrentBoard()[11]).length*3;
@@ -123,6 +124,8 @@ public class NewBoardEvaluation {
 
         //adds the states where the pawns should be to the total advantage
         totalPawnAdvantage+= capitalPawnCount-lowerCasePawnCount;
+
+
 
         return totalPawnAdvantage;
 

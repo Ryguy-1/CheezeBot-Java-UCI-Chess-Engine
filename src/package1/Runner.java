@@ -34,22 +34,23 @@ public class Runner {
 
         // Board Evaluation
 
-
+        System.out.println("Game State: " + Runner.mainBoard.mainPosition.getGameState());
+        System.out.println("Board Eval: " + Runner.newBoardEvaluation.getBoardEvaluation(Runner.mainBoard.mainPosition));
 
 
 
 //
-//        long start = System.nanoTime();
-//
-//        // call the method
-//        Runner.findMove.findMove(Runner.mainBoard.mainPosition, Runner.mainBoard.mainBoardMoves, 4, true);
-//
-//        // get the end time
-//        long end = System.nanoTime();
-//
-//        // execution time
-//        long execution = end - start;
-//        System.out.println("Execution time: " + execution + " nanoseconds");
+        long start = System.nanoTime();
+
+        // call the method
+        Runner.newBoardEvaluation.getBoardEvaluation(Runner.mainBoard.mainPosition);
+
+        // get the end time
+        long end = System.nanoTime();
+
+        // execution time
+        long execution = end - start;
+        System.out.println("Execution time: " + execution + " nanoseconds");
 
 
 

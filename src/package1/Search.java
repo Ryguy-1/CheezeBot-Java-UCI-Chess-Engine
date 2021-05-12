@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 public class Search {
 
-    /////////////////Capital///////////////////
+    //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
 
+    /////////////////Capital///////////////////
     public boolean capitalIsInCheckmate(Position pos){
         if(allCapitalMovesEqualCheck(pos)&&capitalIsInCheck(pos)){
             return true;
@@ -255,6 +256,31 @@ public class Search {
 
         //return the final list of moves
         return finalMoveset;
+    }
+
+    //does include piece other than just the pieces checking. However, does include ALL pieces checking guaranteed with just some extra.
+    public long piecesIncludingCheckingCapital(Position pos){
+        long capitalKing = pos.getCurrentBoard()[10];
+        long piecesAttacking = 0l;
+        if((capitalKing & Runner.checkValidConditions.getLowerCaseRookMoves(pos)) != 0) piecesAttacking |= pos.getCurrentBoard()[0];
+        if((capitalKing & Runner.checkValidConditions.getLowerCaseKnightMoves(pos)) != 0) piecesAttacking |= pos.getCurrentBoard()[1];
+        if((capitalKing & Runner.checkValidConditions.getLowerCaseBishopMoves(pos)) != 0) piecesAttacking |= pos.getCurrentBoard()[2];
+        if((capitalKing & Runner.checkValidConditions.getLowerCaseQueenMoves(pos)) != 0) piecesAttacking |= pos.getCurrentBoard()[3];
+//        if((capitalKing & Runner.checkValidConditions.getLowerCaseKingMoves(pos)) != 0) piecesAttacking |= pos.getCurrentBoard()[4]; //cannot check the opponent with your own king
+        if((capitalKing & Runner.checkValidConditions.getLowerCasePawnCombined(pos)) != 0) piecesAttacking |= pos.getCurrentBoard()[5];
+        return piecesAttacking;
+    }
+
+    public long piecesIncludingCheckingLowerCase(Position pos){
+        long lowerCaseKing = pos.getCurrentBoard()[4];
+        long piecesAttacking = 0l;
+        if((lowerCaseKing & Runner.checkValidConditions.getCapitalRookMoves(pos)) != 0) piecesAttacking |= pos.getCurrentBoard()[6];
+        if((lowerCaseKing & Runner.checkValidConditions.getCapitalKnightMoves(pos)) != 0) piecesAttacking |= pos.getCurrentBoard()[7];
+        if((lowerCaseKing & Runner.checkValidConditions.getCapitalBishopMoves(pos)) != 0) piecesAttacking |= pos.getCurrentBoard()[8];
+        if((lowerCaseKing & Runner.checkValidConditions.getCapitalQueenMoves(pos)) != 0) piecesAttacking |= pos.getCurrentBoard()[9];
+//        if((capitalKing & Runner.checkValidConditions.getCapitalKingMoves(pos)) != 0) piecesAttacking |= pos.getCurrentBoard()[10]; //cannot check the opponent with your own king
+        if((lowerCaseKing & Runner.checkValidConditions.getCapitalPawnCombined(pos)) != 0) piecesAttacking |= pos.getCurrentBoard()[11];
+        return piecesAttacking;
     }
 
 

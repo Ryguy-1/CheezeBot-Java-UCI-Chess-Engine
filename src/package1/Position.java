@@ -21,6 +21,18 @@ public class Position{
             {"a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"}
     };
 
+    /*Game states:
+        1. Early Game: 0 -> Opening time mainly (p>=25)
+        2. Mid Game: 1 -> Decisions before endgame and before and during major captures which will decide the endgame (10<p<25)
+        3. End Game: 2 -> When the majority of the pieces have been taken (p<=10)
+     */
+    private byte gameState = 0;
+    private final byte earlyGameCutoff = 25;
+    private final byte endGameCutoff = 10;
+    public byte getGameState() {
+        return gameState;
+    }
+
     private boolean capitalHasCastled = false;
     private boolean lowerCaseHasCastled = false;
     public void setCapitalHasCastled(boolean capitalHasCastled){
@@ -361,8 +373,18 @@ public class Position{
         //also update boardEvaluation
         boardEvaluation = Runner.boardEvaluation.getBoardRanking(this);
 
+        //also update gameState based on cutoffs
+        if(Runner.controlAndSeparation.splitBitboard(Runner.controlAndSeparation.condenseBoard(currentBoard)).length>=earlyGameCutoff){
+            gameState = 0;
+        }else if(Runner.controlAndSeparation.splitBitboard(Runner.controlAndSeparation.condenseBoard(currentBoard)).length>endGameCutoff && Runner.controlAndSeparation.splitBitboard(Runner.controlAndSeparation.condenseBoard(currentBoard)).length<earlyGameCutoff){
+            gameState = 1;
+        }else{ //less than endGameCutoff
+            gameState = 2;
+        }
+
     }
 
+    //These methods are used in calculations, not real movement of a board or in a search for moves that involves moving. Bitboard calculations that don't affect the actual position.
     public void fromToMove(long from, long to, String optionalPromotion){
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -552,27 +574,6 @@ public class Position{
         forceUpdatePosition(copyBoard);
         //do not update the board evaluation here because not used in that context
     }
-
-    public boolean moveLeadsToCheck(String fromTo, char pieceInCheck){
-
-        //create new Position with same history to check for check in new position once moved
-        Position testingPosition = new Position(currentBoard, currentBoardHistory);
-        //move the piece in new object from from to to.
-        testingPosition.fromToMove(fromTo);
-
-        //cannot do auto casing because it may choose the wrong piece on accident if you check the enemy, but you are not in check anymore -> Niche, but can be avoided easily.
-        //char casing = getCasing(testingPosition, from);
-
-        //checks if either capital or lower case (depending on who moved) is in check after the move
-        if(pieceInCheck=='c' && Runner.search.capitalIsInCheck(testingPosition)){
-            return true;
-        }else if(pieceInCheck=='l' && Runner.search.lowerCaseIsInCheck(testingPosition)){
-            return true;
-        }
-
-        return false;
-    }
-
     public boolean moveLeadsToCheck(long from, long to, char pieceInCheck, String optionalPromotion){
 
         //create new Position with same history to check for check in new position once moved
@@ -592,6 +593,27 @@ public class Position{
 
         return false;
     }
+//    public boolean moveLeadsToCheck(String fromTo, char pieceInCheck){
+//
+//        //create new Position with same history to check for check in new position once moved
+//        Position testingPosition = new Position(currentBoard, currentBoardHistory);
+//        //move the piece in new object from from to to.
+//        testingPosition.fromToMove(fromTo);
+//
+//        //cannot do auto casing because it may choose the wrong piece on accident if you check the enemy, but you are not in check anymore -> Niche, but can be avoided easily.
+//        //char casing = getCasing(testingPosition, from);
+//
+//        //checks if either capital or lower case (depending on who moved) is in check after the move
+//        if(pieceInCheck=='c' && Runner.search.capitalIsInCheck(testingPosition)){
+//            return true;
+//        }else if(pieceInCheck=='l' && Runner.search.lowerCaseIsInCheck(testingPosition)){
+//            return true;
+//        }
+//
+//        return false;
+//    }
+
+
 
     private char getCasing(Position pos, long piece){
         for (int i = 0; i < pos.getCurrentBoard().length; i++) {

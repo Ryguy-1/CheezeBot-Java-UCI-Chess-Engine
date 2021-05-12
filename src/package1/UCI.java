@@ -70,34 +70,34 @@ public class UCI {
 //        });
 //        t1.start();
 
-        t1 = new Thread(() -> {
-            while (engineRunning) {
-                Scanner scanner = new Scanner(System.in);
-                String input = scanner.nextLine();
-                if (input.equals("uci")) { //first command sent after bootup to the engine
-                    inputUCI();
-                }
-//                else if (input.startsWith("setoption")) { //not using yet
-//                    inputSetOption(input);
+//        t1 = new Thread(() -> {
+//            while (engineRunning) {
+//                Scanner scanner = new Scanner(System.in);
+//                String input = scanner.nextLine();
+//                if (input.equals("uci")) { //first command sent after bootup to the engine
+//                    inputUCI();
 //                }
-                else if (input.equals("isready")) { //used to make sure engine is still alive, to ping it, and just to make sure the engine and gui are synchronized.
-                    inputIsReady();
-                } else if (input.equals("ucinewgame")) {
-                    inputUCINewGame();
-                } else if (input.startsWith("position")) {
-                    inputPosition(input);
-                } else if (input.equals("go")) {
-                    inputGo();
-                }else if(input.equals("quit")){
-                    quit();
-                } else if (input.equals("drawBoard")) {
-                    drawMainBoard();
-                }
-
-
-            }
-        });
-        t1.start();
+////                else if (input.startsWith("setoption")) { //not using yet
+////                    inputSetOption(input);
+////                }
+//                else if (input.equals("isready")) { //used to make sure engine is still alive, to ping it, and just to make sure the engine and gui are synchronized.
+//                    inputIsReady();
+//                } else if (input.equals("ucinewgame")) {
+//                    inputUCINewGame();
+//                } else if (input.startsWith("position")) {
+//                    inputPosition(input);
+//                } else if (input.equals("go")) {
+//                    inputGo();
+//                }else if(input.equals("quit")){
+//                    quit();
+//                } else if (input.equals("drawBoard")) {
+//                    drawMainBoard();
+//                }
+//
+//
+//            }
+//        });
+//        t1.start();
 
     }
 
