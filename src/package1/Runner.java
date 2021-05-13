@@ -27,7 +27,7 @@ public class Runner {
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//NEXT: WORKING ON ROOKS FOR NEW BOARD EVALUATION!! Improving NewBoardEvaluation before making checkmate function much more efficient. Checkmate takes up the most time by a long shot.
+//NEXT: WORKING ON NEW BOARD EVALUATION!! Improving NewBoardEvaluation before making checkmate function much more efficient. Checkmate takes up the most time by a long shot.
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -43,16 +43,24 @@ public class Runner {
         long start = System.nanoTime();
 
         // call the method
-        Runner.newBoardEvaluation.getBoardEvaluation(Runner.mainBoard.mainPosition);
-
+        System.out.println("Old Board Eval: " + Runner.boardEvaluation.getBoardRanking(Runner.mainBoard.mainPosition));
         // get the end time
         long end = System.nanoTime();
 
         // execution time
         long execution = end - start;
         System.out.println("Execution time: " + execution + " nanoseconds");
+/////////////////////////////////////////////////
+        long start2 = System.nanoTime();
 
+        // call the method
+        System.out.println("New Board Eval: " + Runner.newBoardEvaluation.getBoardEvaluation(Runner.mainBoard.mainPosition));
+        // get the end time
+        long end2 = System.nanoTime();
 
+        // execution time
+        long execution2 = end2 - start2;
+        System.out.println("Execution time: " + execution2 + " nanoseconds");
 
 //        mainBoard.mainPosition.setCapitalAFileRookHasMoved(true);
 //        mainBoard.mainPosition.setCapitalHFileRookHasMoved(true);

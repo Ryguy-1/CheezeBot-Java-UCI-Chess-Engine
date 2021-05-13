@@ -146,6 +146,27 @@ public class BitboardControlAndSeparation {
         return letters;
     }
 
+    public boolean isInSameColumn(long piece1, long piece2){
+
+        if(((piece1&Runner.checkValidConditions.aFile)!=0) && ((piece2&Runner.checkValidConditions.aFile)!=0)){
+            return true;
+        }else if(((piece1&Runner.checkValidConditions.bFile)!=0) && ((piece2&Runner.checkValidConditions.bFile)!=0)){
+            return true;
+        }else if(((piece1&Runner.checkValidConditions.cFile)!=0) && ((piece2&Runner.checkValidConditions.cFile)!=0)){
+            return true;
+        }else if(((piece1&Runner.checkValidConditions.dFile)!=0) && ((piece2&Runner.checkValidConditions.dFile)!=0)){
+            return true;
+        }else if(((piece1&Runner.checkValidConditions.eFile)!=0) && ((piece2&Runner.checkValidConditions.eFile)!=0)){
+            return true;
+        }else if(((piece1&Runner.checkValidConditions.fFile)!=0) && ((piece2&Runner.checkValidConditions.fFile)!=0)){
+            return true;
+        }else if(((piece1&Runner.checkValidConditions.gFile)!=0) && ((piece2&Runner.checkValidConditions.gFile)!=0)){
+            return true;
+        }else if(((piece1&Runner.checkValidConditions.hFile)!=0) && ((piece2&Runner.checkValidConditions.hFile)!=0)){
+            return true;
+        }return false;
+    }
+
 
 
 

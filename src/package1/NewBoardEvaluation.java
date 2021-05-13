@@ -50,14 +50,14 @@ public class NewBoardEvaluation {
         int totalEvaluation = 0;
 
         //if one side in checkmate, look no further.
-//        if(Runner.search.capitalIsInCheckmate(pos)){
-//            return -checkmateWeight;
-//        }else if(Runner.search.lowerCaseIsInCheckmate(pos)){
-//            return checkmateWeight;
-//        }
+        if(Runner.search.capitalIsInCheckmate(pos)){
+            return -checkmateWeight;
+        }else if(Runner.search.lowerCaseIsInCheckmate(pos)){
+            return checkmateWeight;
+        }
         //if not in checkmate...
 
-        //totalEvaluation+=getPawnAdvantage(pos); //typically maxes out somewhere around 5 ish. Should be rather constant throughout game states
+        totalEvaluation+=getPawnAdvantage(pos); //typically maxes out somewhere around 5 ish. Should be rather constant throughout game states
         totalEvaluation+=getRookAdvantage(pos);
 
 
@@ -133,22 +133,44 @@ public class NewBoardEvaluation {
        - Take control of as many squares as possible (largest amount of attacking squares available)
        - Link themselves if possible for potential (Stacked or "attacking" each other)
      */
-    private int getRookAdvantage(Position pos){
+    private int getRookAdvantage(Position pos) {
         //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
 
         int totalRookAdvantage = 0;
-        int linkedValue = 6; //has to outweigh most other lines it would want to take
+        int stackedValue = 8; //has to outweigh most other lines it would want to take
 
         int numCapitalRookAttackingSquares = Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.getCapitalRookMoves(pos)).length;
         int numLowerCaseRookAttackingSquares = Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.getLowerCaseRookMoves(pos)).length;
 
-        totalRookAdvantage+=numCapitalRookAttackingSquares-numLowerCaseRookAttackingSquares;
+        totalRookAdvantage += numCapitalRookAttackingSquares - numLowerCaseRookAttackingSquares;
 
 
         //stacked rooks - just want to know if they are in the same column
-
-
-
+        //add a linkedValue for every rook that is in the same column after the first
+        Long[] capitalRooks = Runner.controlAndSeparation.splitBitboard(pos.getCurrentBoard()[6]);
+        Long[] lowerCaseRooks = Runner.controlAndSeparation.splitBitboard(pos.getCurrentBoard()[0]);
+        //capital stacked
+        if (capitalRooks.length>1) {
+            for (int i = 0; i < capitalRooks.length - 1; i++) {
+                for (int j = i + 1; j < capitalRooks.length; j++) {
+                    if (Runner.controlAndSeparation.isInSameColumn(capitalRooks[i], capitalRooks[j])) {
+                        System.out.println("Capital Stacked");
+                        totalRookAdvantage += stackedValue;
+                    }
+                }
+            }
+        }
+        //lower case stacked
+        if(lowerCaseRooks.length>1) {
+            for (int i = 0; i < lowerCaseRooks.length - 1; i++) {
+                for (int j = i + 1; j < lowerCaseRooks.length; j++) {
+                    if (Runner.controlAndSeparation.isInSameColumn(lowerCaseRooks[i], lowerCaseRooks[j])) {
+                        System.out.println("Lower Case Stacked");
+                        totalRookAdvantage -= stackedValue;
+                    }
+                }
+            }
+        }
 
         //capital rook stack capital rook or capital rook attack capital rook
 //        if((Runner.checkValidConditions.getCapitalRookMoves(pos) & pos.getCurrentBoard()[6]) != 0){
