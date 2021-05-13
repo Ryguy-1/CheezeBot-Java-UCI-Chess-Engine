@@ -3,7 +3,7 @@ package package1;
 public class CheckValidConditions {
     //pawn on rank 2
     public final long rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8;
-    public final long aFile, bFile, gFile, hFile;
+    public final long aFile, bFile, cFile, dFile, eFile, fFile, gFile, hFile;
     public final long long1;
 
     public final long longCastleCapitalIntermediateSpaces;
@@ -48,6 +48,10 @@ public class CheckValidConditions {
         //initialize file longs
         aFile = Runner.mainBoard.parseLong("1000000010000000100000001000000010000000100000001000000010000000", 2);
         bFile = Runner.mainBoard.parseLong("0100000001000000010000000100000001000000010000000100000001000000", 2);
+        cFile = Runner.mainBoard.parseLong("0010000000100000001000000010000000100000001000000010000000100000", 2);
+        dFile = Runner.mainBoard.parseLong("0001000000010000000100000001000000010000000100000001000000010000", 2);
+        eFile = Runner.mainBoard.parseLong("0000100000001000000010000000100000001000000010000000100000001000", 2);
+        fFile = Runner.mainBoard.parseLong("0000010000000100000001000000010000000100000001000000010000000100", 2);
         gFile = Runner.mainBoard.parseLong("0000001000000010000000100000001000000010000000100000001000000010", 2);
         hFile = Runner.mainBoard.parseLong("0000000100000001000000010000000100000001000000010000000100000001", 2);
 
@@ -1210,7 +1214,7 @@ public class CheckValidConditions {
 
 
     //Diagonal , Horizontal, and Vertical Sliders/////////////////////////
-    private long getDiagonalMovesSingle(long goodPieces, long badPieces, long piece){
+    public long getDiagonalMovesSingle(long goodPieces, long badPieces, long piece){
 
         long total = 0l;
 
@@ -1305,7 +1309,7 @@ public class CheckValidConditions {
 
         return total;
     }
-    private long getVerticalHorizontalMovesSingle(long goodPieces, long badPieces, long piece){
+    public long getVerticalHorizontalMovesSingle(long goodPieces, long badPieces, long piece){
 
         long total = 0l;
 

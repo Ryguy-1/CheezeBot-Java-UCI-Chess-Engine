@@ -50,15 +50,15 @@ public class NewBoardEvaluation {
         int totalEvaluation = 0;
 
         //if one side in checkmate, look no further.
-        if(Runner.search.capitalIsInCheckmate(pos)){
-            return -checkmateWeight;
-        }else if(Runner.search.lowerCaseIsInCheckmate(pos)){
-            return checkmateWeight;
-        }
+//        if(Runner.search.capitalIsInCheckmate(pos)){
+//            return -checkmateWeight;
+//        }else if(Runner.search.lowerCaseIsInCheckmate(pos)){
+//            return checkmateWeight;
+//        }
         //if not in checkmate...
 
-        totalEvaluation+=getPawnAdvantage(pos);
-
+        //totalEvaluation+=getPawnAdvantage(pos); //typically maxes out somewhere around 5 ish. Should be rather constant throughout game states
+        totalEvaluation+=getRookAdvantage(pos);
 
 
 
@@ -69,9 +69,9 @@ public class NewBoardEvaluation {
 
 
     /* Pawn Preferences:
-       1. Protect themselves and other pieces
-       2. Attack other pieces as long as they are supported
-       3. Get to the other side of the board in endgame
+       - Set up good Pawn Structure (using matching bitboards above for pawn structure)
+       - Protect their own pieces
+       - Attack other pieces as long as they are supported - not implemented yet
      */
     private int getPawnAdvantage(Position pos){
         //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
@@ -82,7 +82,7 @@ public class NewBoardEvaluation {
         long lowerCasePawnAttacks = Runner.checkValidConditions.getLowerCasePawnThreatenedSpaces(pos);
 
         //Pawns like to protect their own pieces
-        totalPawnAdvantage = Runner.controlAndSeparation.splitBitboard(capitalPawnAttacks&Runner.controlAndSeparation.condenseBoard(Runner.controlAndSeparation.getCapitalPieces(pos))).length
+        totalPawnAdvantage += Runner.controlAndSeparation.splitBitboard(capitalPawnAttacks&Runner.controlAndSeparation.condenseBoard(Runner.controlAndSeparation.getCapitalPieces(pos))).length
                 - Runner.controlAndSeparation.splitBitboard(lowerCasePawnAttacks&Runner.controlAndSeparation.condenseBoard(Runner.controlAndSeparation.getLowerCasePieces(pos))).length;
 
         //Pawns like to attack other color's pieces just as much, as long as they are supported
@@ -107,29 +107,60 @@ public class NewBoardEvaluation {
             lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalMidGame & pos.getCurrentBoard()[5]).length;
         }else if(gameState==2){ //end game
             /* Get closer to other side for promotion*/
-            capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEndGame1 & pos.getCurrentBoard()[11]).length*6;
-            capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEndGame2 & pos.getCurrentBoard()[11]).length*4;
-            capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEndGame3 & pos.getCurrentBoard()[11]).length*3;
-            capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEndGame4 & pos.getCurrentBoard()[11]).length*2;
+            capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEndGame1 & pos.getCurrentBoard()[11]).length*3;
+            capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEndGame2 & pos.getCurrentBoard()[11]).length*2;
+            capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEndGame3 & pos.getCurrentBoard()[11]).length;
+            capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEndGame4 & pos.getCurrentBoard()[11]).length;
             capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEndGame5 & pos.getCurrentBoard()[11]).length;
             capitalPawnCount+=Runner.controlAndSeparation.splitBitboard(capitalPawnMoveGoalEndGame6 & pos.getCurrentBoard()[11]).length;
 
-            lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalEndGame1 & pos.getCurrentBoard()[5]).length*6;
-            lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalEndGame2 & pos.getCurrentBoard()[5]).length*4;
-            lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalEndGame3 & pos.getCurrentBoard()[5]).length*3;
-            lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalEndGame4 & pos.getCurrentBoard()[5]).length*2;
+            lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalEndGame1 & pos.getCurrentBoard()[5]).length*3;
+            lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalEndGame2 & pos.getCurrentBoard()[5]).length*2;
+            lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalEndGame3 & pos.getCurrentBoard()[5]).length;
+            lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalEndGame4 & pos.getCurrentBoard()[5]).length;
             lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalEndGame5 & pos.getCurrentBoard()[5]).length;
             lowerCasePawnCount+=Runner.controlAndSeparation.splitBitboard(lowerCasePawnMoveGoalEndGame6 & pos.getCurrentBoard()[5]).length;
         }
 
         //adds the states where the pawns should be to the total advantage
-        totalPawnAdvantage+= capitalPawnCount-lowerCasePawnCount;
-
-
+        totalPawnAdvantage += capitalPawnCount-lowerCasePawnCount;
 
         return totalPawnAdvantage;
 
     }
 
+    /*Rook Preferences:
+       - Take control of as many squares as possible (largest amount of attacking squares available)
+       - Link themselves if possible for potential (Stacked or "attacking" each other)
+     */
+    private int getRookAdvantage(Position pos){
+        //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
+
+        int totalRookAdvantage = 0;
+        int linkedValue = 6; //has to outweigh most other lines it would want to take
+
+        int numCapitalRookAttackingSquares = Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.getCapitalRookMoves(pos)).length;
+        int numLowerCaseRookAttackingSquares = Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.getLowerCaseRookMoves(pos)).length;
+
+        totalRookAdvantage+=numCapitalRookAttackingSquares-numLowerCaseRookAttackingSquares;
+
+
+        //stacked rooks - just want to know if they are in the same column
+
+
+
+
+        //capital rook stack capital rook or capital rook attack capital rook
+//        if((Runner.checkValidConditions.getCapitalRookMoves(pos) & pos.getCurrentBoard()[6]) != 0){
+//            System.out.println("capital linked rooks");
+//            totalRookAdvantage+=linkedValue;
+//        }
+//        if((Runner.checkValidConditions.getLowerCaseRookMoves(pos) & pos.getCurrentBoard()[0]) != 0){
+//            System.out.println("lower case linked rooks");
+//            totalRookAdvantage-=linkedValue;
+//        }
+
+        return totalRookAdvantage;
+    }
 
 }

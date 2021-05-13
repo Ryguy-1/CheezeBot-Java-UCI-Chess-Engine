@@ -43,14 +43,14 @@ public class MainBoard {
     private Long longEnd1 = parseLong("1000000000000000000000000000000000000000000000000000000000000000", 2);
 
     String[][] visualRepresentation = {
-            {"r", "n", "b", "q", "k", "b", "n", "r"},
-            {"p", "p", "p", "p", "p", "p", "p", "p"},
-            {"",  "",  "",  "",  "",  "",  "",  ""},
-            {"",  "",  "",  "",  "",  "",  "",  ""},
-            {"",  "",  "",  "",  "",  "",  "",  ""},
-            {"",  "",  "P",  "",  "",  "",  "",  ""},
-            {"P", "P", "", "P", "P", "P", "P", "P"},
-            {"R", "N", "B", "Q", "K", "B", "N", "R"}
+            {"", "", "", "", "", "", "", ""},
+            {"", "", "", "", "", "", "", ""},
+            {"", "", "", "", "", "", "", ""},
+            {"", "", "", "", "", "", "", ""},
+            {"", "", "", "", "", "", "", ""},
+            {"", "", "", "", "", "", "", ""},
+            {"", "", "", "", "", "", "", ""},
+            {"r", "", "", "", "", "", "k", "r"}
     };
 
 
@@ -198,12 +198,6 @@ public class MainBoard {
         System.out.println();
 
     }
-
-//    public void updateMainBoardAndHistory(Long[] newBoard){
-//        mainBoardHistory = mainBoard;
-//        mainBoard=newBoard;
-//    }
-
 
     //Logic Crazy Chess Implementation of Drawing For Testing Purposes (Modified)
     public void drawGameBoard(Long[] currentBoard) {
