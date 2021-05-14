@@ -44,25 +44,25 @@ public class NewBoardEvaluation {
     private static final int checkmateWeight = (Integer.MAX_VALUE/2); //HAS TO BE -1 BECAUSE MIN AND MAX VALUES IN MINIMAX ARE INTEGER.MAX_VALUE. THROWS ERROR OTHERWISE.
     private static final int stalemateWeight = (Integer.MAX_VALUE/4);
 
-
+    private static final int stackedValue = 8; //Rooks: value you add per rook stacked
+    private static final int hasCastledValue = 10; //Rooks: value you add for each player if they have castled.
 
     public int getBoardEvaluation(Position pos){
         int totalEvaluation = 0;
 
         //if one side in checkmate, look no further.
-        if(Runner.search.capitalIsInCheckmate(pos)){
-            return -checkmateWeight;
-        }else if(Runner.search.lowerCaseIsInCheckmate(pos)){
-            return checkmateWeight;
-        }
+//        if(Runner.search.capitalIsInCheckmate(pos)){
+//            return -checkmateWeight;
+//        }else if(Runner.search.lowerCaseIsInCheckmate(pos)){
+//            return checkmateWeight;
+//        }
         //if not in checkmate...
 
-        totalEvaluation+=getPawnAdvantage(pos); //typically maxes out somewhere around 5 ish. Should be rather constant throughout game states
-        totalEvaluation+=getRookAdvantage(pos);
-
-
-
-
+//        totalEvaluation+=getPawnAdvantage(pos); //typically maxes out somewhere around 5 ish. Should be rather constant throughout game states
+//        totalEvaluation+=getRookAdvantage(pos); // maxes out somewhere around 25-40 ish
+//        totalEvaluation+=getKnightAdvantage(pos); // maxes out at around 16.
+//        totalEvaluation+=getBishopAdvantage(pos); //maxes out somewhere around 16 as well.
+//        totalEvaluation+=getQueenAdvantage(pos); //maxes out somewhere around 30 ish (single queen no promotions)
 
         return totalEvaluation;
     }
@@ -130,6 +130,7 @@ public class NewBoardEvaluation {
     }
 
     /*Rook Preferences:
+       - If you have castled, this is good
        - Take control of as many squares as possible (largest amount of attacking squares available)
        - Link themselves if possible for potential (Stacked or "attacking" each other)
      */
@@ -137,7 +138,11 @@ public class NewBoardEvaluation {
         //order in array: r, n, b, q, k, p, R, N, B, Q, K, P
 
         int totalRookAdvantage = 0;
-        int stackedValue = 8; //has to outweigh most other lines it would want to take
+
+        //castle adder -> Castling is good
+        if(pos.getCapitalHasCastled()) totalRookAdvantage+=hasCastledValue;
+        if(pos.getLowerCaseHasCastled()) totalRookAdvantage-=hasCastledValue;
+
 
         int numCapitalRookAttackingSquares = Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.getCapitalRookMoves(pos)).length;
         int numLowerCaseRookAttackingSquares = Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.getLowerCaseRookMoves(pos)).length;
@@ -145,6 +150,7 @@ public class NewBoardEvaluation {
         totalRookAdvantage += numCapitalRookAttackingSquares - numLowerCaseRookAttackingSquares;
 
 
+        //Take some time though...
         //stacked rooks - just want to know if they are in the same column
         //add a linkedValue for every rook that is in the same column after the first
         Long[] capitalRooks = Runner.controlAndSeparation.splitBitboard(pos.getCurrentBoard()[6]);
@@ -171,18 +177,54 @@ public class NewBoardEvaluation {
                 }
             }
         }
-
-        //capital rook stack capital rook or capital rook attack capital rook
-//        if((Runner.checkValidConditions.getCapitalRookMoves(pos) & pos.getCurrentBoard()[6]) != 0){
-//            System.out.println("capital linked rooks");
-//            totalRookAdvantage+=linkedValue;
-//        }
-//        if((Runner.checkValidConditions.getLowerCaseRookMoves(pos) & pos.getCurrentBoard()[0]) != 0){
-//            System.out.println("lower case linked rooks");
-//            totalRookAdvantage-=linkedValue;
-//        }
-
         return totalRookAdvantage;
     }
 
+    /*Knight Preferences:
+       - Attack as many squares as possible (edges are bad usually)
+     */
+    private int getKnightAdvantage(Position pos){
+        int totalKnightAdvantage = 0;
+
+        totalKnightAdvantage+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.getCapitalKnightMoves(pos)).length;
+        totalKnightAdvantage-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.getLowerCaseKnightMoves(pos)).length;
+
+        return totalKnightAdvantage;
+    }
+
+    /*Bishop Preferences:
+        - Attack as many squares as possible
+    */
+    private int getBishopAdvantage(Position pos){
+        int totalBishopAdvantage = 0;
+
+        totalBishopAdvantage+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.getCapitalBishopMoves(pos)).length;
+        totalBishopAdvantage-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.getLowerCaseBishopMoves(pos)).length;
+
+        return totalBishopAdvantage;
+    }
+
+    /*Queen Preferences:
+        - Attack as many squares as possible
+    */
+    private int getQueenAdvantage(Position pos){
+        int totalQueenAdvantage = 0;
+
+        totalQueenAdvantage+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.getCapitalQueenMoves(pos)).length;
+        totalQueenAdvantage-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.getLowerCaseQueenMoves(pos)).length;
+
+        return totalQueenAdvantage;
+    }
+
+    /*King Preferences:
+        - GS1: Corners of its own side
+        - GS2: Corners of its own side
+        - GS3: Center of board
+     */
+    private int getKingAdvantage(Position pos){
+        int totalKingAdvantage = 0;
+
+
+        return totalKingAdvantage;
+    }
 }

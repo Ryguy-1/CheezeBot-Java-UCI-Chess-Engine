@@ -31,79 +31,79 @@ public class FindMove {
     public Position findMove(Position pos, ArrayList<String> positionMoveHistory, int depth, boolean isMaximizingPlayer){
         //makes position copy
         Position finalPosition = pos.getPositionCopy();
-        finalPosition.getMovesToCurrent().clear(); //clear past moves so can return new line with object.
-        //initializes array of preffered moves to make preset.
-        String[] preferredOpening = Runner.openings.openingsWithNames[openingNumber][1].split(" ");
-        System.out.println("Preffered opening is: " + preferredOpening[0]);
+//        finalPosition.getMovesToCurrent().clear(); //clear past moves so can return new line with object.
+//        //initializes array of preffered moves to make preset.
+//        String[] preferredOpening = Runner.openings.openingsWithNames[openingNumber][1].split(" ");
+//        System.out.println("Preffered opening is: " + preferredOpening[0]);
+//
+//        //if you are starting, just make the first move
+//        if(positionMoveHistory.size()==0){
+//            System.out.println("Position move history = " + positionMoveHistory);
+//            finalPosition.fromToMove(preferredOpening[0]);
+//            for (int i = 0; i < preferredOpening.length; i++) {
+//                finalPosition.addMove(preferredOpening[i]);
+//            }
+//            return finalPosition;
+//        }else{
+//            boolean isLegal = false;
+//            try{//otheriwse check if there is a move to make left
+//                String prefferedMove = preferredOpening[positionMoveHistory.size()];
+//                System.out.println("is maximizing player 1 " + isMaximizingPlayer);
+//                System.out.println("prefferedMove " + prefferedMove);
+//                if(isMaximizingPlayer){ //capital
+//                    String[] possibleMoves = Runner.search.getPossibleMovesByCasing(finalPosition, 'c');
+//                    for (int i = 0; i < possibleMoves.length; i++) {
+//                        if(possibleMoves[i].equals(prefferedMove)){
+//                            finalPosition.fromToMove(prefferedMove); //tries to make the next move in the sequence if there is one. Shouldn't make the move if there isn't one...
+//                            isLegal = true;
+//                        }
+//                    }
+//                }else{
+//                    String[] possibleMoves = Runner.search.getPossibleMovesByCasing(finalPosition, 'l');
+//                    for (int i = 0; i < possibleMoves.length; i++) {
+//                        if(possibleMoves[i].equals(prefferedMove)){
+//                            finalPosition.fromToMove(prefferedMove); //tries to make the next move in the sequence if there is one. Shouldn't make the move if there isn't one...
+//                            isLegal = true;
+//                        }
+//                    }
+//                }
+//
+//                if(!isLegal){
+//                    throw new IndexOutOfBoundsException();
+//                    //go to minimax if move isn't legal
+//                }
+//
+//                System.out.println("have another move in preffered opening to make..");
+//                //if there is a move to make left, move it, and check how good it was with depth of 1 so basically they can't immediately take a piece
+//                int openingEval = minimax(finalPosition, 2, !isMaximizingPlayer, MIN, MAX).getBoardEvaluation(); //Gets the move the opponent makes right afterwards
+//                //if the opening board is better evaluation than it was before, make the move
+//                if(isMaximizingPlayer && openingEval>pos.getBoardEvaluation()){
+//                    System.out.println("Here 1");
+//                    for (int i = positionMoveHistory.size(); i <preferredOpening.length; i++) {
+//                        finalPosition.addMove(preferredOpening[i]);
+//                    }System.out.println("Here 2");
+//                    return finalPosition;
+//                }else if(!isMaximizingPlayer && openingEval<pos.getBoardEvaluation()){
+//                    System.out.println("PositionMoveHistory = " + positionMoveHistory + ". prefferedOpening length = " + preferredOpening.length);
+//                    for (int i = positionMoveHistory.size(); i <preferredOpening.length; i++) {
+//                        finalPosition.addMove(preferredOpening[i]);
+//                    }System.out.println("Here 4");
+//                    return finalPosition;
+//                }else{ //if it was not a good move as decided by evaluation function, then just use minimax
+//                    System.out.println("used minimax becasue bad opening");
+//                    return minimax(pos, depth, isMaximizingPlayer, MIN, MAX);
+//                }
+//            }catch (IndexOutOfBoundsException e){
+//                //no next move to make, so use minimax
+//                System.out.println("used minimax because no have match");
+//                System.out.println("Minimax PositionMoveHistory = " + positionMoveHistory);
+//                System.out.println("Position new object moves to current = " + finalPosition.getMovesToCurrent());
+//                Runner.mainBoard.drawGameBoard(pos.getCurrentBoard());
+//                return minimax(finalPosition, depth, isMaximizingPlayer, MIN, MAX);
+//            }
+//        }
 
-        //if you are starting, just make the first move
-        if(positionMoveHistory.size()==0){
-            System.out.println("Position move history = " + positionMoveHistory);
-            finalPosition.fromToMove(preferredOpening[0]);
-            for (int i = 0; i < preferredOpening.length; i++) {
-                finalPosition.addMove(preferredOpening[i]);
-            }
-            return finalPosition;
-        }else{
-            boolean isLegal = false;
-            try{//otheriwse check if there is a move to make left
-                String prefferedMove = preferredOpening[positionMoveHistory.size()];
-                System.out.println("is maximizing player 1 " + isMaximizingPlayer);
-                System.out.println("prefferedMove " + prefferedMove);
-                if(isMaximizingPlayer){ //capital
-                    String[] possibleMoves = Runner.search.getPossibleMovesByCasing(finalPosition, 'c');
-                    for (int i = 0; i < possibleMoves.length; i++) {
-                        if(possibleMoves[i].equals(prefferedMove)){
-                            finalPosition.fromToMove(prefferedMove); //tries to make the next move in the sequence if there is one. Shouldn't make the move if there isn't one...
-                            isLegal = true;
-                        }
-                    }
-                }else{
-                    String[] possibleMoves = Runner.search.getPossibleMovesByCasing(finalPosition, 'l');
-                    for (int i = 0; i < possibleMoves.length; i++) {
-                        if(possibleMoves[i].equals(prefferedMove)){
-                            finalPosition.fromToMove(prefferedMove); //tries to make the next move in the sequence if there is one. Shouldn't make the move if there isn't one...
-                            isLegal = true;
-                        }
-                    }
-                }
-
-                if(!isLegal){
-                    throw new IndexOutOfBoundsException();
-                    //go to minimax if move isn't legal
-                }
-
-                System.out.println("have another move in preffered opening to make..");
-                //if there is a move to make left, move it, and check how good it was with depth of 1 so basically they can't immediately take a piece
-                int openingEval = minimax(finalPosition, 2, !isMaximizingPlayer, MIN, MAX).getBoardEvaluation(); //Gets the move the opponent makes right afterwards
-                //if the opening board is better evaluation than it was before, make the move
-                if(isMaximizingPlayer && openingEval>pos.getBoardEvaluation()){
-                    System.out.println("Here 1");
-                    for (int i = positionMoveHistory.size(); i <preferredOpening.length; i++) {
-                        finalPosition.addMove(preferredOpening[i]);
-                    }System.out.println("Here 2");
-                    return finalPosition;
-                }else if(!isMaximizingPlayer && openingEval<pos.getBoardEvaluation()){
-                    System.out.println("PositionMoveHistory = " + positionMoveHistory + ". prefferedOpening length = " + preferredOpening.length);
-                    for (int i = positionMoveHistory.size(); i <preferredOpening.length; i++) {
-                        finalPosition.addMove(preferredOpening[i]);
-                    }System.out.println("Here 4");
-                    return finalPosition;
-                }else{ //if it was not a good move as decided by evaluation function, then just use minimax
-                    System.out.println("used minimax becasue bad opening");
-                    return minimax(pos, depth, isMaximizingPlayer, MIN, MAX);
-                }
-            }catch (IndexOutOfBoundsException e){
-                //no next move to make, so use minimax
-                System.out.println("used minimax because no have match");
-                System.out.println("Minimax PositionMoveHistory = " + positionMoveHistory);
-                System.out.println("Position new object moves to current = " + finalPosition.getMovesToCurrent());
-                Runner.mainBoard.drawGameBoard(pos.getCurrentBoard());
-                return minimax(finalPosition, depth, isMaximizingPlayer, MIN, MAX);
-            }
-        }
-
-        //return minimax(finalPosition, depth, isMaximizingPlayer, MIN, MAX);
+        return minimax(finalPosition, depth, isMaximizingPlayer, MIN, MAX);
     }
 
     private void printOpeningLine(String[] moves){

@@ -77,6 +77,9 @@ public class Position{
     public int getBoardEvaluation(){ //optimized to only be updated when needed
         return boardEvaluation;
     }
+    public void setBoardEvaluation(int boardEvaluation){
+        this.boardEvaluation = boardEvaluation;
+    }
 
 
     Position(Long[] currentBoard){
@@ -102,7 +105,7 @@ public class Position{
             System.out.println("Error initializing Position Object Overloaded Constructor");
         }
 
-        if(!referenceArrayHasBeenInitialized){
+        if(!referenceArrayHasBeenInitialized) {
             referenceArray = new Long[64];
             referenceArray = populateReferenceArray(referenceArray);
         }
@@ -574,6 +577,7 @@ public class Position{
         forceUpdatePosition(copyBoard);
         //do not update the board evaluation here because not used in that context
     }
+
     public boolean moveLeadsToCheck(long from, long to, char pieceInCheck, String optionalPromotion){
 
         //create new Position with same history to check for check in new position once moved
@@ -678,6 +682,7 @@ public class Position{
         newPosition.setLowerCaseHFileRookHasMoved(lowerCaseHFileRookHasMoved);
         newPosition.setLowerCaseKingHasMoved(lowerCaseKingHasMoved);
         newPosition.setLowerCaseHasCastled(lowerCaseHasCastled);
+        newPosition.setBoardEvaluation(this.boardEvaluation);
         for (int i = 0; i < movesToCurrent.size(); i++) {
             newPosition.addMove(movesToCurrent.get(i));
         }
