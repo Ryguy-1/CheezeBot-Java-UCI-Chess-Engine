@@ -13,4 +13,4 @@ Recommended GUI with [Arena Chess](http://www.playwitharena.de/)
 Jar file is compiled in Java 1.8
 - Download Java [HERE](https://java.com/en/)
 
-Download and Run this [Jar File]()
+Download and Run this [Jar File](https://github.com/Ryguy-1/CheezeBot-Java-UCI-Chess-Engine/blob/master/out/artifacts/ChessSimJavaNoGradle_jar/ChessSimJavaNoGradle.jar)
