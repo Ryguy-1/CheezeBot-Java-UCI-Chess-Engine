@@ -167,7 +167,17 @@ public class BitboardControlAndSeparation {
         }return false;
     }
 
+    public ArrayList<Integer> getIndicesPopulated(long bitboard){
+        ArrayList<Integer> populatedIndices = new ArrayList<Integer>();
+        Long[] pieces = splitBitboard(bitboard);
+        for (int i = 0; i < pieces.length; i++) {
+            // finish this
+        }
 
+
+
+        return populatedIndices;
+    }
 
 
 

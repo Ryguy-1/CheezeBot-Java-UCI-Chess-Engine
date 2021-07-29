@@ -13,7 +13,7 @@ public class NewBoardEvaluation { //Come back to this...
     private static final int stalemateWeight = (Integer.MAX_VALUE/4);
 
     /*
-        Early, Middle, and End Games
+        Middle and End Games
      */
     /** Piece/square table for king during middle game. */
     static final int[] kt1b =
@@ -128,10 +128,18 @@ public class NewBoardEvaluation { //Come back to this...
 
 
 
+    // Looks to Openings if in early game and this method if not....
 
     public int getBoardEvaluation(Position pos){
         int totalEval = 0;
-
+        switch(pos.getGameState()){
+            case 0:
+                // look to openings
+                break;
+            default:
+                // figure it out
+                totalEval+=getPawnValue(pos);
+        }
 
 
 
@@ -146,7 +154,10 @@ public class NewBoardEvaluation { //Come back to this...
         int totalPawnValue = 0;
 
         switch(pos.getGameState()){
-            case 0: //early game
+            case 1: //mid game
+
+                break;
+            case 2: //end game
 
                 break;
         }
