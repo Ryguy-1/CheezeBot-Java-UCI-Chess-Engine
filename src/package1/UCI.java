@@ -11,7 +11,7 @@ public class UCI {
 
     public static boolean isReadyOk = true;
 
-    public static final int lookAhead = 4;
+    public static final int lookAhead = 1;
 
     UCI() {
         initiateCommunication();
@@ -94,6 +94,8 @@ public class UCI {
             }
         });
         t1.start();
+        // TEMP FOR TESTING!
+        inputGo();
 
     }
 
@@ -144,7 +146,7 @@ public class UCI {
     private void inputGo(){
         //search for the best move. May put this into a new thread? not sure yet.
         //computer turn as lower case
-        Position returnedPosition = Runner.minimax.minimax(Runner.mainBoard.mainPosition, lookAhead, false, Minimax.MIN, Minimax.MAX);
+        Position returnedPosition = Runner.findMove.findBestPosition(Runner.mainBoard.mainPosition, lookAhead, false, Minimax.MIN, Minimax.MAX);
         String bestMoveFound = returnedPosition.getMovesToCurrent().get(0);
         Runner.mainBoard.mainPosition.fromToMove(bestMoveFound);
         System.out.println("bestmove " + bestMoveFound);

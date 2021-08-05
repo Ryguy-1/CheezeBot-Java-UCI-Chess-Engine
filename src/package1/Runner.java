@@ -1,5 +1,6 @@
 package package1;
 
+import java.time.LocalTime;
 import java.util.Stack;
 
 public class Runner {
@@ -10,6 +11,7 @@ public class Runner {
     public static BoardEvaluation boardEvaluation;
     public static ZobristHash zobristHash;
     public static Minimax minimax;
+    public static FindMove findMove;
     public static UCI uci;
 
     public static void main(String[] args){
@@ -20,8 +22,10 @@ public class Runner {
         search = new Search();
         boardEvaluation = new BoardEvaluation();
         zobristHash = new ZobristHash();
-        minimax = new Minimax();
+//        minimax = new Minimax();
+        findMove = new FindMove();
         uci = new UCI();
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

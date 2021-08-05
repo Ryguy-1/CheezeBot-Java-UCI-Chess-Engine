@@ -1,10 +1,13 @@
 package package1;
 
-import sun.invoke.empty.Empty;
 
-import java.util.EmptyStackException;
+import javafx.geometry.Pos;
 
-public class Minimax {
+import java.lang.reflect.Array;
+import java.time.LocalTime;
+import java.util.ArrayList;
+
+public class Minimax extends Thread{
 
     //Capital = maximize
     //Lower Case = minimize
@@ -12,6 +15,8 @@ public class Minimax {
     public static final int MAX = Integer.MAX_VALUE;
     public static final int MIN = -Integer.MAX_VALUE; //Double.MIN_VALUE is still a positive number because of rollovers or something
 
+    int processorNum = Runtime.getRuntime().availableProcessors(); //number of threads available
+    final int timeAvailable = 10; //in seconds
 
 ////////////////////////////////////////////////////////////////////////
     //using the position object as three things...
@@ -20,30 +25,44 @@ public class Minimax {
     //3) An object that can be used to calculate the goodness of that node (a position object = a node in the minimax tree)
     /////////////////////////////////////////////////////////////////////
 
-    public Position minimax(Position pos, int depth, boolean isMaximizingPlayer, int alpha, int beta){
+    private Position pos;
+    private int depth;
+    private boolean isMaximizingPlayer;
+    private int alpha;
+    private int beta;
+    private Position returnedPosition;
+
+    Minimax(Position pos, int depth, boolean isMaximizingPlayer, int alpha, int beta){
+        this.pos = pos;
+        this.depth = depth;
+        this.isMaximizingPlayer = isMaximizingPlayer;
+        this.alpha = alpha;
+        this.beta = beta;
+//        run();
+    }
+
+    @Override
+    public void run() {
+        super.run();
+        minimax();
+    }
+
+    private Position minimax(){
+        System.out.println("mini");
 
         if(depth==0){
-//            if(Runner.search.capitalIsInCheckmate(pos)){
-//                System.out.println("capital is in checkmate");
-//                System.out.println(pos.getMovesToCurrent());
-//                Runner.mainBoard.drawGameBoard(pos.getCurrentBoard());
-//            } else if (Runner.search.lowerCaseIsInCheckmate(pos)) {
-//                System.out.println("lower case is in checkmate");
-//                System.out.println(pos.getMovesToCurrent());
-//                Runner.mainBoard.drawGameBoard(pos.getCurrentBoard());
-//            }
-            //^^ commenting out draws out all of the possible ways each player could get checkmate from starting point.
-            return pos;
+            this.returnedPosition = pos;
+            System.out.println("end");
         }
 
-        if(isMaximizingPlayer){ //Capital
+        if(isMaximizingPlayer) { //Capital
             int bestValue = MIN; //initialize a best value
             int leastMoves = MAX;
             Position bestPosition = null; //initialize a best position
             String[] possibleMoves = Runner.search.getPossibleMovesByCasing(pos, 'c');
 
             //if there are no moves, you have reached a leaf, so return it
-            if (possibleMoves.length==0) {
+            if (possibleMoves.length == 0) {
                 return pos;
             }
 
@@ -58,7 +77,10 @@ public class Minimax {
                 childPos.addMove(possibleMoves[i]); //adds the move to that arraylist for that child
 
                 //Gets the result from minimax
-                Position tempPosition = minimax(childPos, depth-1, false, alpha, beta);
+                Minimax min = new Minimax(childPos, depth - 1, false, alpha, beta);
+                min.start();
+                Position tempPosition = min.getReturnedPosition();
+
 
                 //checks if the move is better
                 if (tempPosition.getBoardEvaluation() > bestValue) {
@@ -66,18 +88,19 @@ public class Minimax {
                     bestValue = tempPosition.getBoardEvaluation();
                     bestPosition = tempPosition;
                     //if it is the same evaluation and less moves, it should also go
-                } else if (tempPosition.getBoardEvaluation()==bestValue && tempPosition.getMovesToCurrent().size()<leastMoves) {
+                } else if (tempPosition.getBoardEvaluation() == bestValue && tempPosition.getMovesToCurrent().size() < leastMoves) {
                     leastMoves = tempPosition.getMovesToCurrent().size();
                     bestValue = tempPosition.getBoardEvaluation();
                     bestPosition = tempPosition;
                 }
 //                //need to come back to understand the alpha beta pruning
                 alpha = Math.max(alpha, bestValue);
-                if(beta <= alpha){
+                if (beta <= alpha) {
                     break;
                 }
             }
             return bestPosition;
+
         }else{ //Lower Case
             int bestValue = MAX;
             int leastMoves = MAX;
@@ -99,7 +122,9 @@ public class Minimax {
                 childPos.addMove(possibleMoves[i]); //adds the move to that arraylist for that child
 
                 //Gets the result from minimax
-                Position tempPosition = minimax(childPos, depth-1, true, alpha, beta);
+                Minimax min = new Minimax(childPos, depth - 1, false, alpha, beta);
+                min.start();
+                Position tempPosition = min.getReturnedPosition();
 
                 //checks if the move is better
                 //if it is a better evaluation, it should go every time.
@@ -121,6 +146,16 @@ public class Minimax {
                 }
             }
             return bestPosition;
+        }
+    }
+
+
+    public Position getReturnedPosition(){
+        while(true){
+            if(returnedPosition!=null){
+                System.out.println("sfd");
+                return returnedPosition;
+            }
         }
     }
 
