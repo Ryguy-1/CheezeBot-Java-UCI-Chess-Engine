@@ -8,8 +8,7 @@ public class Runner {
     public static BitboardControlAndSeparation controlAndSeparation;
     public static Search search;
     public static BoardEvaluation boardEvaluation;
-    public static ZobristHash zobristHash;
-    public static Minimax minimax;
+    public static FindMove findMove;
     public static UCI uci;
 
     public static void main(String[] args){
@@ -19,11 +18,11 @@ public class Runner {
         controlAndSeparation = new BitboardControlAndSeparation();
         search = new Search();
         boardEvaluation = new BoardEvaluation();
-        zobristHash = new ZobristHash();
-        minimax = new Minimax();
+        findMove = new FindMove();
         uci = new UCI();
 
 
+        System.out.println(Runner.boardEvaluation.getBoardRanking(Runner.mainBoard.mainPosition));
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //NEXT: Beat 1500: Handily with 77 percent accuracy vs its 25 percent.
 

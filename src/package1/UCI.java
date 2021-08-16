@@ -1,5 +1,6 @@
 package package1;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class UCI {
@@ -11,7 +12,7 @@ public class UCI {
 
     public static boolean isReadyOk = true;
 
-    public static final int lookAhead = 4;
+    public static final int numSimulations = 40;
 
     UCI() {
         initiateCommunication();
@@ -144,10 +145,9 @@ public class UCI {
     private void inputGo(){
         //search for the best move. May put this into a new thread? not sure yet.
         //computer turn as lower case
-        Position returnedPosition = Runner.minimax.minimax(Runner.mainBoard.mainPosition, lookAhead, false, Minimax.MIN, Minimax.MAX);
-        String bestMoveFound = returnedPosition.getMovesToCurrent().get(0);
-        Runner.mainBoard.mainPosition.fromToMove(bestMoveFound);
-        System.out.println("bestmove " + bestMoveFound);
+        ArrayList<String> moveChain = Runner.findMove.findMove(Runner.mainBoard.mainPosition, false, numSimulations);
+        Runner.mainBoard.mainPosition.fromToMove(moveChain.get(0));
+        System.out.println("bestmove " + moveChain.get(0));
         drawMainBoard();
     }
 

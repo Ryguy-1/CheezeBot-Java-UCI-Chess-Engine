@@ -61,10 +61,57 @@ public class Position{
     }
     //////////////////////////////////
 
-    public int getBoardEvaluation(){ //can be optimized later...
+    private boolean hasBeenExpanded = false;
+    public boolean hasBeenExpanded(){
+        return hasBeenExpanded;
+    }
+    public void setHasBeenExpanded(boolean hasBeenExpanded){
+        this.hasBeenExpanded = hasBeenExpanded;
+    }
+
+    // 17:17
+    private int visitCount = 0;
+    public int getVisitCount() {
+        return visitCount;
+    }
+    public void addVisit() {
+        visitCount++;
+    }
+    public void resetVisitCount(){
+        visitCount = 0;
+    }
+
+
+    // Probability of going to this node
+    private int priorProbability = 0;
+    public int getPriorProbability(){
+        return priorProbability;
+    }
+    public void setPriorProbability(int priorProbability){
+        this.priorProbability = priorProbability;
+    }
+
+    private double UCBScore = 0;
+    public void setUCBScore(double UCBScore){
+        this.UCBScore = UCBScore;
+    }
+    public double getUCBScore(){
+        return UCBScore;
+    }
+
+    private Position parentNode;
+    public void setParentNode(Position parentNode){
+        this.parentNode = parentNode;
+    }
+    public Position getParentNode(){
+        return this.parentNode;
+    }
+
+    public int getBoardEvaluation(){
         return Runner.boardEvaluation.getBoardRanking(this);
     }
 
+    ////////////////////////////////////
 
     Position(Long[] currentBoard){
         if(currentBoard!=null && currentBoard.length == 12) {
@@ -664,5 +711,4 @@ public class Position{
             newBitboard[i] = bitboardArray[i];
         }return newBitboard;
     }
-
 }

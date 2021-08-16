@@ -153,10 +153,11 @@ public class BoardEvaluation {
         long capitalPieceSquares = Runner.controlAndSeparation.condenseBoard(Runner.controlAndSeparation.getCapitalPieces(pos));
         long lowerCasePieceSquares = Runner.controlAndSeparation.condenseBoard(Runner.controlAndSeparation.getLowerCasePieces(pos));
 
-        long capitalPiecesAttacked = lowerCaseAttackingSquares | capitalPieceSquares;
-        long lowerCasePiecesAttacked = capitalAttackingSquares | lowerCasePieceSquares;
+        long capitalPiecesAttacked = lowerCaseAttackingSquares & capitalPieceSquares;
+        long lowerCasePiecesAttacked = capitalAttackingSquares & lowerCasePieceSquares;
 
-        totalValue -= Runner.controlAndSeparation.splitBitboard(capitalPiecesAttacked).length + Runner.controlAndSeparation.splitBitboard(lowerCasePiecesAttacked).length;
+        totalValue -= Runner.controlAndSeparation.splitBitboard(capitalPiecesAttacked).length;
+        totalValue += Runner.controlAndSeparation.splitBitboard(lowerCasePiecesAttacked).length;
 
         return totalValue;
     }

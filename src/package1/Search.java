@@ -4,6 +4,19 @@ import java.util.ArrayList;
 
 public class Search {
 
+    // returns 1 for capital wins by checkmate, -1 for lowercase win, and 0 for neither
+    public int boardIsInCheckmate(Position pos){
+        if(capitalIsInCheckmate(pos)){ // lc wins
+            return -1;
+        }else if(lowerCaseIsInCheckmate(pos)){ // cap wins
+            return 1;
+        }else{ // neither wins
+            return 0;
+        }
+    }
+
+
+
     /////////////////Capital///////////////////
 
     public boolean capitalIsInCheckmate(Position pos){
