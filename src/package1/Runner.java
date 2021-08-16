@@ -30,13 +30,21 @@ public class Runner {
 
         Runner.mainBoard.mainPosition.fromToMove("e2e4");
         Hash.zobristMap.clear();
-        Position returnedPosition = Runner.minimax.minimax(Runner.mainBoard.mainPosition, 2, false, Minimax.MIN, Minimax.MAX);
+        Position returnedPosition = Runner.minimax.minimax(Runner.mainBoard.mainPosition, 6, false, Minimax.MIN, Minimax.MAX);
         Runner.mainBoard.mainPosition.fromToMove(returnedPosition.getMovesToCurrent().get(0));
         System.out.println("Hash size = " + Hash.zobristMap.size());
         System.out.println("Positions checked = " + Minimax.positionsChecked);
         System.out.println(returnedPosition.getMovesToCurrent());
         Runner.mainBoard.drawGameBoard(Runner.mainBoard.mainPosition.getCurrentBoard());
         System.out.println("Advantage = " + boardEvaluation.getBoardRanking(Runner.mainBoard.mainPosition));
+
+        for (int i = 1; i < returnedPosition.getMovesToCurrent().size(); i++) {
+            Runner.mainBoard.mainPosition.fromToMove(returnedPosition.getMovesToCurrent().get(i));
+        }
+        System.out.println("===After all moves made===");
+        Runner.mainBoard.drawGameBoard(Runner.mainBoard.mainPosition.getCurrentBoard());
+        System.out.println("Advantage = " + boardEvaluation.getBoardRanking(Runner.mainBoard.mainPosition));
+
 
 //        System.out.println(Runner.boardEvaluation.getBoardRanking(mainBoard.mainPosition));
 //

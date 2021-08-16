@@ -16,7 +16,7 @@ public class BoardEvaluation {
     //Spend time later figuring out mobility advantages
     private static final int materialMultiplier = 60; //don't want anything to interfere with this...
     private static final int centerControlMultiplier = 5;
-    private static final int pawnStructureMultiplier = 13;
+    private static final int pawnStructureMultiplier = 100000; //was 13
     private static final int attackingPiecesMultiplier = 2;
     private static final int mobilityMultiplier = 3;
 
@@ -42,45 +42,40 @@ public class BoardEvaluation {
     public int getBoardRanking(Position pos){
         int totalAdv = 0;
         //CHECKMATES BEFORE EVERYTHING ELSE
-//        if(Runner.search.capitalIsInCheckmate(pos)){
-//            return -checkmateWeight;
-//        }else if(Runner.search.lowerCaseIsInCheckmate(pos)){
-//            return checkmateWeight;
-//        }
-        //OTHER VARIABLES
-//        totalAdv+=getPieceAdvantage(pos)*materialMultiplier;
-        if((pos.getCurrentBoard()[5]&Runner.checkValidConditions.rank5)!=0){
-            totalAdv-=1000;
-        }else if((pos.getCurrentBoard()[11]&Runner.checkValidConditions.rank4)!=0){
-            totalAdv+=1000;
+        if(Runner.search.capitalIsInCheckmate(pos)){
+            return -checkmateWeight;
+        }else if(Runner.search.lowerCaseIsInCheckmate(pos)){
+            return checkmateWeight;
         }
-//        totalAdv+=getMobilityAdvantage(pos)*mobilityMultiplier;
-//        totalAdv+=getAttackingPiecesAdvantage(pos)*attackingPiecesMultiplier;
-//        totalAdv+=getCenterControlAdvantage(pos)*centerControlMultiplier;
-//        totalAdv+=getPawnProtectAdvantage(pos)*pawnStructureMultiplier;
-//        //CASTLING
-//        if(pos.getCapitalHasCastled()){ //if you have moved a rook or king and haven't castled, this is not ideal
-//            totalAdv+=castleAdder;
-//        }
-//        if(pos.getLowerCaseHasCastled()){
-//            totalAdv-=castleAdder;
-//        }
-//        //CHECKING
-//        if(Runner.search.capitalIsInCheck(pos)){
-//            totalAdv-=checkAdder;
-//        }else if(Runner.search.lowerCaseIsInCheck(pos)){
-//            totalAdv+=checkAdder;
-//        }
-//        //STALEMATES
-//        if(Runner.search.capitalIsInStalemate(pos) && totalAdv<(-acceptStalemateDifference)){ //if capital is in stalemate and losing by more than acceptStalemateDifference, it tries to stalemate.
-//            return stalemateWeight; //stalemate does not compare to checkmate
-//        }else if(Runner.search.capitalIsInStalemate(pos) && totalAdv>acceptStalemateDifference){
-//            return -stalemateWeight;
-//        }else if(Runner.search.lowerCaseIsInStalemate(pos) && totalAdv>acceptStalemateDifference){//if lower case is in stalemate and losing by more than acceptStalemateDifference, it tries to stalemate.
-//            return -stalemateWeight;
-//        }else if(Runner.search.lowerCaseIsInStalemate(pos) && totalAdv<(-acceptStalemateDifference)){
-//            return stalemateWeight;
-//        }
+        //OTHER VARIABLES
+        totalAdv+=getPieceAdvantage(pos)*materialMultiplier;
+        totalAdv+=getMobilityAdvantage(pos)*mobilityMultiplier;
+        totalAdv+=getAttackingPiecesAdvantage(pos)*attackingPiecesMultiplier;
+        totalAdv+=getCenterControlAdvantage(pos)*centerControlMultiplier;
+        totalAdv+=getPawnProtectAdvantage(pos)*pawnStructureMultiplier;
+        //CASTLING
+        if(pos.getCapitalHasCastled()){ //if you have moved a rook or king and haven't castled, this is not ideal
+            totalAdv+=castleAdder;
+        }
+        if(pos.getLowerCaseHasCastled()){
+            totalAdv-=castleAdder;
+        }
+        //CHECKING
+        if(Runner.search.capitalIsInCheck(pos)){
+            totalAdv-=checkAdder;
+        }else if(Runner.search.lowerCaseIsInCheck(pos)){
+            totalAdv+=checkAdder;
+        }
+        //STALEMATES
+        if(Runner.search.capitalIsInStalemate(pos) && totalAdv<(-acceptStalemateDifference)){ //if capital is in stalemate and losing by more than acceptStalemateDifference, it tries to stalemate.
+            return stalemateWeight; //stalemate does not compare to checkmate
+        }else if(Runner.search.capitalIsInStalemate(pos) && totalAdv>acceptStalemateDifference){
+            return -stalemateWeight;
+        }else if(Runner.search.lowerCaseIsInStalemate(pos) && totalAdv>acceptStalemateDifference){//if lower case is in stalemate and losing by more than acceptStalemateDifference, it tries to stalemate.
+            return -stalemateWeight;
+        }else if(Runner.search.lowerCaseIsInStalemate(pos) && totalAdv<(-acceptStalemateDifference)){
+            return stalemateWeight;
+        }
 
         return totalAdv;
     }
