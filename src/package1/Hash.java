@@ -41,7 +41,6 @@ public class Hash {
     }
 
     public void addPositionToTable(Position pos){
-        pos.setWasHashed(true);
         zobristMap.put(getHashValue(pos), pos);
     }
 

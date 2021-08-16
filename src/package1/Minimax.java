@@ -44,18 +44,20 @@ public class Minimax {
                 childPos.addMove(possibleMoves[i]); //adds the move to that arraylist for that child
 
                 //Gets the result from minimax / has function work
-//                Position tempPosition = minimax(childPos, depth-1, !isMaximizingPlayer, alpha, beta);
+                Position tempPosition = minimax(childPos, depth-1, !isMaximizingPlayer, alpha, beta);
 
 
                 /////////////////////////////////////////////////////////
-                Position tempPosition;
+//                Position tempPosition;
+//
+//                if (Runner.hash.isInTable(childPos)) {
+//                    tempPosition = Runner.hash.getPositionFromHashedPosition(childPos).getPositionCopy();
+//                }else{
+//                    tempPosition = minimax(childPos, depth-1, !isMaximizingPlayer, alpha, beta);
+//                    Runner.hash.addPositionToTable(tempPosition);
+//                }
 
-                if (Runner.hash.isInTable(childPos)) {
-                    tempPosition = Runner.hash.getPositionFromHashedPosition(childPos);
-                }else{
-                    tempPosition = minimax(childPos, depth-1, !isMaximizingPlayer, alpha, beta);
-                    Runner.hash.addPositionToTable(tempPosition);
-                }
+
 
                 ///////////////////////////////////////////////
 
@@ -101,17 +103,17 @@ public class Minimax {
                 childPos.addMove(possibleMoves[i]); //adds the move to that arraylist for that child
 
                 //Gets the result from minimax / has function work
-//                Position tempPosition = minimax(childPos, depth-1, !isMaximizingPlayer, alpha, beta);
+                Position tempPosition = minimax(childPos, depth-1, !isMaximizingPlayer, alpha, beta);
 
                 /////////////////////////////////////////////////////////
-                Position tempPosition;
-
-                if (Runner.hash.isInTable(childPos)) {
-                    tempPosition = Runner.hash.getPositionFromHashedPosition(childPos);
-                }else{
-                    tempPosition = minimax(childPos, depth-1, !isMaximizingPlayer, alpha, beta);
-                    Runner.hash.addPositionToTable(tempPosition);
-                }
+//                Position tempPosition;
+//
+//                if (Runner.hash.isInTable(childPos)) {
+//                    tempPosition = Runner.hash.getPositionFromHashedPosition(childPos).getPositionCopy();
+//                }else{
+//                    tempPosition = minimax(childPos, depth-1, !isMaximizingPlayer, alpha, beta);
+//                    Runner.hash.addPositionToTable(tempPosition);
+//                }
 
                 ///////////////////////////////////////////////
 

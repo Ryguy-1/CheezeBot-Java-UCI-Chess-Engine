@@ -58,15 +58,6 @@ public class Position{
         return movesToCurrent;
     }
 
-    /////////// Hash measurer
-    private boolean wasHashed = false;
-    public boolean wasHashed(){
-        return wasHashed;
-    }
-    public void setWasHashed(boolean wasHashed){
-        this.wasHashed = wasHashed;
-    }
-
     public void clearMovesToCurrent(){
         movesToCurrent.clear();
     }
@@ -666,7 +657,6 @@ public class Position{
         newPosition.setLowerCaseHFileRookHasMoved(lowerCaseHFileRookHasMoved);
         newPosition.setLowerCaseKingHasMoved(lowerCaseKingHasMoved);
         newPosition.setLowerCaseHasCastled(lowerCaseHasCastled);
-        newPosition.setWasHashed(wasHashed);
         for (int i = 0; i < movesToCurrent.size(); i++) {
             newPosition.addMove(movesToCurrent.get(i));
         }

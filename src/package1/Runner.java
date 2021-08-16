@@ -1,6 +1,7 @@
 package package1;
 
 import javax.annotation.processing.SupportedSourceVersion;
+import javax.rmi.ssl.SslRMIClientSocketFactory;
 import java.util.Stack;
 
 public class Runner {
@@ -24,13 +25,18 @@ public class Runner {
         minimax = new Minimax();
         uci = new UCI();
 
+//        Position returnedPosition = Runner.minimax.minimax(Runner.mainBoard.mainPosition, 6, false, Minimax.MIN, Minimax.MAX);
+//        System.out.println(Hash.zobristMap.size());
 
-//        Hash.zobristMap.clear();
-//        Position returnedPosition = Runner.minimax.minimax(Runner.mainBoard.mainPosition, 6, true, Minimax.MIN, Minimax.MAX);
-//        System.out.println("Hash size = " + Hash.zobristMap.size());
-//        System.out.println("Positions checked = " + Minimax.positionsChecked);
-//        System.out.println("Was Hashed: " + returnedPosition.wasHashed());
-//        System.out.println(returnedPosition.getMovesToCurrent());
+        Runner.mainBoard.mainPosition.fromToMove("e2e4");
+        Hash.zobristMap.clear();
+        Position returnedPosition = Runner.minimax.minimax(Runner.mainBoard.mainPosition, 2, false, Minimax.MIN, Minimax.MAX);
+        Runner.mainBoard.mainPosition.fromToMove(returnedPosition.getMovesToCurrent().get(0));
+        System.out.println("Hash size = " + Hash.zobristMap.size());
+        System.out.println("Positions checked = " + Minimax.positionsChecked);
+        System.out.println(returnedPosition.getMovesToCurrent());
+        Runner.mainBoard.drawGameBoard(Runner.mainBoard.mainPosition.getCurrentBoard());
+        System.out.println("Advantage = " + boardEvaluation.getBoardRanking(Runner.mainBoard.mainPosition));
 
 //        System.out.println(Runner.boardEvaluation.getBoardRanking(mainBoard.mainPosition));
 //

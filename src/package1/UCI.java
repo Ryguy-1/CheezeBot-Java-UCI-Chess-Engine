@@ -6,7 +6,7 @@ public class UCI {
     Thread t1;
     public static final String engineName = "CheezeBot Alpha";
     public static final String creditName = "Ryland Birchmeier";
-    public static final String version = "0.3";
+    public static final String version = "0.31";
     public static boolean engineRunning;
 
     public static boolean isReadyOk = true;
@@ -100,9 +100,10 @@ public class UCI {
         //search for the best move. May put this into a new thread? not sure yet.
         //computer turn as lower case
         Hash.zobristMap.clear();
+        Minimax.positionsChecked = 0;
         Position returnedPosition = Runner.minimax.minimax(Runner.mainBoard.mainPosition, lookAhead, false, Minimax.MIN, Minimax.MAX);
         String bestMoveFound = returnedPosition.getMovesToCurrent().get(0);
-        System.out.println("+++++++++++Best Move Sequence++++++++++++++++");
+        System.out.println("+++++++++++Best Move Sequence++++++++++++++++Look Ahead = " + lookAhead);
         System.out.println("Hash Size = " + Hash.zobristMap.size());
         System.out.println("Positions checked = " + Minimax.positionsChecked);
         System.out.println(returnedPosition.getMovesToCurrent());
