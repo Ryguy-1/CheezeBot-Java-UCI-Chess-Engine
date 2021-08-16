@@ -2,6 +2,7 @@ package package1;
 
 import sun.invoke.empty.Empty;
 
+import java.util.ArrayList;
 import java.util.EmptyStackException;
 
 public class Minimax {
@@ -10,29 +11,14 @@ public class Minimax {
     //Lower Case = minimize
 
     public static final int MAX = Integer.MAX_VALUE;
-    public static final int MIN = -Integer.MAX_VALUE; //Double.MIN_VALUE is still a positive number because of rollovers or something
+    public static final int MIN = -Integer.MAX_VALUE; //Integer.MIN_VALUE is still a positive number because of rollovers or something
 
+    public static long positionsChecked = 0;
 
-////////////////////////////////////////////////////////////////////////
-    //using the position object as three things...
-    //1) A way to store the board and the board history to be able to generate moves
-    //2) A way to hold the best move calculated with minimax
-    //3) An object that can be used to calculate the goodness of that node (a position object = a node in the minimax tree)
-    /////////////////////////////////////////////////////////////////////
-
+    // USES UCI.LOOKAHEAD!!!
     public Position minimax(Position pos, int depth, boolean isMaximizingPlayer, int alpha, int beta){
 
         if(depth==0){
-//            if(Runner.search.capitalIsInCheckmate(pos)){
-//                System.out.println("capital is in checkmate");
-//                System.out.println(pos.getMovesToCurrent());
-//                Runner.mainBoard.drawGameBoard(pos.getCurrentBoard());
-//            } else if (Runner.search.lowerCaseIsInCheckmate(pos)) {
-//                System.out.println("lower case is in checkmate");
-//                System.out.println(pos.getMovesToCurrent());
-//                Runner.mainBoard.drawGameBoard(pos.getCurrentBoard());
-//            }
-            //^^ commenting out draws out all of the possible ways each player could get checkmate from starting point.
             return pos;
         }
 
@@ -57,8 +43,24 @@ public class Minimax {
                 childPos.fromToMove(possibleMoves[i]); //make the move
                 childPos.addMove(possibleMoves[i]); //adds the move to that arraylist for that child
 
-                //Gets the result from minimax
-                Position tempPosition = minimax(childPos, depth-1, false, alpha, beta);
+                //Gets the result from minimax / has function work
+//                Position tempPosition = minimax(childPos, depth-1, !isMaximizingPlayer, alpha, beta);
+
+
+                /////////////////////////////////////////////////////////
+                Position tempPosition;
+
+                if (Runner.hash.isInTable(childPos)) {
+                    tempPosition = Runner.hash.getPositionFromHashedPosition(childPos);
+                }else{
+                    tempPosition = minimax(childPos, depth-1, !isMaximizingPlayer, alpha, beta);
+                    Runner.hash.addPositionToTable(tempPosition);
+                }
+
+                ///////////////////////////////////////////////
+
+                // Add position checked to counter
+                positionsChecked++;
 
                 //checks if the move is better
                 if (tempPosition.getBoardEvaluation() > bestValue) {
@@ -98,8 +100,24 @@ public class Minimax {
                 childPos.fromToMove(possibleMoves[i]); //make the move
                 childPos.addMove(possibleMoves[i]); //adds the move to that arraylist for that child
 
-                //Gets the result from minimax
-                Position tempPosition = minimax(childPos, depth-1, true, alpha, beta);
+                //Gets the result from minimax / has function work
+//                Position tempPosition = minimax(childPos, depth-1, !isMaximizingPlayer, alpha, beta);
+
+                /////////////////////////////////////////////////////////
+                Position tempPosition;
+
+                if (Runner.hash.isInTable(childPos)) {
+                    tempPosition = Runner.hash.getPositionFromHashedPosition(childPos);
+                }else{
+                    tempPosition = minimax(childPos, depth-1, !isMaximizingPlayer, alpha, beta);
+                    Runner.hash.addPositionToTable(tempPosition);
+                }
+
+                ///////////////////////////////////////////////
+
+
+                // Add position checked to counter
+                positionsChecked++;
 
                 //checks if the move is better
                 //if it is a better evaluation, it should go every time.
@@ -123,6 +141,5 @@ public class Minimax {
             return bestPosition;
         }
     }
-
 
 }

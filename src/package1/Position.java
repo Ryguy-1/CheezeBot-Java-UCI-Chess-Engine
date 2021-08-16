@@ -1,6 +1,7 @@
 package package1;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Stack;
 
 public class Position{
@@ -56,6 +57,20 @@ public class Position{
     public ArrayList<String> getMovesToCurrent(){
         return movesToCurrent;
     }
+
+    /////////// Hash measurer
+    private boolean wasHashed = false;
+    public boolean wasHashed(){
+        return wasHashed;
+    }
+    public void setWasHashed(boolean wasHashed){
+        this.wasHashed = wasHashed;
+    }
+
+    public void clearMovesToCurrent(){
+        movesToCurrent.clear();
+    }
+
     public void addMove(String fromTo){
         movesToCurrent.add(fromTo);
     }
@@ -64,7 +79,6 @@ public class Position{
     public int getBoardEvaluation(){ //can be optimized later...
         return Runner.boardEvaluation.getBoardRanking(this);
     }
-
 
     Position(Long[] currentBoard){
         if(currentBoard!=null && currentBoard.length == 12) {
@@ -652,6 +666,7 @@ public class Position{
         newPosition.setLowerCaseHFileRookHasMoved(lowerCaseHFileRookHasMoved);
         newPosition.setLowerCaseKingHasMoved(lowerCaseKingHasMoved);
         newPosition.setLowerCaseHasCastled(lowerCaseHasCastled);
+        newPosition.setWasHashed(wasHashed);
         for (int i = 0; i < movesToCurrent.size(); i++) {
             newPosition.addMove(movesToCurrent.get(i));
         }
@@ -663,6 +678,13 @@ public class Position{
         for (int i = 0; i < bitboardArray.length; i++) {
             newBitboard[i] = bitboardArray[i];
         }return newBitboard;
+    }
+
+
+    public boolean boardIsEqualTo(Position otherPos){ // used for fast check to get boardValue
+        if(Arrays.equals(currentBoard, otherPos.getCurrentBoard())){
+            return true;
+        }return false;
     }
 
 }

@@ -2,6 +2,7 @@ package package1;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class BitboardControlAndSeparation {
 
@@ -146,7 +147,15 @@ public class BitboardControlAndSeparation {
         return letters;
     }
 
-
+    public ArrayList<Integer> getPopulatedIndices(long bitboard){
+        ArrayList<Integer> indices = new ArrayList<Integer>();
+        for (int i = 0; i < referenceArray.length; i++) {
+            if((referenceArray[i] & bitboard) != 0){
+                indices.add(i);
+            }
+        }
+        return indices;
+    }
 
 
 

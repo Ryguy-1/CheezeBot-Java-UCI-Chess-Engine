@@ -4,68 +4,22 @@ import java.util.Scanner;
 
 public class UCI {
     Thread t1;
-    public static final String engineName = "CheezeBot Beta";
-    public static final String creditName = "Ryland";
-    public static final String version = "0.11";
+    public static final String engineName = "CheezeBot Alpha";
+    public static final String creditName = "Ryland Birchmeier";
+    public static final String version = "0.3";
     public static boolean engineRunning;
 
     public static boolean isReadyOk = true;
 
-    public static final int lookAhead = 4;
+    public static final int lookAhead = 6;
 
     UCI() {
         initiateCommunication();
         engineRunning = true;
+        System.out.println(engineName + ", " + creditName + ", " + version);
     }
 
     private void initiateCommunication() {
-//        t1 = new Thread(() -> {
-//            Scanner scanner = new Scanner(System.in);
-//
-//            //draw initial game board
-//            Runner.mainBoard.drawGameBoard(Runner.mainBoard.mainPosition.getCurrentBoard());
-//
-//            while(engineRunning){
-//                if(Runner.search.capitalIsInCheckmate(Runner.mainBoard.mainPosition)){
-//                    engineRunning = false;
-//                    System.out.println("Capital Is In Checkmate!! Good Game");
-//                    break;
-//                } else if (Runner.search.lowerCaseIsInCheckmate(Runner.mainBoard.mainPosition)) {
-//                    engineRunning = false;
-//                    System.out.println("Lower Case Is In Checkmate!! Good Game");
-//                    break;
-//                }
-//                    //if there are no checkmates
-//                    //my turn as capital (have to make valid moves because don't need to check if my move as a user is valid or not for uci)
-//                    System.out.println();
-//                    System.out.print("Move FromTo (Algebraic Notation): ");
-//                    String fromTo = scanner.nextLine();
-//                    Runner.mainBoard.mainPosition.fromToMove(fromTo);
-//                    //print board after my move
-//                    Runner.mainBoard.drawGameBoard(Runner.mainBoard.mainPosition.getCurrentBoard());
-//                    System.out.println();
-//                if(Runner.search.capitalIsInCheckmate(Runner.mainBoard.mainPosition)){
-//                    engineRunning = false;
-//                    System.out.println("Capital Is In Checkmate!! Good Game");
-//                    break;
-//                } else if (Runner.search.lowerCaseIsInCheckmate(Runner.mainBoard.mainPosition)) {
-//                    engineRunning = false;
-//                    System.out.println("Lower Case Is In Checkmate!! Good Game");
-//                    break;
-//                }
-//                    //computer turn as lower case
-//                    Position newPos = Runner.minimax.minimax(Runner.mainBoard.mainPosition, lookAhead, false, Minimax.MIN, Minimax.MAX);
-//                    Runner.mainBoard.mainPosition.fromToMove(newPos.getMovesToCurrent().get(0));
-//                    //print logic train
-//                    System.out.println(newPos.getMovesToCurrent());
-//                    //Print board for computer move
-//                    Runner.mainBoard.drawGameBoard(Runner.mainBoard.mainPosition.getCurrentBoard());
-//
-//            }
-//
-//        });
-//        t1.start();
-
         t1 = new Thread(() -> {
             while (engineRunning) {
                 Scanner scanner = new Scanner(System.in);
@@ -124,6 +78,7 @@ public class UCI {
         //what you call when you want to start a new game. Clear hash table, etc.
         System.out.println("Starting new game with " + engineName + ". Version: " + version);
         Runner.mainBoard.initializeNewBoard();
+        Hash.zobristMap.clear(); // clear hash
     }
 
     private void inputPosition(String input){
@@ -144,8 +99,14 @@ public class UCI {
     private void inputGo(){
         //search for the best move. May put this into a new thread? not sure yet.
         //computer turn as lower case
+        Hash.zobristMap.clear();
         Position returnedPosition = Runner.minimax.minimax(Runner.mainBoard.mainPosition, lookAhead, false, Minimax.MIN, Minimax.MAX);
         String bestMoveFound = returnedPosition.getMovesToCurrent().get(0);
+        System.out.println("+++++++++++Best Move Sequence++++++++++++++++");
+        System.out.println("Hash Size = " + Hash.zobristMap.size());
+        System.out.println("Positions checked = " + Minimax.positionsChecked);
+        System.out.println(returnedPosition.getMovesToCurrent());
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++");
         Runner.mainBoard.mainPosition.fromToMove(bestMoveFound);
         System.out.println("bestmove " + bestMoveFound);
         drawMainBoard();

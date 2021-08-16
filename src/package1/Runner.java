@@ -1,5 +1,6 @@
 package package1;
 
+import javax.annotation.processing.SupportedSourceVersion;
 import java.util.Stack;
 
 public class Runner {
@@ -8,8 +9,8 @@ public class Runner {
     public static BitboardControlAndSeparation controlAndSeparation;
     public static Search search;
     public static BoardEvaluation boardEvaluation;
-    public static ZobristHash zobristHash;
     public static Minimax minimax;
+    public static Hash hash;
     public static UCI uci;
 
     public static void main(String[] args){
@@ -19,9 +20,25 @@ public class Runner {
         controlAndSeparation = new BitboardControlAndSeparation();
         search = new Search();
         boardEvaluation = new BoardEvaluation();
-        zobristHash = new ZobristHash();
+        hash = new Hash();
         minimax = new Minimax();
         uci = new UCI();
+
+
+//        Hash.zobristMap.clear();
+//        Position returnedPosition = Runner.minimax.minimax(Runner.mainBoard.mainPosition, 6, true, Minimax.MIN, Minimax.MAX);
+//        System.out.println("Hash size = " + Hash.zobristMap.size());
+//        System.out.println("Positions checked = " + Minimax.positionsChecked);
+//        System.out.println("Was Hashed: " + returnedPosition.wasHashed());
+//        System.out.println(returnedPosition.getMovesToCurrent());
+
+//        System.out.println(Runner.boardEvaluation.getBoardRanking(mainBoard.mainPosition));
+//
+//        System.out.println(hash.getBoardEvaluationHASH(mainBoard.mainPosition));
+//        mainBoard.mainPosition.fromToMove("e2e4");
+//        System.out.println(hash.getBoardEvaluationHASH(mainBoard.mainPosition));
+//        mainBoard.mainPosition.fromToMove("e4e2");
+//        System.out.println(hash.getBoardEvaluationHASH(mainBoard.mainPosition));
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
