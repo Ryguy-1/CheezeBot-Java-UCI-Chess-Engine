@@ -22,7 +22,13 @@ public class Runner {
         uci = new UCI();
 
 
-        System.out.println(Runner.boardEvaluation.getBoardRanking(Runner.mainBoard.mainPosition));
+
+        findMove.findMove(Runner.mainBoard.mainPosition, true, 2);
+
+//        Runner.mainBoard.mainPosition.fromToMove("g1h3");
+//        System.out.println(Runner.mainBoard.mainPosition.getBoardEvaluation());
+//
+//        System.out.println(Runner.boardEvaluation.getBoardRanking(Runner.mainBoard.mainPosition));
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //NEXT: Beat 1500: Handily with 77 percent accuracy vs its 25 percent.
 

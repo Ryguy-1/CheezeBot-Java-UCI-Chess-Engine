@@ -8,7 +8,7 @@ public class Position{
     //Also, holds the history board and the chain of moves which have led up to that board in a STACK!! of moves.
 
     private static Long[] referenceArray;
-    private static boolean referenceArrayHasBeenInitialized;
+    private static boolean referenceArrayHasBeenInitialized = false;
 
     private final static String[][] algebraicNotation = {
             {"a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8"},
@@ -69,6 +69,14 @@ public class Position{
         this.hasBeenExpanded = hasBeenExpanded;
     }
 
+    private Position[] childNodes; //only from one player's perspective...
+    public Position[] getChildNodes(){
+        return childNodes;
+    }
+    public void setChildNodes(Position[] childNodes){
+        this.childNodes = childNodes;
+    }
+
     // 17:17
     private int visitCount = 0;
     public int getVisitCount() {
@@ -80,7 +88,6 @@ public class Position{
     public void resetVisitCount(){
         visitCount = 0;
     }
-
 
     // Probability of going to this node
     private int priorProbability = 0;
@@ -111,6 +118,22 @@ public class Position{
         return Runner.boardEvaluation.getBoardRanking(this);
     }
 
+    private int totalOfChildBoardEvaluations;
+    private int numChildBoardEvaluationsUsed;
+    public int getCollectiveValue(){
+        // the total of children board evaluations added/visit count is the average board value of its searched children
+        if(visitCount!=0) {
+            return totalOfChildBoardEvaluations / visitCount;
+        }else{
+            return 0;
+        }
+    }
+    public void addFoundValueToNode(int newBoardValue){
+        totalOfChildBoardEvaluations+=newBoardValue;
+        numChildBoardEvaluationsUsed++;
+    }
+
+
     ////////////////////////////////////
 
     Position(Long[] currentBoard){
@@ -124,6 +147,7 @@ public class Position{
         if(!referenceArrayHasBeenInitialized){
             referenceArray = new Long[64];
             referenceArray = populateReferenceArray(referenceArray);
+            referenceArrayHasBeenInitialized = true;
         }
     }
 
@@ -139,6 +163,7 @@ public class Position{
         if(!referenceArrayHasBeenInitialized){
             referenceArray = new Long[64];
             referenceArray = populateReferenceArray(referenceArray);
+            referenceArrayHasBeenInitialized = true;
         }
     }
 
@@ -710,5 +735,16 @@ public class Position{
         for (int i = 0; i < bitboardArray.length; i++) {
             newBitboard[i] = bitboardArray[i];
         }return newBitboard;
+    }
+
+    public void print(){
+        Runner.mainBoard.drawGameBoard(currentBoard);
+        System.out.println("Moves to Current = " + movesToCurrent);
+        System.out.println("UCB Score = " + UCBScore);
+        System.out.println("Has been expanded = " + hasBeenExpanded);
+        System.out.println("Visit Count = " + visitCount);
+        System.out.println("Prior Pobability = " + priorProbability);
+        System.out.println("Total of Children Board Evaluations = " + totalOfChildBoardEvaluations);
+        System.out.println("Num Child Evaluations Used = " + numChildBoardEvaluationsUsed);
     }
 }
