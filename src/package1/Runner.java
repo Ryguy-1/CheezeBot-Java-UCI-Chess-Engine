@@ -21,10 +21,6 @@ public class Runner {
         findMove = new FindMove();
         uci = new UCI();
 
-
-
-        findMove.findMove(Runner.mainBoard.mainPosition, true, 2);
-
 //        Runner.mainBoard.mainPosition.fromToMove("g1h3");
 //        System.out.println(Runner.mainBoard.mainPosition.getBoardEvaluation());
 //
