@@ -11,7 +11,7 @@ public class UCI {
 
     public static boolean isReadyOk = true;
 
-    public static final int lookAhead = 4;
+    public static int lookAhead = 4;
 
     UCI() {
         initiateCommunication();
@@ -123,6 +123,7 @@ public class UCI {
     private void inputUCINewGame() {
         //what you call when you want to start a new game. Clear hash table, etc.
         System.out.println("Starting new game with " + engineName + ". Version: " + version);
+        lookAhead = 4;
         Runner.mainBoard.initializeNewBoard();
     }
 
@@ -143,6 +144,11 @@ public class UCI {
 
     private void inputGo(){
         //search for the best move. May put this into a new thread? not sure yet.
+
+        if(Runner.controlAndSeparation.splitBitboard(Runner.controlAndSeparation.condenseBoard(Runner.mainBoard.mainPosition.getCurrentBoard())).length<15){
+            lookAhead = 5;
+        }
+
         //computer turn as lower case
         Position returnedPosition = Runner.minimax.minimax(Runner.mainBoard.mainPosition, lookAhead, false, Minimax.MIN, Minimax.MAX);
         String bestMoveFound = returnedPosition.getMovesToCurrent().get(0);
