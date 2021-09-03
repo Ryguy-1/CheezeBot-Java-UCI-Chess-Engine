@@ -6,7 +6,7 @@ public class UCI {
     Thread t1;
     public static final String engineName = "CheezeBot Beta";
     public static final String creditName = "Ryland";
-    public static final String version = "0.11";
+    public static final String version = "0.12";
     public static boolean engineRunning;
 
     public static boolean isReadyOk = true;

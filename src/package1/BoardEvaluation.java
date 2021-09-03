@@ -14,7 +14,7 @@ public class BoardEvaluation {
 
     //Spend time later figuring out mobility advantages
     private static final int materialMultiplier = 60; //don't want anything to interfere with this...
-    private static final int centerControlMultiplier = 5;
+    private static final int centerControlMultiplier = 10;
     private static final int pawnStructureMultiplier = 20;
     private static final int attackingPiecesMultiplier = 2;
     private static final int mobilityMultiplier = 3;
@@ -32,7 +32,7 @@ public class BoardEvaluation {
     //piece values for material advantage
     private static final int pawnValue = 1;
     private static final int knightValue = 4;
-    private static final int bishopValue = 4;
+    private static final int bishopValue = 3;
     private static final int rookValue = 6;
     private static final int queenValue = 12;
     private static final int kingValue = 100_000;
