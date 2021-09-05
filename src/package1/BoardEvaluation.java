@@ -18,13 +18,13 @@ public class BoardEvaluation {
     private static final int centerControlMultiplier = 20;
     private static final int pawnStructureMultiplier = 30;
     private static final int attackingPiecesMultiplier = 2;
-    private static final int mobilityMultiplier = 10;
+    private static final int mobilityMultiplier = 25;
     private static final int pushAdvantageMultiplier = 30;
-    private static final int pawnPromoteMultiplier = 30;
+    private static final int pawnPromoteMultiplier = 50;
 
 
-    private static final int checkAdder = 40;
-    private static final int castleAdder = 30;
+    private static final int checkAdder = 25;
+    private static final int castleAdder = 25;
 
     private static final int acceptStalemateDifference = 300;
 

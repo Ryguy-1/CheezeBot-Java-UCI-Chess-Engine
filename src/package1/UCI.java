@@ -7,7 +7,7 @@ public class UCI {
     Thread t1; // for general communication
     public static final String engineName = "CheezeBot Beta";
     public static final String creditName = "Ryland";
-    public static final String version = "0.40";
+    public static final String version = "0.41";
     public static boolean engineRunning;
 
     public static int lookAhead = 4;
@@ -98,9 +98,9 @@ public class UCI {
     private void inputGo(){
         //search for the best move. May put this into a new thread? not sure yet.
 
-        if(Runner.controlAndSeparation.splitBitboard(Runner.controlAndSeparation.condenseBoard(Runner.mainBoard.mainPosition.getCurrentBoard())).length<10){
-            lookAhead = 6;
-        }
+//        if(Runner.controlAndSeparation.splitBitboard(Runner.controlAndSeparation.condenseBoard(Runner.mainBoard.mainPosition.getCurrentBoard())).length<10){
+//            lookAhead = 6;
+//        }
 
         //computer turn as lower case
         Position returnedPosition = Runner.minimax.minimax(Runner.mainBoard.mainPosition, lookAhead, isCapitalTurn, Minimax.MIN, Minimax.MAX);
