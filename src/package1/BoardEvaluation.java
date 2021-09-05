@@ -20,7 +20,7 @@ public class BoardEvaluation {
     private static final int attackingPiecesMultiplier = 2;
     private static final int mobilityMultiplier = 25;
     private static final int pushAdvantageMultiplier = 30;
-    private static final int pawnPromoteMultiplier = 50;
+    private static final int pawnPromoteMultiplier = 10;
 
 
     private static final int checkAdder = 25;
@@ -55,7 +55,7 @@ public class BoardEvaluation {
         totalAdv+=getCenterControlAdvantage(pos)*centerControlMultiplier;
         totalAdv+=getPawnProtectAdvantage(pos)*pawnStructureMultiplier;
         totalAdv+=getPushAdvantage(pos)*pushAdvantageMultiplier;
-        if(Runner.controlAndSeparation.splitBitboard(Runner.controlAndSeparation.condenseBoard(pos.getCurrentBoard())).length<15){
+        if(Runner.controlAndSeparation.splitBitboard(Runner.controlAndSeparation.condenseBoard(pos.getCurrentBoard())).length<20){
             totalAdv+=getPawnPromoteAdvantage(pos)*pawnPromoteMultiplier;
         }
 
@@ -237,23 +237,16 @@ public class BoardEvaluation {
         Long capitalPawns = pos.getCurrentBoard()[11];
         Long lowerCasePawns = pos.getCurrentBoard()[5];
 
-        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank8&lowerCasePawns).length;
-        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank7&lowerCasePawns).length*2;
-        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank6&lowerCasePawns).length*3;
-        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank5&lowerCasePawns).length*4;
-        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank8&lowerCasePawns).length*5;
-        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank7&lowerCasePawns).length*6;
-        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank6&lowerCasePawns).length*10;
-        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank5&lowerCasePawns).length*20;
+        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank5&lowerCasePawns).length*33;
+        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank4&lowerCasePawns).length*100;
+        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank3&lowerCasePawns).length*300;
+        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank2&lowerCasePawns).length*900;
 
-        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank1&capitalPawns).length;
-        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank2&capitalPawns).length*2;
-        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank3&capitalPawns).length*3;
-        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank4&capitalPawns).length*4;
-        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank5&capitalPawns).length*5;
-        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank6&capitalPawns).length*6;
-        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank7&capitalPawns).length*10;
-        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank8&capitalPawns).length*20;
+        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank4&capitalPawns).length*33;
+        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank5&capitalPawns).length*100;
+        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank6&capitalPawns).length*300;
+        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank7&capitalPawns).length*900;
+
 
         return returnedValue;
 
