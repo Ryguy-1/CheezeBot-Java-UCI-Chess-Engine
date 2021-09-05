@@ -2,6 +2,7 @@ package package1;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 
 public class BoardEvaluation {
 
@@ -13,26 +14,27 @@ public class BoardEvaluation {
 
 
     //Spend time later figuring out mobility advantages
-    private static final int materialMultiplier = 60; //don't want anything to interfere with this...
-    private static final int centerControlMultiplier = 5;
-    private static final int pawnStructureMultiplier = 13;
+    private static final int materialMultiplier = 1000; //don't want anything to interfere with this...
+    private static final int centerControlMultiplier = 20;
+    private static final int pawnStructureMultiplier = 30;
     private static final int attackingPiecesMultiplier = 2;
-    private static final int mobilityMultiplier = 3;
+    private static final int mobilityMultiplier = 25;
+    private static final int pushAdvantageMultiplier = 30;
+    private static final int pawnPromoteMultiplier = 50;
 
-    private static final int checkAdder = 40;
-    private static final int castleAdder = 30;
+
+    private static final int checkAdder = 25;
+    private static final int castleAdder = 25;
 
     private static final int acceptStalemateDifference = 300;
 
     private static final int checkmateWeight = (Integer.MAX_VALUE/2); //HAS TO BE -1 BECAUSE MIN AND MAX VALUES IN MINIMAX ARE INTEGER.MAX_VALUE. THROWS ERROR OTHERWISE.
     private static final int stalemateWeight = (Integer.MAX_VALUE/4);
 
-    private static final int numActiveFactors = 4; //including checkAdder.
-
     //piece values for material advantage
     private static final int pawnValue = 1;
     private static final int knightValue = 4;
-    private static final int bishopValue = 4;
+    private static final int bishopValue = 3;
     private static final int rookValue = 6;
     private static final int queenValue = 12;
     private static final int kingValue = 100_000;
@@ -52,6 +54,11 @@ public class BoardEvaluation {
         totalAdv+=getAttackingPiecesAdvantage(pos)*attackingPiecesMultiplier;
         totalAdv+=getCenterControlAdvantage(pos)*centerControlMultiplier;
         totalAdv+=getPawnProtectAdvantage(pos)*pawnStructureMultiplier;
+        totalAdv+=getPushAdvantage(pos)*pushAdvantageMultiplier;
+        if(Runner.controlAndSeparation.splitBitboard(Runner.controlAndSeparation.condenseBoard(pos.getCurrentBoard())).length<15){
+            totalAdv+=getPawnPromoteAdvantage(pos)*pawnPromoteMultiplier;
+        }
+
         //CASTLING
         if(pos.getCapitalHasCastled()){ //if you have moved a rook or king and haven't castled, this is not ideal
             totalAdv+=castleAdder;
@@ -207,11 +214,49 @@ public class BoardEvaluation {
         return totalAdvantage;
     }
 
-    private double roundDoubleProperly(double num){
-        DecimalFormat df = new DecimalFormat("#.#");
-        df.setRoundingMode(RoundingMode.HALF_EVEN);
-        System.out.println(df.format(num));
-        return Double.parseDouble(df.format(num));
+    private int getPushAdvantage(Position pos){
+        int returnedValue = 0;
+        Long capitalPiecesBitboard = Runner.controlAndSeparation.condenseBoard(Arrays.copyOfRange(pos.getCurrentBoard(), 0, 3)); //0, 1, 2 -> minor pieces
+        Long lowerCasePiecesBitboard = Runner.controlAndSeparation.condenseBoard(Arrays.copyOfRange(pos.getCurrentBoard(), 6, 9)); //6, 7, 8 -> minor pieces
+
+        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank8&lowerCasePiecesBitboard).length;
+        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank7&lowerCasePiecesBitboard).length*2;
+        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank6&lowerCasePiecesBitboard).length*3;
+        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank5&lowerCasePiecesBitboard).length*4;
+
+        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank1&capitalPiecesBitboard).length;
+        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank2&capitalPiecesBitboard).length*2;
+        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank3&capitalPiecesBitboard).length*3;
+        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank4&capitalPiecesBitboard).length*4;
+
+        return returnedValue;
+    }
+
+    private int getPawnPromoteAdvantage(Position pos){
+        int returnedValue = 0;
+        Long capitalPawns = pos.getCurrentBoard()[11];
+        Long lowerCasePawns = pos.getCurrentBoard()[5];
+
+        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank8&lowerCasePawns).length;
+        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank7&lowerCasePawns).length*2;
+        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank6&lowerCasePawns).length*3;
+        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank5&lowerCasePawns).length*4;
+        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank8&lowerCasePawns).length*5;
+        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank7&lowerCasePawns).length*6;
+        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank6&lowerCasePawns).length*10;
+        returnedValue-=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank5&lowerCasePawns).length*20;
+
+        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank1&capitalPawns).length;
+        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank2&capitalPawns).length*2;
+        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank3&capitalPawns).length*3;
+        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank4&capitalPawns).length*4;
+        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank5&capitalPawns).length*5;
+        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank6&capitalPawns).length*6;
+        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank7&capitalPawns).length*10;
+        returnedValue+=Runner.controlAndSeparation.splitBitboard(Runner.checkValidConditions.rank8&capitalPawns).length*20;
+
+        return returnedValue;
+
     }
 
 
