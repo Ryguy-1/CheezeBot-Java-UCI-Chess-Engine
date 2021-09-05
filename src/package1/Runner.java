@@ -8,7 +8,6 @@ public class Runner {
     public static BitboardControlAndSeparation controlAndSeparation;
     public static Search search;
     public static BoardEvaluation boardEvaluation;
-    public static ZobristHash zobristHash;
     public static Minimax minimax;
     public static UCI uci;
 
@@ -19,7 +18,6 @@ public class Runner {
         controlAndSeparation = new BitboardControlAndSeparation();
         search = new Search();
         boardEvaluation = new BoardEvaluation();
-        zobristHash = new ZobristHash();
         minimax = new Minimax();
         uci = new UCI();
 
