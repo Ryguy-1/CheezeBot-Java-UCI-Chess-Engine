@@ -33,7 +33,7 @@ public class BoardEvaluation {
 
     //piece values for material advantage
     private static final int pawnValue = 1;
-    private static final int knightValue = 4;
+    private static final int knightValue = 3;
     private static final int bishopValue = 3;
     private static final int rookValue = 6;
     private static final int queenValue = 12;
